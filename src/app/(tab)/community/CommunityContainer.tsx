@@ -24,12 +24,11 @@ const CommunityContainer = ({ list: crewList }: CrewListDataProps) => {
   return (
     <FormProvider {...method}>
       <div className="min-h-40 bg-[#d9d9d9]">
-        <div className="container px-5 pt-20">
-          <Text.lg className="pt-14 font-semibold text-center">
-            <h3>크루탐색(배너이미지 들어 갈 예정)</h3>
-          </Text.lg>
-          <div className="pt-6 pb-4 w-2/3 mx-auto mobile:w-full SE:w-full S2:w-full">
-            <Search />
+        <div className="pt-20">
+          <div className="flex justify-center items-end min-h-56 bg-[url('/images/search_banner.svg')] bg-cover bg-center bg-no-repeat">
+            <div className="container pt-6 pb-4 w-2/3 mx-auto mobile:w-full SE:w-full S2:w-full">
+              <Search />
+            </div>
           </div>
         </div>
       </div>

@@ -3,10 +3,11 @@ import axios from 'axios';
 import { auth } from '@/auth';
 
 export const apiFetch = axios.create({
-  baseURL: 'http://192.168.0.10:8087/api',
+  baseURL: 'http://43.203.4.6:8080/api',
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 8000,
 });
 
 // 클라이언트 측 인터셉터
@@ -14,6 +15,12 @@ if (typeof window !== 'undefined') {
   apiFetch.interceptors.request.use(async (config) => {
     try {
       const session = await getSession();
+
+      const controller = new AbortController();
+
+      config.signal = controller.signal;
+
+      setTimeout(() => controller.abort(), 8000);
 
       if (session) {
         config.headers['Authorization'] = `Bearer ${session.accessToken}`;
@@ -28,8 +35,12 @@ if (typeof window !== 'undefined') {
 else {
   apiFetch.interceptors.request.use(async (config) => {
     try {
-      // 비동기 컨텍스트에서 getServerSession 호출
       const session = await auth();
+
+      const controller = new AbortController();
+      config.signal = controller.signal;
+
+      setTimeout(() => controller.abort(), 8000);
 
       if (session) {
         config.headers['Authorization'] = `Bearer ${session.accessToken}`;

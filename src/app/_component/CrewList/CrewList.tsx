@@ -45,10 +45,10 @@ const CrewList = ({ list }: CrewListPropsType) => {
                 ? list.map((crew, index) => (
                     <CrewCard
                       key={index}
-                      crewImage={crew.imageUrl}
-                      ownerName={crew.crewOwner.nickname}
+                      crewImage={crew?.imageUrl || ''}
+                      ownerName={crew.crewOwner?.nickname || ''}
                       title={crew.name}
-                      description={crew.introduce}
+                      description={crew?.introduce || ''}
                       tagSlot={
                         <>
                           {crew.hashtags.map((tag, i) => {
