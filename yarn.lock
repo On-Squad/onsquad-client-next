@@ -3497,6 +3497,11 @@ outvariant@^1.2.1, outvariant@^1.4.0, outvariant@^1.4.2:
   resolved "https://registry.npmjs.org/outvariant/-/outvariant-1.4.3.tgz"
   integrity sha512-+Sl2UErvtsoajRDKCE5/dBz4DIvHXQQnAxtQTF04OJxY0+DyZXSo5P5Bb7XYWOh81syohlYL24hbDwxedPUJCA==
 
+overlay-kit@^1.8.6:
+  version "1.8.6"
+  resolved "https://registry.yarnpkg.com/overlay-kit/-/overlay-kit-1.8.6.tgz#f76697350d1e723ff0a1d47cfb532351c0e356d1"
+  integrity sha512-0JeZ+QcoMCEgW4OndzCJger/eHZHGan7M9iQ6sHxrMPVwLyqSN8665CdciNrNjzorV3xGtqVeZUs2o4rt4ddYw==
+
 own-keys@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/own-keys/-/own-keys-1.0.1.tgz"
