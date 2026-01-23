@@ -1,11 +1,12 @@
-import { useToast as useLibToast } from '@/components/ui/use-toast';
-import { TOAST } from '@/constants/toast';
-import { useRef, ReactNode } from 'react';
+import { useToast as useLibToast } from '@/shared/ui/ui/use-toast';
+import { TOAST } from '@/shared/config/toast';
+import { useRef, ReactElement } from 'react';
+import type { LucideIcon } from 'lucide-react';
 
 export interface ToastMessageType {
   title: string;
   className: ValueOf<typeof TOAST>;
-  icon?: ReactNode | ReactNode[];
+  icon?: LucideIcon | ReactElement<LucideIcon>;
 }
 
 const TOAST_TIMEOUT = 1500;

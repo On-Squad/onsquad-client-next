@@ -34,6 +34,7 @@
     "draftjs-to-html": "^0.9.1",
     "draftjs-to-markdown": "^0.6.0",
     "embla-carousel-react": "^8.3.0",
+    "es-toolkit": "^1.44.0",
     "http-request-fetch": "^1.0.1",
     "lucide-react": "^0.395.0",
     "msw": "2.1",

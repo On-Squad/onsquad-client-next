@@ -1,5 +1,5 @@
 import { PATH } from './paths';
-import { type HashTagType } from '@/api/model';
+import { type HashTagType } from '@/shared/api/model';
 
 export type MBTIType =
   | 'ISTJ'

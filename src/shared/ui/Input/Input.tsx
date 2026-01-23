@@ -1,9 +1,9 @@
 import { Controller, FieldValues, Path, useFormContext } from 'react-hook-form';
-import { useExtractNumberHandler } from '@/hooks/useExtractNumberHandler';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { useExtractNumberHandler } from '@/shared/lib/hooks/useExtractNumberHandler';
+import { Input } from '@/shared/ui/ui/input';
+import { Label } from '@/shared/ui/ui/label';
 import { ReactNode } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/shared/lib/utils';
 
 interface CustomInputPropsType<T extends FieldValues> {
   name: Path<T>;
@@ -71,15 +71,14 @@ const CustomInput = <T extends FieldValues>(props: CustomInputPropsType<T>) => {
                 onChange={
                   extractNumber
                     ? (e) => {
-                        handleExtractNumber(e);
-                        onChange(e);
-                      }
+                      handleExtractNumber(e);
+                      onChange(e);
+                    }
                     : onChange
                 }
                 className={`${cn(
-                  ` placeholder:text-grayscale500 block w-full px-3 py-2 border border-[#f8f8f8] rounded-md  focus:outline-none ${className} ${
-                    fieldError &&
-                    'border-2 border-red-500  focus-visible:border-red-400'
+                  ` placeholder:text-grayscale500 block w-full px-3 py-2 border border-[#f8f8f8] rounded-md  focus:outline-none ${className} ${fieldError &&
+                  'border-2 border-red-500  focus-visible:border-red-400'
                   }`,
                 )}`}
                 {...rest}

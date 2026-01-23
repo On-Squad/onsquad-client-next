@@ -24,7 +24,7 @@ export const useApiMutation = <
   invalidateKey,
   options,
 }: {
-  mutationKey: TMutationKey;
+  mutationKey?: TMutationKey;
   invalidateKey?: TInvalidateKey;
   fetcher: (variables: TVariables) => Promise<AxiosResponse<TMutationFnData>>;
   options?: Omit<

@@ -1,4 +1,4 @@
-import { LOGIN_REGEXP } from '@/constants/regexp';
+import { LOGIN_REGEXP } from '@/shared/config/regexp';
 import * as yup from 'yup';
 
 export const changePasswordSchema = yup.object().shape({

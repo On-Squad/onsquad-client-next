@@ -2,15 +2,16 @@
 
 // Inspired by react-hot-toast library
 import * as React from 'react';
-
-import type { ToastActionElement, ToastProps } from '@/components/ui/toast';
+import type { LucideIcon } from 'lucide-react';
+import type { ToastActionElement, ToastProps } from '@/shared/ui/ui/toast';
+import { type ReactElement } from 'react';
 
 const TOAST_LIMIT = 1;
 const TOAST_REMOVE_DELAY = 1000000;
 
 type ToasterToast = ToastProps & {
   id: string;
-  icon?: React.ReactNode | React.ReactNode[];
+  icon?: LucideIcon | ReactElement<LucideIcon>;
   title?: React.ReactNode;
   description?: React.ReactNode;
   action?: ToastActionElement;

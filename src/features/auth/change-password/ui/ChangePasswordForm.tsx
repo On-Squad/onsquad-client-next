@@ -2,18 +2,15 @@
 
 import React, { useMemo, useLayoutEffect } from 'react';
 
+import { isEmpty } from 'es-toolkit/compat';
+
 import { useForm, useWatch, FormProvider } from 'react-hook-form';
-import { changePasswordSchema } from './validator';
+import { changePasswordSchema } from '../model/changePasswordSchema';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Input } from '@/components/Input';
-import { Button } from '@/components/ui/button';
-import { PATH } from '@/constants/paths';
-import { useRouter } from 'next/navigation';
-import { useToast } from '@/hooks/useToast';
-import { TOAST } from '@/constants/toast';
-import { CircleX, CircleCheck, Loader2 } from 'lucide-react';
-import { useApiMutation } from '@/services/useApiMutation';
-import { changePasswordPatchFetch } from '@/api/user/changePasswordPatchFetch';
+import { Button } from '@/shared/ui/ui/button';
+import { Loader2 } from 'lucide-react';
+import { useChangePasswordMutation } from '../model/useChangePasswordMutation';
+import { Input } from '@/shared/ui/Input';
 
 const ChangePasswordForm = () => {
   const method = useForm({
@@ -38,44 +35,14 @@ const ChangePasswordForm = () => {
     name: ['currentPassword', 'newPassword', 'newPasswordConfirm'],
   });
 
-  const isEmpty = useMemo(() => {
-    return !currentPassword || !newPassword || !newPasswordConfirm;
-  }, [currentPassword, newPassword, newPasswordConfirm]);
+  const { mutateAsync: changePassword, isPending } = useChangePasswordMutation();
+
+  const isEmptyValue = isEmpty(currentPassword) || isEmpty(newPassword) || isEmpty(newPasswordConfirm);
 
   const isError =
     errors.currentPassword || errors.newPassword || errors.newPasswordConfirm;
 
-  const router = useRouter();
-
-  const { toast } = useToast();
-
-  const { mutateAsync: changePassword, isPending } = useApiMutation({
-    mutationKey: ['@change-password'],
-    fetcher: changePasswordPatchFetch,
-    options: {
-      onSuccess: (data) => {
-        if (data.status === 204) {
-          toast({
-            title: '비밀번호 변경에 성공했어요.',
-            className: TOAST.success,
-            icon: <CircleCheck />,
-          });
-
-          router.push(PATH.root, { scroll: false });
-        } else {
-          toast({
-            title: '비밀번호 변경에 실패했어요.',
-            className: TOAST.error,
-            icon: <CircleX />,
-          });
-        }
-      },
-    },
-  });
-
-  const handleSubmit = submit(async () => {
-    await changePassword(getValues());
-  });
+  const handleSubmit = submit(async () => await changePassword(getValues()))
 
   useLayoutEffect(() => {
     const body = document.body;
@@ -118,7 +85,7 @@ const ChangePasswordForm = () => {
           className="w-full disabled:bg-grayscale200 disabled:text-grayscale600 disabled:cursor-not-allowed"
           formAction="submit"
           disabled={
-            isPending || isEmpty || isError === undefined ? false : true
+            isPending || isEmptyValue || isError === undefined ? false : true
           }
         >
           {isPending ? (

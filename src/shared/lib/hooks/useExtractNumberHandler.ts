@@ -1,5 +1,5 @@
 import { ChangeEventHandler } from 'react';
-import { numberExtract } from '@/utils/numberExtract';
+import { numberExtract } from '@/shared/lib/utils/numberExtract';
 
 export const useExtractNumberHandler =
   <T extends HTMLInputElement | HTMLTextAreaElement>(): ChangeEventHandler<T> =>
