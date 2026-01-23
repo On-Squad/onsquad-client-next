@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useLayoutEffect } from 'react';
+import React, { useLayoutEffect } from 'react';
 
 import { isEmpty } from 'es-toolkit/compat';
 
