@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { Appbar } from '@/shared/ui/Appbar';
 import { MyCrew } from '@/widgets/crew-list';
+
+import { Appbar } from '@/shared/ui/Appbar';
 
 export default function CrewsPage() {
   return (

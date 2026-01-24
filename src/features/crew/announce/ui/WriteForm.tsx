@@ -1,10 +1,12 @@
 'use client';
 
 import React from 'react';
-import { TextEditor } from '@/shared/ui/TextEditor';
-import { useForm, FormProvider, Controller } from 'react-hook-form';
-import { Label } from '@/shared/ui/ui/label';
+
+import { Controller, FormProvider, useForm } from 'react-hook-form';
+
 import { Input } from '@/shared/ui/Input';
+import { TextEditor } from '@/shared/ui/TextEditor';
+import { Label } from '@/shared/ui/ui/label';
 
 export const WriteForm = () => {
   const method = useForm({
@@ -24,7 +26,7 @@ export const WriteForm = () => {
   } = method;
 
   return (
-    <div className="container px-0 pt-20 overflow-hidden">
+    <div className="container overflow-hidden px-0 pt-20">
       <div className="flex flex-col px-4">
         <FormProvider {...method}>
           <Input name="title" type="text" label="제목" />

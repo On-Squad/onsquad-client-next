@@ -1,22 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { CircleX } from 'lucide-react';
 
+import { CircleX } from 'lucide-react';
 import { useFormContext } from 'react-hook-form';
 
-import {
-  Accordion as LibAccordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
+import { TOAST } from '@/shared/config/toast';
+import { useToast } from '@/shared/lib/hooks/useToast';
+import { cn } from '@/shared/lib/utils';
+import { AccordionContent, AccordionItem, AccordionTrigger, Accordion as LibAccordion } from '@/shared/ui/ui/accordion';
+
 import { Button } from '../ui/button';
-
-import { cn } from '@/lib/utils';
-
-import { TOAST } from '@/constants/toast';
-import { useToast } from '@/hooks/useToast';
 
 interface AccordionPropsType {
   /**
@@ -46,34 +40,26 @@ const Accordion = (props: AccordionPropsType) => {
 
   const parentSelectedItem = getValues(name) as string[];
 
-  const [selectedItem, setSelectedItem] =
-    useState<string[]>(parentSelectedItem);
+  const [selectedItem, setSelectedItem] = useState<string[]>(parentSelectedItem);
 
   return (
     <>
-      <LibAccordion
-        type="multiple"
-        className="w-full"
-        defaultValue={defaultValue}
-      >
+      <LibAccordion type="multiple" className="w-full" defaultValue={defaultValue}>
         {list.map((item, index) => (
           <AccordionItem key={index} value={item.value}>
             <AccordionTrigger>{item.title}</AccordionTrigger>
             <AccordionContent>
-              <div className="grid grid-flow-row gap-1 grid-cols-2 max-h-72 overflow-auto">
+              <div className="grid max-h-72 grid-flow-row grid-cols-2 gap-1 overflow-auto">
                 {item.tags.map((tag, tagIndex) => (
                   <div
                     key={tagIndex}
                     className={cn(
-                      'flex items-center justify-center h-[45px] border border-grayscale300 rounded-lg text-lg bg-grayscale200 text-grayscale400 cursor-pointer',
-                      selectedItem.includes(tag) &&
-                        'bg-secondary border-secondary text-white',
+                      'flex h-[45px] cursor-pointer items-center justify-center rounded-lg border border-grayscale300 bg-grayscale200 text-lg text-grayscale400',
+                      selectedItem.includes(tag) && 'border-secondary bg-secondary text-white',
                     )}
                     onClick={() => {
                       if (selectedItem.includes(tag)) {
-                        const filteredItem = [...selectedItem].filter(
-                          (item) => item !== tag,
-                        );
+                        const filteredItem = [...selectedItem].filter((item) => item !== tag);
 
                         setSelectedItem(filteredItem);
 

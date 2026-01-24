@@ -1,36 +1,31 @@
 'use client';
 
-import { useState, useRef, ChangeEvent } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 
-import { Button } from '@/components/ui/button';
-
-import { getQueryClient } from '@/services/get-query-client';
-
-import { useForm, FormProvider } from 'react-hook-form';
-
-import { yupResolver } from '@hookform/resolvers/yup';
-import { addCrewSchema } from './validator';
-
-import { Accordion } from '@/components/Accordion';
-import { Input } from '@/components/Input';
-import { Textarea } from '@/components/Textarea';
-import { InputButton } from '@/components/InputButton';
-import { Label } from '@/components/ui/label';
-import { cn } from '@/lib/utils';
-import { useToast } from '@/hooks/useToast';
-
-import { TOAST } from '@/constants/toast';
-import { ImagePlus, CircleX, X, Loader2 } from 'lucide-react';
-
-import { crewCheckGetFetch } from '@/api/crew/crewCheckGetFetch';
 import { ACCORDION_HASH_TAG_LIST } from '@/constants';
-
 import { useModalStackStore } from '@/store/useModalStackStore';
-import { BottomSheet } from '@/components/BottomSheet';
-import { Badge } from '@/components/Badge';
-import { addCrewPostFetch } from '@/api/crew/addCrewPostFetch';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { CircleX, ImagePlus, Loader2, X } from 'lucide-react';
 import Image from 'next/image';
-import { useApiMutation } from '@/services/useApiMutation';
+import { FormProvider, useForm } from 'react-hook-form';
+
+import { addCrewPostFetch } from '@/shared/api/crew/addCrewPostFetch';
+import { crewCheckGetFetch } from '@/shared/api/crew/crewCheckGetFetch';
+import { TOAST } from '@/shared/config/toast';
+import { useToast } from '@/shared/lib/hooks/useToast';
+import { getQueryClient } from '@/shared/lib/queries/get-query-client';
+import { useApiMutation } from '@/shared/lib/queries/useApiMutation';
+import { cn } from '@/shared/lib/utils';
+import { Accordion } from '@/shared/ui/Accordion';
+import { Badge } from '@/shared/ui/Badge';
+import { BottomSheet } from '@/shared/ui/BottomSheet';
+import { Input } from '@/shared/ui/Input';
+import { InputButton } from '@/shared/ui/InputButton';
+import { Textarea } from '@/shared/ui/Textarea';
+import { Button } from '@/shared/ui/ui/button';
+import { Label } from '@/shared/ui/ui/label';
+
+import { addCrewSchema } from './validator';
 
 /**
  * 크루 개설하기 작성 폼
@@ -154,7 +149,7 @@ const AddForm = () => {
 
   return (
     <FormProvider {...method}>
-      <div className="container pt-14 bg-white">
+      <div className="container bg-white pt-14">
         <div className="pt-12">
           <div>
             <Input
@@ -164,29 +159,17 @@ const AddForm = () => {
               maxLength={15}
               label="크루명"
               disabled={!isDuplicate}
-              button={
-                <InputButton
-                  disabled={!isDuplicate}
-                  buttonText="중복확인"
-                  onClick={handleCrewNameCheck}
-                />
-              }
+              button={<InputButton disabled={!isDuplicate} buttonText="중복확인" onClick={handleCrewNameCheck} />}
             />
           </div>
 
           <div className="mt-6">
-            <Textarea
-              name="introduce"
-              label="크루 소개"
-              placeholder="크루 소개글을 작성해주세요."
-            />
+            <Textarea name="introduce" label="크루 소개" placeholder="크루 소개글을 작성해주세요." />
           </div>
 
           <div className="mt-6">
-            <Label className="block text-grayScale800 font-bold mb-2">
-              대표이미지
-            </Label>
-            <div className="border border-[#f8f8f8] w-full h-40 rounded-md flex items-center justify-center">
+            <Label className="text-grayScale800 mb-2 block font-bold">대표이미지</Label>
+            <div className="flex h-40 w-full items-center justify-center rounded-md border border-[#f8f8f8]">
               {watch('file') && imageUrl ? (
                 <div
                   style={{
@@ -194,12 +177,10 @@ const AddForm = () => {
                     backgroundSize: 'contain',
                     backgroundPosition: 'center',
                   }}
-                  className={cn(
-                    `w-full h-full object-cover bg-cover bg-center bg-no-repeat`,
-                  )}
+                  className={cn(`h-full w-full bg-cover bg-center bg-no-repeat object-cover`)}
                 >
                   <Image
-                    className="w-full h-full object-contain rounded-md"
+                    className="h-full w-full rounded-md object-contain"
                     src={imageUrl}
                     alt="업로드 이미지"
                     width={100}
@@ -218,19 +199,13 @@ const AddForm = () => {
                   <div className="flex items-center gap-2">
                     <>
                       <ImagePlus size={16} />
-                      <span className="inline-block pt-0.5">
-                        대표이미지 등록
-                      </span>
+                      <span className="inline-block pt-0.5">대표이미지 등록</span>
                     </>
                   </div>
                 </Button>
               )}
             </div>
-            {errors?.file && (
-              <p className="mt-2 text-sm text-left text-red-600">
-                {errors?.file.message}
-              </p>
-            )}
+            {errors?.file && <p className="mt-2 text-left text-sm text-red-600">{errors?.file.message}</p>}
             <input
               type="file"
               ref={fileRef}
@@ -241,11 +216,7 @@ const AddForm = () => {
           </div>
 
           <div className="mt-6">
-            <Textarea
-              name="detail"
-              label="크루 상세정보"
-              placeholder="크루 상세정보를 작성해주세요."
-            />
+            <Textarea name="detail" label="크루 상세정보" placeholder="크루 상세정보를 작성해주세요." />
           </div>
 
           <div className="mt-6">
@@ -263,18 +234,12 @@ const AddForm = () => {
                   onClick={() =>
                     setModal(
                       <FormProvider {...method}>
-                        <BottomSheet
-                          title="크루 해시태그"
-                          isOpen={true}
-                          onClose={onClose}
-                        >
+                        <BottomSheet title="크루 해시태그" isOpen={true} onClose={onClose}>
                           <Accordion
                             name="hashtags"
                             list={ACCORDION_HASH_TAG_LIST}
                             defaultValue={['hashtag']}
-                            onSubmit={(args: string[]) =>
-                              setValue('hashtags', args)
-                            }
+                            onSubmit={(args: string[]) => setValue('hashtags', args)}
                             onCancel={onClose}
                           />
                         </BottomSheet>
@@ -285,45 +250,34 @@ const AddForm = () => {
               }
             />
           </div>
-          <div className="mt-3 flex gap-1 items-center flex-wrap">
+          <div className="mt-3 flex flex-wrap items-center gap-1">
             {watch('hashtags')?.map((item, index) => (
               <Badge
                 key={index}
-                className="flex gap-1 bg-white border border-secondary text-secondary rounded-xl cursor-pointer hover:bg-secondary/10 active:bg-secondary/20"
+                className="flex cursor-pointer gap-1 rounded-xl border border-secondary bg-white text-secondary hover:bg-secondary/10 active:bg-secondary/20"
                 onClick={() => {
                   const hashtags = getValues('hashtags');
 
-                  const filteredHashtags = [...(hashtags ?? [])].filter(
-                    (tag) => tag !== item,
-                  );
+                  const filteredHashtags = [...(hashtags ?? [])].filter((tag) => tag !== item);
 
                   setValue('hashtags', filteredHashtags);
                 }}
               >
                 <span>{item}</span>
-                <X className="text-black mb-0.5" size={12} />
+                <X className="mb-0.5 text-black" size={12} />
               </Badge>
             ))}
           </div>
 
           <div className="mt-6">
-            <Input
-              type="text"
-              name="kakaoLink"
-              label="크루 소통방"
-              placeholder="크루 소통방 링크를 입력해주세요."
-            />
+            <Input type="text" name="kakaoLink" label="크루 소통방" placeholder="크루 소통방 링크를 입력해주세요." />
           </div>
         </div>
 
-        <div className="buttonArea mt-36 mb-12">
-          <Button
-            className="w-full"
-            onClick={handleSubmit}
-            disabled={displaySpinner}
-          >
+        <div className="buttonArea mb-12 mt-36">
+          <Button className="w-full" onClick={handleSubmit} disabled={displaySpinner}>
             {displaySpinner ? (
-              <div className="flex items-center gap-1 justify-center">
+              <div className="flex items-center justify-center gap-1">
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 크루를 생성하고 있어요
               </div>

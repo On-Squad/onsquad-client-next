@@ -1,58 +1,49 @@
-import { Text } from '@/shared/ui/Text';
-
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import Image from 'next/image';
-import { SearchContainer } from '@/widgets/SearchContainer';
+
 import { CrewList } from '@/widgets/CrewList';
 import { MainDashboard } from '@/widgets/MainDashboard';
-import { Appbar } from '@/shared/ui/Appbar';
-import { getQueryClient } from '@/services/get-query-client';
-import {
-  crewListOptions,
-  CREW_LIST_QUERY_KEY,
-} from '@/services/options/crewListOptions';
-import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
+import { SearchContainer } from '@/widgets/SearchContainer';
+
 import type { CrewListDataType } from '@/entities/crew';
+import { crewQueries } from '@/entities/crew/api/crew.queries';
+
+import { getQueryClient } from '@/shared/lib/queries/get-query-client';
+import { Appbar } from '@/shared/ui/Appbar';
+import { Text } from '@/shared/ui/Text';
 
 export default async function HomePage() {
   const queryClient = getQueryClient();
 
-  await queryClient.prefetchQuery(crewListOptions);
+  await queryClient.prefetchQuery(crewQueries.list());
 
-  const crewListData = queryClient.getQueryData<CrewListDataType>([
-    CREW_LIST_QUERY_KEY,
-  ]);
+  const crewListData = queryClient.getQueryData<CrewListDataType>(crewQueries.list().queryKey);
 
   return (
-    <div className="w-full h-full bg-gray-50">
+    <div className="h-full w-full bg-gray-50">
       <Appbar />
       <div className="container px-2 pt-20">
-        <div className="w-full bg-[#144A7D] ease-linear p-9 flex justify-between items-center rounded-xl mt-6 mobile:flex-col tablet:flex-col SE:flex-col S2:flex-col">
+        <div className="mt-6 flex w-full items-center justify-between rounded-xl bg-[#144A7D] p-9 ease-linear S2:flex-col SE:flex-col mobile:flex-col tablet:flex-col">
           <Image
             src="/images/main_banner.svg"
             width={220}
             height={110}
-            className="hidden w-auto h-auto mobile:inline-block mobile:mb-12 tablet:inline-block tablet:mb-12 SE:inline-block S2:inline-block SE:mb-12 S2:mb-12"
+            className="hidden h-auto w-auto S2:mb-12 S2:inline-block SE:mb-12 SE:inline-block mobile:mb-12 mobile:inline-block tablet:mb-12 tablet:inline-block"
             alt="온스쿼드 배너"
             priority={true}
           />
           <div className="font-semibold text-white">
-            <Text.lg className="mb-1 S2:text-sm">
-              모임이 좋았을 뿐인데,,,
-            </Text.lg>
+            <Text.lg className="mb-1 S2:text-sm">모임이 좋았을 뿐인데,,,</Text.lg>
             <Text.xxl className="mb-2">
               <h2 className="flex items-center S2:text-xs">
-                점점{' '}
-                <Text.xxxl className="ml-1 font-extrabold S2:text-xl">
-                  부담
-                </Text.xxxl>
-                이 되고 있다면?
+                점점 <Text.xxxl className="ml-1 font-extrabold S2:text-xl">부담</Text.xxxl>이 되고 있다면?
               </h2>
             </Text.xxl>
             <div className="flex flex-col gap-3 mobile:flex-row tablet:flex-row">
               <Image
                 src="/icons/onsquad_logo.svg"
                 alt="온스쿼드 로고"
-                className="w-auto h-auto"
+                className="h-auto w-auto"
                 width={150}
                 height={50}
               />
@@ -63,16 +54,16 @@ export default async function HomePage() {
             src="/images/main_banner.svg"
             width={220}
             height={110}
-            className="w-auto h-auto mobile:hidden tablet:hidden SE:hidden S2:hidden"
+            className="h-auto w-auto S2:hidden SE:hidden mobile:hidden tablet:hidden"
             alt="온스쿼드 배너"
             priority={true}
           />
         </div>
-        <div className="w-1/2 mx-auto mt-6 mb-14 tablet:w-11/12 mobile:w-11/12 S2:w-11/12 SE:w-11/12">
+        <div className="mx-auto mb-14 mt-6 w-1/2 S2:w-11/12 SE:w-11/12 mobile:w-11/12 tablet:w-11/12">
           <SearchContainer />
         </div>
 
-        <section className="flex items-center justify-center w-full gap-4 tablet:flex-col mobile:flex-col SE:flex-col S2:flex-col">
+        <section className="flex w-full items-center justify-center gap-4 S2:flex-col SE:flex-col mobile:flex-col tablet:flex-col">
           <MainDashboard />
         </section>
         <section>

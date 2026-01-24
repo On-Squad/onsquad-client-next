@@ -12,7 +12,5 @@ export interface SocialLoginResponse {}
  * - kakao
  * - google
  */
-export const userSocialLoginGetFetch = ({
-  platform,
-}: SocialLoginGetFetchParams) =>
+export const userSocialLoginGetFetch = ({ platform }: SocialLoginGetFetchParams) =>
   apiFetch.get<SocialLoginResponse>(`/login/oauth2/${platform}`);

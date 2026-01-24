@@ -12,6 +12,5 @@ export interface ChangePasswordPatchFetchResponse extends ResponseModel {}
 /**
  * 패스워드 변경
  */
-export const changePasswordPatchFetch = (
-  params: ChangePasswordPatchFetchParams,
-) => apiFetch.patch<ChangePasswordPatchFetchResponse>('/my', params);
+export const changePasswordPatchFetch = (params: ChangePasswordPatchFetchParams) =>
+  apiFetch.patch<ChangePasswordPatchFetchResponse>('/my', params);

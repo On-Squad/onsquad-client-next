@@ -1,7 +1,9 @@
-import { useToast as useLibToast } from '@/shared/ui/ui/use-toast';
-import { TOAST } from '@/shared/config/toast';
-import { useRef, ReactElement } from 'react';
+import { ReactElement, useRef } from 'react';
+
 import type { LucideIcon } from 'lucide-react';
+
+import { TOAST } from '@/shared/config/toast';
+import { useToast as useLibToast } from '@/shared/ui/ui/use-toast';
 
 export interface ToastMessageType {
   title: string;

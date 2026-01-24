@@ -1,6 +1,7 @@
 import { AxiosRequestConfig } from 'axios';
+
 import { apiFetch } from '../common';
-import { ResponseModel } from '../model';
+import type { ResponseModel } from '../model';
 
 export interface UserLoginPostFetchParams {
   email: string;
@@ -8,11 +9,9 @@ export interface UserLoginPostFetchParams {
 }
 
 export interface UserLoginResponse extends ResponseModel {
-  accessToken: {
-    value: string;
-  };
-  refreshToken: {
-    value: string;
+  data: {
+    accessToken: string;
+    refreshToken: string;
   };
 }
 

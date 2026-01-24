@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react';
+
 import { Appbar } from '../Appbar';
 
 interface LayoutPropsType {
@@ -6,11 +7,7 @@ interface LayoutPropsType {
 }
 
 const Wrapper = ({ children }: LayoutPropsType) => {
-  return (
-    <main className="min-w-[20rem] max-w-[45rem] relative mx-auto">
-      {children}
-    </main>
-  );
+  return <main className="relative mx-auto min-w-[20rem] max-w-[45rem]">{children}</main>;
 };
 
 export default Wrapper;

@@ -1,5 +1,5 @@
 import { apiFetch } from '../common';
-import { MbtiType, ResponseModel } from '../model';
+import type { HashTag, Mbti, ResponseModel } from '../model';
 
 export interface CrewListGetFetchParams {
   size?: number;
@@ -36,15 +36,18 @@ export interface CrewListResponseProps extends ResponseModel {
 
     /**
      * 해시태그 배열
-     * - 0: 멤버수 해시태그 (int)
-     * - 1 이후: 문자열 해시태그
      */
-    hashtags: [number, ...string[]];
+    hashtags: HashTag[];
+
+    /**
+     * 멤버 수
+     */
+    memberCount: number;
 
     /**
      * 크루장 정보
      */
-    crewOwner: {
+    owner: {
       /**
        * 크루장 멤버 pk
        */
@@ -58,7 +61,7 @@ export interface CrewListResponseProps extends ResponseModel {
       /**
        * 엠비티아이
        */
-      mbti: MbtiType;
+      mbti: Mbti;
     };
   }[];
 }
@@ -66,7 +69,7 @@ export interface CrewListResponseProps extends ResponseModel {
 export const crewListGetFetch = (params?: CrewListGetFetchParams) => {
   if (params) {
     return apiFetch.get<CrewListResponseProps>(
-      `/crews?size=${params.size}?page=${params.page}?crewName=${params.crewName}`,
+      `/crews?size=${params.size}&page=${params.page}&name=${params.crewName}`,
     );
   }
 

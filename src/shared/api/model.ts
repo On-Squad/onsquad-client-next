@@ -7,7 +7,7 @@ export interface ResponseModel {
   status: number;
 }
 
-export type HashTagType =
+export type HashTag =
   | '활발한'
   | '트랜디한'
   | '내향적인'
@@ -48,7 +48,7 @@ export type HashTagType =
   | '분위기있는'
   | '와인';
 
-export type MbtiType =
+export type Mbti =
   | 'ISTJ'
   | 'ISFJ'
   | 'INFJ'

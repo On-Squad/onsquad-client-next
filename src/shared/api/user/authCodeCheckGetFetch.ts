@@ -15,10 +15,5 @@ export interface AuthCodeCheckResponseProps extends ResponseModel {
 /**
  * 인증코드 확인
  */
-export const authCodeCheckGetFetch = ({
-  email,
-  authCode,
-}: AuthCodeCheckGetFetchParams) =>
-  apiFetch.get<AuthCodeCheckResponseProps>(
-    `/auth/verify/email/${email}?code=${authCode}`,
-  );
+export const authCodeCheckGetFetch = ({ email, authCode }: AuthCodeCheckGetFetchParams) =>
+  apiFetch.get<AuthCodeCheckResponseProps>(`/auth/verify/email/${email}?code=${authCode}`);

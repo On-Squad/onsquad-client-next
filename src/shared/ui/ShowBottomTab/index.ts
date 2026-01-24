@@ -1,1 +1,1 @@
-export { default as ShowBottomTab } from "./ShowBottomTab";
+export { default as ShowBottomTab } from './ShowBottomTab';

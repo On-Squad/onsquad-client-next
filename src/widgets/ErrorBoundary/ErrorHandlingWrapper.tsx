@@ -1,7 +1,9 @@
 'use client';
 
-import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import React, { ComponentType, ReactNode, Suspense } from 'react';
+
+import { QueryErrorResetBoundary } from '@tanstack/react-query';
+
 import ErrorBoundary, { FallbackProps } from './ErrorBoundary';
 
 interface PropsType {

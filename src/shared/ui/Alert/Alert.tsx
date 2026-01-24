@@ -1,17 +1,18 @@
 import { ReactNode } from 'react';
 
+import { cn } from '@/shared/lib/utils';
 import {
   AlertDialog,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
   AlertDialogOverlay,
-  AlertDialogDescription,
-} from '@/components/ui/alert-dialog';
+  AlertDialogTitle,
+} from '@/shared/ui/ui/alert-dialog';
+
 import { Button } from '../ui/button';
 import { BUTTON } from './style';
-import { cn } from '@/lib/utils';
 
 export interface AlertPropsType {
   title: ReactNode | string;
@@ -65,14 +66,12 @@ const Alert = (props: AlertPropsType) => {
     <AlertDialog open={true}>
       <AlertDialogOverlay />
       <AlertDialogContent className="p-0">
-        <AlertDialogHeader className={cn('pt-9 px-4', headerClassName)}>
-          <AlertDialogTitle className="text-center text-grayscale900 text-xl">
-            {title}
-          </AlertDialogTitle>
+        <AlertDialogHeader className={cn('px-4 pt-9', headerClassName)}>
+          <AlertDialogTitle className="text-center text-xl text-grayscale900">{title}</AlertDialogTitle>
           <AlertDialogDescription className="hidden" />
         </AlertDialogHeader>
         <div className="px-4 pb-4 text-center">{children}</div>
-        <AlertDialogFooter className="px-0 grid grid-cols-1 w-full">
+        <AlertDialogFooter className="grid w-full grid-cols-1 px-0">
           <div className="-mx-[0.075rem] -mb-[0.075rem]">
             {buttonSlot || (
               <>

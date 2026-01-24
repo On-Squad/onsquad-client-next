@@ -1,17 +1,18 @@
 'use client';
 
-import React, { useLayoutEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { cn } from '@/shared/lib/utils';
+import React, { useLayoutEffect } from 'react';
 
+import { PencilLine, Star } from 'lucide-react';
+
+import { cn } from '@/shared/lib/utils';
 import { Article } from '@/shared/ui/Article';
-import { Text } from '@/shared/ui/Text';
-import { ScrollArea } from '@/shared/ui/ui/scroll-area';
 import { Avatar } from '@/shared/ui/Avatar';
 import { Badge } from '@/shared/ui/Badge';
-import { PencilLine, Star } from 'lucide-react';
 import { PostButton } from '@/shared/ui/PostButton';
+import { Text } from '@/shared/ui/Text';
+import { ScrollArea } from '@/shared/ui/ui/scroll-area';
 
 export const AnnounceList = () => {
   const router = useRouter();
@@ -27,13 +28,13 @@ export const AnnounceList = () => {
   }, []);
 
   return (
-    <div className="container px-0 pt-14 overflow-hidden">
-      <div className="tablet:mx-0 mobile:mx-0 SE:mx-0 S2:mx-0 mx-5 mt-6">
+    <div className="container overflow-hidden px-0 pt-14">
+      <div className="mx-5 mt-6 S2:mx-0 SE:mx-0 mobile:mx-0 tablet:mx-0">
         <Article
-          className="w-full p-3 min-h-[360px]"
+          className="min-h-[360px] w-full p-3"
           slot={
             <>
-              <div className="flex justify-between items-center">
+              <div className="flex items-center justify-between">
                 <Text.lg className="font-bold">
                   <h5>공지사항</h5>
                 </Text.lg>
@@ -52,38 +53,30 @@ export const AnnounceList = () => {
                     <li
                       key={index}
                       className="cursor-pointer"
-                      onClick={() =>
-                        router.push('/crews/1/announce', { scroll: false })
-                      }
+                      onClick={() => router.push('/crews/1/announce', { scroll: false })}
                     >
                       <div
                         className={cn(
-                          'flex flex-col justify-center gap-2 border-t border-grayScale400 mt-2',
+                          'border-grayScale400 mt-2 flex flex-col justify-center gap-2 border-t',
                           index === 0 && 'border-none',
                         )}
                       >
-                        <div className="flex justify-between mt-2">
-                          <Text.base className="font-semibold">
-                            크루 규정 안내(신규 크루원 필독)
-                          </Text.base>
+                        <div className="mt-2 flex justify-between">
+                          <Text.base className="font-semibold">크루 규정 안내(신규 크루원 필독)</Text.base>
                           <Star size={16} fill="#FFCD29" stroke="#FFCD29" />
                         </div>
-                        <div className="footer flex justify-between items-center">
-                          <div className="flex gap-[3px] items-center">
-                            <div className="flex gap-0.5 items-center">
-                              <Avatar className="w-4 h-4" />
-                              <Text.xs className="pt-[0.05rem]">
-                                홍길동 크루장
-                              </Text.xs>
+                        <div className="footer flex items-center justify-between">
+                          <div className="flex items-center gap-[3px]">
+                            <div className="flex items-center gap-0.5">
+                              <Avatar className="h-4 w-4" />
+                              <Text.xs className="pt-[0.05rem]">홍길동 크루장</Text.xs>
                             </div>
                             <Badge className="px-0.5 py-0">
                               <Text.xxs>크루장</Text.xxs>
                             </Badge>
                           </div>
                           <div>
-                            <Text.xs className="text-grayscale500">
-                              2024-10-12
-                            </Text.xs>
+                            <Text.xs className="text-grayscale500">2024-10-12</Text.xs>
                           </div>
                         </div>
                       </div>

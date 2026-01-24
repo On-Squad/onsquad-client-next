@@ -1,6 +1,8 @@
 import { ReactNode } from 'react';
+
+import { cn } from '@/shared/lib/utils';
+
 import { Badge, BadgeProps } from '../ui/badge';
-import { cn } from '@/lib/utils';
 
 interface BadgePropsType extends BadgeProps {
   className?: string;
@@ -12,9 +14,7 @@ const CustomBadge = (props: BadgePropsType) => {
 
   return (
     <Badge
-      className={cn(
-        `bg-secondary rounded-md px-1.5 hover:bg-secondary active:bg-secondary font-bold ${className} `,
-      )}
+      className={cn(`rounded-md bg-secondary px-1.5 font-bold hover:bg-secondary active:bg-secondary ${className} `)}
       {...rest}
     >
       {children}

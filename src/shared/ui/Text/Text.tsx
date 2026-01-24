@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+
 import cn from 'classnames';
 
 type TextPropsType = {
@@ -7,10 +8,7 @@ type TextPropsType = {
 };
 
 const Text = () => {
-  const TextComponent = (
-    { children, className }: TextPropsType,
-    size: string,
-  ) => {
+  const TextComponent = ({ children, className }: TextPropsType, size: string) => {
     return <div className={cn(`${size} ${className}`)}>{children}</div>;
   };
 

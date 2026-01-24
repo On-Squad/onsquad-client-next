@@ -1,12 +1,14 @@
 'use client';
 
 import React from 'react';
-import { useFormContext, FormProvider } from 'react-hook-form';
-import { Input } from '../Input';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 
 import { Search } from 'lucide-react';
+import { FormProvider, useFormContext } from 'react-hook-form';
+
+import { cn } from '@/shared/lib/utils';
+import { Button } from '@/shared/ui/ui/button';
+
+import { Input } from '../Input';
 
 interface SearchbarPropsType {
   className?: string;
@@ -27,15 +29,10 @@ const Searchbar = (props: SearchbarPropsType) => {
     <FormProvider {...method}>
       <form onSubmit={submit(onSubmit)}>
         <div className="relative">
-          <Input
-            className={cn(`pr-10 ${className}`)}
-            name="search"
-            type="text"
-            placeholder="크루를 검색해보세요."
-          />
+          <Input className={cn(`pr-10 ${className}`)} name="search" type="text" placeholder="크루를 검색해보세요." />
           <div className="absolute right-1 top-1">
             <Button
-              className="px-1 py-1 mx-1 m-1 h-fit active:bg-gray-200"
+              className="m-1 mx-1 h-fit px-1 py-1 active:bg-gray-200"
               variant="ghost"
               formAction="submit"
               onClick={submit(onSubmit)}

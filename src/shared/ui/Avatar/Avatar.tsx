@@ -1,6 +1,8 @@
 import React from 'react';
+
+import { cn } from '@/shared/lib/utils';
+
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { cn } from '@/lib/utils';
 
 interface AvatarPropsType {
   imageUrl?: string;
@@ -10,10 +12,7 @@ interface AvatarPropsType {
 const CustomAvatar = ({ imageUrl, className }: AvatarPropsType) => {
   return (
     <Avatar className={cn(`${className}`)}>
-      <AvatarImage
-        src={!imageUrl ? '/icons/no_profile.svg' : imageUrl}
-        alt="프로필 이미지"
-      />
+      <AvatarImage src={!imageUrl ? '/icons/no_profile.svg' : imageUrl} alt="프로필 이미지" />
       <AvatarFallback>U</AvatarFallback>
     </Avatar>
   );

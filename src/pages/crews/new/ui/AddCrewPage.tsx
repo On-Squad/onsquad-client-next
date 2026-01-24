@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { Appbar } from '@/shared/ui/Appbar';
 import { AddForm } from '@/features/crew/create';
+
+import { Appbar } from '@/shared/ui/Appbar';
 
 export default function AddCrewPage() {
   return (

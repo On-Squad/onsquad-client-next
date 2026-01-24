@@ -1,14 +1,8 @@
 import * as yup from 'yup';
 
 export const addCrewSchema = yup.object().shape({
-  name: yup
-    .string()
-    .required('사용하실 크루 이름을 입력해주세요.')
-    .max(15, '크루 이름은 최대 15자 입니다.'),
-  introduce: yup
-    .string()
-    .required('크루의 멋진 소개를 적어주세요.')
-    .max(150, '크루소개는 최대 150자로 입력해주세요.'),
+  name: yup.string().required('사용하실 크루 이름을 입력해주세요.').max(15, '크루 이름은 최대 15자 입니다.'),
+  introduce: yup.string().required('크루의 멋진 소개를 적어주세요.').max(150, '크루소개는 최대 150자로 입력해주세요.'),
   detail: yup
     .string()
     .required('신청자가 볼 크루에 대한 정보를 알려주세요.')

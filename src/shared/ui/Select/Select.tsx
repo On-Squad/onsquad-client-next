@@ -1,17 +1,13 @@
 'use client';
 
 import * as React from 'react';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-} from '@/components/ui/select';
+
 import { SelectProps } from '@radix-ui/react-select';
-import { useFormContext, Controller } from 'react-hook-form';
-import { Label } from '@/components/ui/label';
-import { cn } from '@/lib/utils';
+import { Controller, useFormContext } from 'react-hook-form';
+
+import { cn } from '@/shared/lib/utils';
+import { Label } from '@/shared/ui/ui/label';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from '@/shared/ui/ui/select';
 
 interface CustomSelectProps extends SelectProps {
   className?: string;
@@ -25,14 +21,7 @@ interface CustomSelectProps extends SelectProps {
   }[];
 }
 
-const CustomSelect = ({
-  className,
-  ref,
-  options,
-  label,
-  id,
-  name,
-}: CustomSelectProps) => {
+const CustomSelect = ({ className, ref, options, label, id, name }: CustomSelectProps) => {
   const { control } = useFormContext();
 
   return (
@@ -40,14 +29,12 @@ const CustomSelect = ({
       name={name}
       control={control}
       render={({ field: { value, onChange } }) => {
-        const selectedItem =
-          options.find((option) => option.value === value)?.item ||
-          '선택하세요';
+        const selectedItem = options.find((option) => option.value === value)?.item || '선택하세요';
 
         return (
           <>
             {label && (
-              <Label className="flex items-center mb-2" htmlFor={id}>
+              <Label className="mb-2 flex items-center" htmlFor={id}>
                 {label}
               </Label>
             )}
@@ -58,11 +45,7 @@ const CustomSelect = ({
               <SelectContent id={id}>
                 <SelectGroup>
                   {options.map((option, i) => (
-                    <SelectItem
-                      key={i}
-                      value={option.value}
-                      aria-selected={value === option.value}
-                    >
+                    <SelectItem key={i} value={option.value} aria-selected={value === option.value}>
                       {option.item}
                     </SelectItem>
                   ))}

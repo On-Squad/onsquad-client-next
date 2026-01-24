@@ -1,9 +1,11 @@
 'use client';
 
 import { ReactNode } from 'react';
+
 import Image from 'next/image';
-import { Text } from '@/components/Text';
-import { Avatar } from '@/components/Avatar';
+
+import { Avatar } from '@/shared/ui/Avatar';
+import { Text } from '@/shared/ui/Text';
 
 export interface CrewCardPropsType {
   /**
@@ -60,22 +62,14 @@ export interface CrewCardPropsType {
     />
  */
 const CrewCard = (props: CrewCardPropsType) => {
-  const {
-    title,
-    crewImage,
-    userImage,
-    description,
-    tagSlot,
-    ownerName,
-    onClick,
-  } = props;
+  const { title, crewImage, userImage, description, tagSlot, ownerName, onClick } = props;
 
   return (
     <div
-      className="w-[20rem] tablet:w-full mobile:w-full SE:w-full S2:w-full bg-white rounded-2xl cursor-pointer hover:shadow-md transition-all duration-200"
+      className="w-[20rem] cursor-pointer rounded-2xl bg-white transition-all duration-200 hover:shadow-md S2:w-full SE:w-full mobile:w-full tablet:w-full"
       onClick={onClick}
     >
-      <div className="flex relative rounded-t-lg overflow-hidden w-[20rem] h-[15rem] tablet:w-full mobile:w-full SE:w-full S2:w-full">
+      <div className="relative flex h-[15rem] w-[20rem] overflow-hidden rounded-t-lg S2:w-full SE:w-full mobile:w-full tablet:w-full">
         <Image
           src={crewImage || '/images/mock1.png'}
           alt="크루이미지"
@@ -84,22 +78,20 @@ const CrewCard = (props: CrewCardPropsType) => {
           sizes="100vw"
           style={{ width: '100%', height: 'auto' }}
           // sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="rounded-t-lg w-full px-4"
+          className="w-full rounded-t-lg px-4"
         />
-        <Text.xl className="absolute bottom-0 left-0 w-full p-2 flex items-center text-white bg-gradient-to-t from-black via-black/30 to-transparent backdrop-blur-sm  font-bold overflow-hidden truncate">
+        <Text.xl className="bg-gradient-to-t absolute bottom-0 left-0 flex w-full items-center overflow-hidden truncate from-black via-black/30 to-transparent p-2 font-bold text-white backdrop-blur-sm">
           {title}
         </Text.xl>
       </div>
-      <div className="flex flex-col p-2 gap-2">
+      <div className="flex flex-col gap-2 p-2">
         <div className="flex items-center gap-2">
-          <Avatar className="w-5 h-5" imageUrl={userImage} />
-          <Text.sm className="text-black font-semibold">{ownerName}</Text.sm>
+          <Avatar className="h-5 w-5" imageUrl={userImage} />
+          <Text.sm className="font-semibold text-black">{ownerName}</Text.sm>
         </div>
-        <Text.sm className="overflow-hidden text-ellipsis text-black font-medium truncate">
-          {description}
-        </Text.sm>
+        <Text.sm className="overflow-hidden truncate text-ellipsis font-medium text-black">{description}</Text.sm>
       </div>
-      <div className="px-2 py-1.5 overflow-x-auto whitespace-nowrap flex no-scrollbar gap-1 rounded-b-[1.1rem]">
+      <div className="no-scrollbar flex gap-1 overflow-x-auto whitespace-nowrap rounded-b-[1.1rem] px-2 py-1.5">
         {tagSlot}
       </div>
     </div>

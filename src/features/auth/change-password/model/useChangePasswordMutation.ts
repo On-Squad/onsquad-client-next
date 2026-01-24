@@ -1,10 +1,12 @@
-import { useApiMutation } from '@/shared/lib/queries';
-import { changePasswordPatchFetch } from '@/shared/api/user/changePasswordPatchFetch';
 import { useRouter } from 'next/navigation';
-import { useToast } from '@/shared/lib/hooks/useToast';
-import { TOAST } from '@/shared/config/toast';
+
 import { CircleCheck, CircleX } from 'lucide-react';
+
+import { changePasswordPatchFetch } from '@/shared/api/user/changePasswordPatchFetch';
 import { PATH } from '@/shared/config/paths';
+import { TOAST } from '@/shared/config/toast';
+import { useToast } from '@/shared/lib/hooks/useToast';
+import { useApiMutation } from '@/shared/lib/queries';
 
 export const useChangePasswordMutation = () => {
   const router = useRouter();

@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { JoinForm } from '@/features/auth/join';
+
 import { Appbar } from '@/shared/ui/Appbar';
 
 export default function JoinPage() {

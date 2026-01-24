@@ -1,6 +1,6 @@
-import { getSession } from 'next-auth/react';
-import axios from 'axios';
 import { auth } from '@/auth';
+import axios from 'axios';
+import { getSession } from 'next-auth/react';
 
 export const apiFetch = axios.create({
   baseURL: 'http://43.203.4.6:8080/api',

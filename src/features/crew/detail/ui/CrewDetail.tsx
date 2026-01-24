@@ -1,18 +1,21 @@
 'use client';
 
-import { useState } from 'react';
-import Image from 'next/image';
-import { Text } from '@/shared/ui/Text';
-import { Avatar } from '@/shared/ui/Avatar';
-import { Badge } from '@/shared/ui/Badge';
-import { Button } from '@/shared/ui/ui/button';
-import { useToast } from '@/shared/lib/hooks/useToast';
-import { TOAST } from '@/shared/config/toast';
-import { CircleX } from 'lucide-react';
-import { cn } from '@/shared/lib/utils';
 import { useRouter } from 'next/navigation';
 
+import { useState } from 'react';
+
+import { CircleX } from 'lucide-react';
+import Image from 'next/image';
+
 import type { CrewDetailDataType } from '@/entities/crew';
+
+import { TOAST } from '@/shared/config/toast';
+import { useToast } from '@/shared/lib/hooks/useToast';
+import { cn } from '@/shared/lib/utils';
+import { Avatar } from '@/shared/ui/Avatar';
+import { Badge } from '@/shared/ui/Badge';
+import { Text } from '@/shared/ui/Text';
+import { Button } from '@/shared/ui/ui/button';
 
 interface CrewDetailProps {
   data?: CrewDetailDataType;
@@ -26,16 +29,16 @@ export const CrewDetail = ({ data }: CrewDetailProps) => {
   const { toast, hide } = useToast();
 
   return (
-    <div className="container pt-12 px-0 bg-white min-h-[90vh]">
+    <div className="container min-h-[90vh] bg-white px-0 pt-12">
       <div
-        className="w-full tablet:w-full mobile:w-full SE:w-full S2:w-full bg-white cursor-pointer hover:shadow-md transition-all duration-200"
+        className="w-full cursor-pointer bg-white transition-all duration-200 hover:shadow-md S2:w-full SE:w-full mobile:w-full tablet:w-full"
         onClick={() =>
           router.push(`/crews/${data?.id}/home?category=전체`, {
             scroll: false,
           })
         }
       >
-        <div className="relative overflow-hidden w-full h-[360px] tablet:w-full mobile:w-full SE:w-full S2:w-full">
+        <div className="relative h-[360px] w-full overflow-hidden S2:w-full SE:w-full mobile:w-full tablet:w-full">
           {data ? (
             <Image
               src={data.imageUrl || '/images/mock1.png'}
@@ -46,8 +49,8 @@ export const CrewDetail = ({ data }: CrewDetailProps) => {
             />
           ) : null}
 
-          <div className="flex-col absolute bottom-0 left-0 w-full py-2 px-5 flex text-white bg-black bg-opacity-20 backdrop-blur-sm font-bold overflow-hidden truncate gap-3">
-            <div className="flex justify-between items-center ">
+          <div className="absolute bottom-0 left-0 flex w-full flex-col gap-3 overflow-hidden truncate bg-black bg-opacity-20 px-5 py-2 font-bold text-white backdrop-blur-sm">
+            <div className="flex items-center justify-between">
               <Text.base className="font-medium">크루 스페이스</Text.base>
               <Badge className="bg-primary text-black">모집중</Badge>
             </div>
@@ -64,10 +67,8 @@ export const CrewDetail = ({ data }: CrewDetailProps) => {
                 <Text.xl className="font-bold">크루장</Text.xl>
               </h4>
               <div className="flex items-center gap-2">
-                <Avatar className="w-5 h-5" />
-                <Text.xs className="text-black font-semibold">
-                  {data?.crewOwner?.nickname}
-                </Text.xs>
+                <Avatar className="h-5 w-5" />
+                <Text.xs className="font-semibold text-black">{data?.crewOwner?.nickname}</Text.xs>
                 <Text.xs>{data?.crewOwner?.mbti ?? 'ESFP'}</Text.xs>
               </div>
             </div>
@@ -88,7 +89,7 @@ export const CrewDetail = ({ data }: CrewDetailProps) => {
           </div>
         </div>
 
-        <div className="tagArea py-6 flex items-center gap-2 flex-wrap">
+        <div className="tagArea flex flex-wrap items-center gap-2 py-6">
           {data?.hashtags.map((tag, index) => {
             if (index === 0) {
               return <Badge key={index}>멤버 수 {tag}+</Badge>;
@@ -97,11 +98,9 @@ export const CrewDetail = ({ data }: CrewDetailProps) => {
           })}
         </div>
 
-        <div className="buttonArea pt-6 pb-12 flex flex-col items-center gap-4">
+        <div className="buttonArea flex flex-col items-center gap-4 pb-12 pt-6">
           <Button
-            className={cn(
-              `w-full disabled:bg-grayscale100 disabled:text-grayscale500 disabled:cursor-not-allowed`,
-            )}
+            className={cn(`w-full disabled:cursor-not-allowed disabled:bg-grayscale100 disabled:text-grayscale500`)}
             disabled={isApply}
             onClick={() => {
               setIsApply(true);
@@ -116,11 +115,7 @@ export const CrewDetail = ({ data }: CrewDetailProps) => {
             {isApply ? '가입 신청 완료' : '가입 신청하기'}
           </Button>
           {isApply ? (
-            <Button
-              className="w-fit"
-              variant="ghost"
-              onClick={() => setIsApply(false)}
-            >
+            <Button className="w-fit" variant="ghost" onClick={() => setIsApply(false)}>
               취소
             </Button>
           ) : null}

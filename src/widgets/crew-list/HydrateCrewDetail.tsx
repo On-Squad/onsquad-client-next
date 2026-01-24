@@ -1,12 +1,12 @@
-import React, { Suspense, ReactNode } from 'react';
-import { Appbar } from '@/shared/ui/Appbar';
-import {
-  crewDetailOptions,
-  CREW_DETAIL_QUERY_KEY,
-} from '@/services/options/crews/crewDetailOptions';
-import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
-import { getQueryClient } from '@/services/get-query-client';
+import React, { ReactNode, Suspense } from 'react';
+
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
+
 import type { CrewDetailDataType } from '@/entities/crew';
+
+import { getQueryClient } from '@/shared/lib/queries/get-query-client';
+import { CREW_DETAIL_QUERY_KEY, crewDetailOptions } from '@/shared/lib/queries/options/crews/crewDetailOptions';
+import { Appbar } from '@/shared/ui/Appbar';
 
 interface HydrateCrewDetailProps {
   id: string;
@@ -14,10 +14,7 @@ interface HydrateCrewDetailProps {
   children: (data?: CrewDetailDataType) => ReactNode;
 }
 
-const HydrateCrewDetail = async ({
-  id,
-  children,
-}: HydrateCrewDetailProps) => {
+const HydrateCrewDetail = async ({ id, children }: HydrateCrewDetailProps) => {
   const crewId = parseInt(id, 10);
 
   const queryClient = getQueryClient();
@@ -30,18 +27,13 @@ const HydrateCrewDetail = async ({
     throw error;
   }
 
-  const crewDetailData = queryClient.getQueryData<CrewDetailDataType>([
-    CREW_DETAIL_QUERY_KEY,
-    crewId,
-  ]);
+  const crewDetailData = queryClient.getQueryData<CrewDetailDataType>([CREW_DETAIL_QUERY_KEY, crewId]);
 
   return (
     <>
       <Appbar isMenuHeader={false} title={crewDetailData?.name} />
 
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        {children(crewDetailData)}
-      </HydrationBoundary>
+      <HydrationBoundary state={dehydrate(queryClient)}>{children(crewDetailData)}</HydrationBoundary>
     </>
   );
 };

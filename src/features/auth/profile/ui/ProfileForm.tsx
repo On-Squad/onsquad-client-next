@@ -1,44 +1,34 @@
 'use client';
 
-import {
-  useState,
-  useRef,
-  ChangeEvent,
-  useLayoutEffect,
-  useEffect,
-} from 'react';
-
-import { Button } from '@/components/ui/button';
-
-import { useForm, FormProvider } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 
+import { ChangeEvent, useEffect, useLayoutEffect, useRef, useState } from 'react';
+
 import { yupResolver } from '@hookform/resolvers/yup';
-
-import { Input } from '@/components/Input';
-import { Textarea } from '@/components/Textarea';
-import { InputButton } from '@/components/InputButton';
-import { cn } from '@/lib/utils';
-import { useToast } from '@/hooks/useToast';
-
-import { TOAST } from '@/constants/toast';
-import { CircleX, Loader2, CircleCheck, Camera } from 'lucide-react';
-import { Select } from '@/components/Select';
-
-import { MBTI_SELECT_OPTIONS } from '@/constants';
-
-import { useModalStackStore } from '@/store/useModalStackStore';
-import Image from 'next/image';
-import { useApiMutation } from '@/services/useApiMutation';
+import { Camera, CircleCheck, CircleX, Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { Alert } from '@/components/Alert';
-import { BUTTON } from '@/components/Alert/style';
-import { profileSchema } from './validator';
-import { nicknameCheckGetFetch } from '@/api/user/nicknameCheckGetFetch';
-import AddressSearch from '../join/AddressSearch';
-import { Spinner } from '@/components/Spinner';
+import Image from 'next/image';
+import { overlay } from 'overlay-kit';
+import { FormProvider, useForm } from 'react-hook-form';
 
-//TODO: 이미지 업데이트, aws s3 sdk, 정보 업데이트 분리
+import AddressSearch from '@/features/auth/join/ui/AddressSearch';
+
+import { nicknameCheckGetFetch } from '@/shared/api/user/nicknameCheckGetFetch';
+import { MBTI_SELECT_OPTIONS } from '@/shared/config';
+import { TOAST } from '@/shared/config/toast';
+import { useToast } from '@/shared/lib/hooks/useToast';
+import { useApiMutation } from '@/shared/lib/queries';
+import { cn } from '@/shared/lib/utils';
+import { Alert } from '@/shared/ui/Alert';
+import { BUTTON } from '@/shared/ui/Alert/style';
+import { Input } from '@/shared/ui/Input';
+import { InputButton } from '@/shared/ui/InputButton';
+import { Select } from '@/shared/ui/Select';
+import { Spinner } from '@/shared/ui/Spinner';
+import { Textarea } from '@/shared/ui/Textarea';
+import { Button } from '@/shared/ui/ui/button';
+
+import { profileSchema } from '../model/profileSchema';
 
 /**
  * 프로필 페이지
@@ -46,12 +36,10 @@ import { Spinner } from '@/components/Spinner';
 const ProfileForm = () => {
   const { toast, hide } = useToast();
   const router = useRouter();
-  const setModal = useModalStackStore((state) => state.pushModal);
-  const onClose = useModalStackStore((state) => state.onCloseAll);
 
   const session = useSession();
 
-  const [imageUrl, setImageUrl] = useState<string>('');
+  const [imageUrl, setImageUrl] = useState<string>('/icons/default_profile.svg');
   const [displaySpinner, setDisplaySpinner] = useState<boolean>(false);
   const [isDuplicate, setIsDuplicate] = useState<boolean>(true);
 
@@ -105,6 +93,8 @@ const ProfileForm = () => {
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const { files = [] } = e.target;
+
+    console.log(files);
 
     if (files && files.length > 0) {
       const uploadFile = files[0];
@@ -161,10 +151,7 @@ const ProfileForm = () => {
         headerClassName="pt-6"
         buttonSlot={
           <div className="w-full">
-            <Button
-              className={cn(BUTTON.ACTION, 'rounded-bl-md w-full')}
-              onClick={() => router.back()}
-            >
+            <Button className={cn(BUTTON.ACTION, 'w-full rounded-bl-md')} onClick={() => router.back()}>
               확인
             </Button>
           </div>
@@ -177,7 +164,7 @@ const ProfileForm = () => {
 
   if (session.status === 'loading') {
     return (
-      <div className="container pt-6 bg-grayscale100 flex items-center justify-center h-screen">
+      <div className="container flex h-screen items-center justify-center bg-grayscale100 pt-6">
         <Spinner />
       </div>
     );
@@ -185,27 +172,25 @@ const ProfileForm = () => {
 
   return (
     <FormProvider {...method}>
-      <div className="container pt-20 bg-grayscale100">
+      <div className="container bg-grayscale100 pt-20">
         <div className="pt-12">
-          <div className="flex items-center gap-2 w-full justify-center mb-12">
-            <div className="relative border w-24 h-24 border-[#f8f8f8] rounded-3xl flex items-center justify-center">
+          <div className="mb-12 flex w-full items-center justify-center gap-2">
+            <div className="relative flex h-24 w-24 items-center justify-center rounded-3xl border border-[#f8f8f8]">
               <div
-                className={cn(
-                  `relative w-full h-full object-cover cursor-pointer rounded-3xl overflow-hidden`,
-                )}
+                className={cn(`relative h-full w-full cursor-pointer overflow-hidden rounded-3xl object-cover`)}
                 onClick={() => {
                   fileRef.current?.click();
                 }}
               >
                 <Image
-                  src={profileImage}
+                  src={imageUrl}
                   alt="profile"
-                  className="w-full h-full object-cover rounded-full"
+                  className="h-full w-full rounded-full object-cover"
                   fill
                   sizes="100%"
                   priority
                 />
-                <div className="flex items-center gap-2 absolute bottom-0 right-0 p-1 rounded-full bg-white border border-grayscale300">
+                <div className="absolute bottom-0 right-0 flex items-center gap-2 rounded-full border border-grayscale300 bg-white p-1">
                   <Camera size={12} stroke="#909090" />
                 </div>
               </div>
@@ -241,11 +226,7 @@ const ProfileForm = () => {
           </div>
 
           <div className="mt-6">
-            <Textarea
-              name="introduce"
-              label="나의 소개"
-              placeholder="나의 소개글을 작성해주세요."
-            />
+            <Textarea name="introduce" label="나의 소개" placeholder="나의 소개글을 작성해주세요." />
           </div>
 
           <div className="mt-6">
@@ -262,7 +243,7 @@ const ProfileForm = () => {
             />
           </div>
 
-          <div className="flex flex-col items-center w-full gap-2 mt-6">
+          <div className="mt-6 flex w-full flex-col items-center gap-2">
             <AddressSearch
               name="address"
               onAddressChange={(addr) => {
@@ -279,14 +260,10 @@ const ProfileForm = () => {
           </div>
         </div>
 
-        <div className="buttonArea mt-36 mb-12">
-          <Button
-            className="w-full"
-            onClick={handleSubmit}
-            disabled={displaySpinner}
-          >
+        <div className="buttonArea mb-12 mt-36">
+          <Button className="w-full" onClick={handleSubmit} disabled={displaySpinner}>
             {displaySpinner ? (
-              <div className="flex items-center gap-1 justify-center">
+              <div className="flex items-center justify-center gap-1">
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 프로필을 수정하고 있어요
               </div>

@@ -1,7 +1,8 @@
 import { CredentialsSignin, type NextAuthConfig, type User } from 'next-auth';
-import { userLoginPostFetch } from '@/api/user/userLoginPostFetch';
-import { userInfoGetFetch } from '@/api/user/userInfoGetFetch';
 import Credentials from 'next-auth/providers/credentials';
+
+import { userInfoGetFetch } from '@/shared/api/user/userInfoGetFetch';
+import { userLoginPostFetch } from '@/shared/api/user/userLoginPostFetch';
 
 class InvalidLoginError extends CredentialsSignin {
   code: string;
@@ -34,12 +35,14 @@ export default {
             password: credentials?.password as string,
           });
 
+          const { accessToken, refreshToken } = loginResponse.data.data;
+
           if (loginResponse.data.error) {
             throw new InvalidLoginError(loginResponse.data.error.message);
           }
 
           const userInfoResponse = await userInfoGetFetch({
-            accessToken: loginResponse.data.accessToken.value,
+            accessToken,
           });
 
           if (userInfoResponse.data.error) {
@@ -48,8 +51,8 @@ export default {
 
           return {
             ...(userInfoResponse.data.data as unknown as User),
-            accessToken: loginResponse.data.accessToken.value,
-            refreshToken: loginResponse.data.refreshToken.value,
+            accessToken,
+            refreshToken,
           };
         } catch (error: unknown) {
           if (error instanceof InvalidLoginError) {

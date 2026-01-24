@@ -1,8 +1,10 @@
 'use client';
 
 import React, { useEffect } from 'react';
+
 import { HashLoader } from 'react-spinners';
-import { cn } from '@/lib/utils';
+
+import { cn } from '@/shared/lib/utils';
 
 export interface SpinnerPropsType {
   /**
@@ -27,7 +29,7 @@ const Spinner = (props: SpinnerPropsType) => {
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 z-[9999] bg-black bg-opacity-40 w-screen h-screen flex flex-col justify-center items-center">
+    <div className="fixed left-0 top-0 z-[9999] flex h-screen w-screen flex-col items-center justify-center bg-black bg-opacity-40">
       <HashLoader size={40} color="#F87315" />
 
       <div className="flex items-center">
@@ -35,7 +37,7 @@ const Spinner = (props: SpinnerPropsType) => {
           <span
             key={i}
             className={cn(
-              `font-semibold text-primary text-lg inline-block animate-bounceInOrder mt-4 ${
+              `mt-4 inline-block animate-bounceInOrder text-lg font-semibold text-primary ${
                 i === splitCount && 'ml-2'
               }`,
             )}

@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { ChangePasswordForm } from '@/features/auth/change-password';
+
 import { Appbar } from '@/shared/ui/Appbar';
 
 export default function ChangePasswordPage() {

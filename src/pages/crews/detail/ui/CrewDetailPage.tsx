@@ -1,4 +1,5 @@
 import { HydrateCrewDetail } from '@/widgets/crew-list';
+
 import { CrewDetail } from '@/features/crew/detail';
 
 interface CrewDetailPageProps {
@@ -6,10 +7,7 @@ interface CrewDetailPageProps {
   searchParams?: { [key: string]: string | string[] | undefined };
 }
 
-export default async function CrewDetailPage({
-  params,
-  searchParams,
-}: CrewDetailPageProps) {
+export default async function CrewDetailPage({ params, searchParams }: CrewDetailPageProps) {
   const { id } = await params;
 
   return (

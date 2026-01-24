@@ -1,12 +1,14 @@
 import React from 'react';
+
 import { LoginForm } from '@/features/auth/login';
+
 import { Appbar } from '@/shared/ui/Appbar';
 
 export default async function LoginPage() {
   return (
     <>
       <Appbar isMenuHeader={false} title="로그인" />
-      <div className="container pt-20 bg-white">
+      <div className="container bg-white pt-20">
         <LoginForm />
       </div>
     </>

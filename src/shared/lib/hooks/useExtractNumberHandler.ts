@@ -1,4 +1,5 @@
 import { ChangeEventHandler } from 'react';
+
 import { numberExtract } from '@/shared/lib/utils/numberExtract';
 
 export const useExtractNumberHandler =

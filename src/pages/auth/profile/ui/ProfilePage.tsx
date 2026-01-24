@@ -1,7 +1,10 @@
 import React from 'react';
-import { ProfileForm } from '@/features/auth/profile';
-import { Appbar } from '@/shared/ui/Appbar';
+
 import { auth } from '@/auth';
+
+import { ProfileForm } from '@/features/auth/profile';
+
+import { Appbar } from '@/shared/ui/Appbar';
 
 export default async function ProfilePage() {
   const session = await auth();

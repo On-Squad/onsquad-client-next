@@ -1,8 +1,8 @@
 'use client';
 
-import { forwardRef, ReactNode } from 'react';
+import { ReactNode, forwardRef } from 'react';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/shared/lib/utils';
 
 export interface CardPropsType {
   title: string | ReactNode;
@@ -18,11 +18,7 @@ const Card = forwardRef<HTMLDivElement, CardPropsType>((props, ref) => {
   return (
     <div
       ref={ref}
-      className={cn(
-        'w-full p-2 rounded-md bg-white min-h-32',
-        className,
-        onClick && 'cursor-pointer',
-      )}
+      className={cn('min-h-32 w-full rounded-md bg-white p-2', className, onClick && 'cursor-pointer')}
       onClick={onClick}
     >
       <div>{title}</div>

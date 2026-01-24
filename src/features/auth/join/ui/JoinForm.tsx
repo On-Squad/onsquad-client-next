@@ -1,22 +1,26 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useForm, FormProvider } from 'react-hook-form';
+
 import { yupResolver } from '@hookform/resolvers/yup';
-import { joinSchema } from './validator';
-import { Input } from '@/components/Input';
-import { Button } from '@/components/ui/button';
-import { InputButton } from '@/components/InputButton';
+import { CircleCheck, CircleX, Loader2 } from 'lucide-react';
+import { FormProvider, useForm } from 'react-hook-form';
+
+import { authCodeCheckGetFetch } from '@/shared/api/user/authCodeCheckGetFetch';
+import { nicknameCheckGetFetch } from '@/shared/api/user/nicknameCheckGetFetch';
+import { sendEmailAuthCodePostFetch } from '@/shared/api/user/sendEmailAuthCodePostFetch';
+import { userEmailCheckGetFetch } from '@/shared/api/user/userEmailCheckGetFetch';
+import { userJoinPostFetch } from '@/shared/api/user/userJoinPostFetch';
+import { TOAST } from '@/shared/config/toast';
+import { useToast } from '@/shared/lib/hooks/useToast';
+import { useApiMutation } from '@/shared/lib/queries/useApiMutation';
+import { Input } from '@/shared/ui/Input';
+import { InputButton } from '@/shared/ui/InputButton';
+import { Button } from '@/shared/ui/ui/button';
+
 import AddressSearch from './AddressSearch';
-import { userEmailCheckGetFetch } from '@/api/user/userEmailCheckGetFetch';
-import { useApiMutation } from '@/services/useApiMutation';
-import { useToast } from '@/hooks/useToast';
-import { TOAST } from '@/constants/toast';
-import { CircleX, CircleCheck, Loader2 } from 'lucide-react';
-import { sendEmailAuthCodePostFetch } from '@/api/user/sendEmailAuthCodePostFetch';
-import { authCodeCheckGetFetch } from '@/api/user/authCodeCheckGetFetch';
-import { nicknameCheckGetFetch } from '@/api/user/nicknameCheckGetFetch';
-import { userJoinPostFetch } from '@/api/user/userJoinPostFetch';
+import { joinSchema } from './validator';
+
 const JoinForm = () => {
   const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
   const [isEmailAuth, setIsEmailAuth] = useState<boolean>(false);
@@ -25,28 +29,27 @@ const JoinForm = () => {
 
   const { toast } = useToast();
 
-  const { mutateAsync: userJoin, isPending: isUserJoinPending } =
-    useApiMutation({
-      mutationKey: ['@user-join'],
-      fetcher: userJoinPostFetch,
-      options: {
-        onSuccess: (data) => {
-          if (data.status === 201) {
-            toast({
-              title: '회원가입에 성공했어요.',
-              className: TOAST.success,
-              icon: <CircleCheck />,
-            });
-          } else {
-            toast({
-              title: '회원가입에 실패했어요.',
-              className: TOAST.error,
-              icon: <CircleX />,
-            });
-          }
-        },
+  const { mutateAsync: userJoin, isPending: isUserJoinPending } = useApiMutation({
+    mutationKey: ['@user-join'],
+    fetcher: userJoinPostFetch,
+    options: {
+      onSuccess: (data) => {
+        if (data.status === 201) {
+          toast({
+            title: '회원가입에 성공했어요.',
+            className: TOAST.success,
+            icon: <CircleCheck />,
+          });
+        } else {
+          toast({
+            title: '회원가입에 실패했어요.',
+            className: TOAST.error,
+            icon: <CircleX />,
+          });
+        }
       },
-    });
+    },
+  });
 
   const { mutateAsync: nicknameCheck } = useApiMutation({
     mutationKey: ['@nickname-check'],
@@ -200,11 +203,8 @@ const JoinForm = () => {
 
   return (
     <FormProvider {...method}>
-      <form
-        className="flex flex-col gap-6 items-center mt-4 pb-8"
-        onSubmit={handleSubmit}
-      >
-        <div className="flex flex-col items-center w-full gap-2">
+      <form className="mt-4 flex flex-col items-center gap-6 pb-8" onSubmit={handleSubmit}>
+        <div className="flex w-full flex-col items-center gap-2">
           <Input
             name="email"
             type="text"
@@ -223,10 +223,7 @@ const JoinForm = () => {
                     }}
                   />
                 ) : !isEmailAuth || !isEmailAuthSuccess ? (
-                  <InputButton
-                    buttonText={isEmailAuth ? '재전송하기' : '이메일 인증'}
-                    onClick={handleAuthCodeSend}
-                  />
+                  <InputButton buttonText={isEmailAuth ? '재전송하기' : '이메일 인증'} onClick={handleAuthCodeSend} />
                 ) : null}
               </>
             }
@@ -255,12 +252,7 @@ const JoinForm = () => {
           ) : null}
         </div>
 
-        <Input
-          name="password"
-          type="password"
-          label="비밀번호"
-          placeholder="영문, 숫자, 특수문자 1자를 포함"
-        />
+        <Input name="password" type="password" label="비밀번호" placeholder="영문, 숫자, 특수문자 1자를 포함" />
 
         <Input
           name="passwordConfirm"
@@ -287,7 +279,7 @@ const JoinForm = () => {
           }
         />
 
-        <div className="flex flex-col items-center w-full gap-2">
+        <div className="flex w-full flex-col items-center gap-2">
           <AddressSearch
             name="address"
             onAddressChange={(addr) => {
@@ -303,13 +295,9 @@ const JoinForm = () => {
           <Input name="addressDetail" type="text" />
         </div>
 
-        <Button
-          className="w-full"
-          formAction="submit"
-          disabled={isUserJoinPending}
-        >
+        <Button className="w-full" formAction="submit" disabled={isUserJoinPending}>
           {isUserJoinPending ? (
-            <div className="flex items-center gap-1 justify-center">
+            <div className="flex items-center justify-center gap-1">
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               회원가입 중이에요 ...
             </div>

@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { Appbar } from '@/shared/ui/Appbar';
 import { AnnounceList } from '@/features/crew/announce';
+
+import { Appbar } from '@/shared/ui/Appbar';
 
 export default function AnnouncePage() {
   return (

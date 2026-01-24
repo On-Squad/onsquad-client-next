@@ -1,12 +1,14 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 import React, { FormEventHandler } from 'react';
 
-import { useRouter } from 'next/navigation';
-import { useForm, FormProvider } from 'react-hook-form';
-import { Searchbar } from '@/components/Searchbar';
-import { searchSchema } from '@/components/Searchbar/validator';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { FormProvider, useForm } from 'react-hook-form';
+
+import { Searchbar } from '@/shared/ui/Searchbar';
+import { searchSchema } from '@/shared/ui/Searchbar/validator';
 
 const SearchContainer = () => {
   const router = useRouter();

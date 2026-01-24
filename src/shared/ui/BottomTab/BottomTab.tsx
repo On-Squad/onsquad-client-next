@@ -1,18 +1,21 @@
 'use client';
 
-import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { useSession } from 'next-auth/react';
-import { useModalStackStore } from '@/store/useModalStackStore';
-import { Alert } from '../Alert';
 
-import { cn } from '@/lib/utils';
-import { TAB_MENUS } from '@/constants/tabs';
-import { Button } from '../ui/button';
+import React from 'react';
+
+import { useModalStackStore } from '@/store/useModalStackStore';
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
+import Link from 'next/link';
+
+import { PATH } from '@/shared/config/paths';
+import { TAB_MENUS } from '@/shared/config/tabs';
+import { cn } from '@/shared/lib/utils';
+
+import { Alert } from '../Alert';
 import { BUTTON } from '../Alert/style';
-import { PATH } from '@/constants/paths';
+import { Button } from '../ui/button';
 
 const BottomTab = () => {
   const pathname = usePathname();
@@ -22,7 +25,7 @@ const BottomTab = () => {
   const onClose = useModalStackStore((state) => state.popModal);
 
   return (
-    <div className="min-w-[20rem] max-w-[45rem] mx-auto flex fixed bottom-0 left-0 right-0 bg-white shadow-md z-10">
+    <div className="fixed bottom-0 left-0 right-0 z-10 mx-auto flex min-w-[20rem] max-w-[45rem] bg-white shadow-md">
       {TAB_MENUS.map((item) => {
         const { location, ...rest } = item;
 
@@ -33,8 +36,8 @@ const BottomTab = () => {
             <div
               key={item.location}
               className={cn(
-                `cursor-pointer relative flex-grow text-center py-3 no-underline text-black w-[33%] flex justify-center items-center flex-col gap-1 ${
-                  isActive && 'text-primary bg-primary rounded-md'
+                `relative flex w-[33%] flex-grow cursor-pointer flex-col items-center justify-center gap-1 py-3 text-center text-black no-underline ${
+                  isActive && 'rounded-md bg-primary text-primary'
                 }`,
               )}
               onClick={() =>
@@ -61,15 +64,11 @@ const BottomTab = () => {
                         }
                       >
                         <div className="flex flex-col gap-2">
-                          <span className="text-grayscale700 text-lg font-semibold">
-                            로그인 후 다시 시도해주세요.
-                          </span>
-                          <div className="flex items-center gap-2 justify-center text-sm">
-                            <span className="text-grayscale700">
-                              아직 회원이 아니신가요?
-                            </span>
+                          <span className="text-lg font-semibold text-grayscale700">로그인 후 다시 시도해주세요.</span>
+                          <div className="flex items-center justify-center gap-2 text-sm">
+                            <span className="text-grayscale700">아직 회원이 아니신가요?</span>
                             <span
-                              className="cursor-pointer underline text-blue400"
+                              className="cursor-pointer text-blue400 underline"
                               onClick={() => {
                                 onClose();
 
@@ -94,13 +93,7 @@ const BottomTab = () => {
                 style={{ width: 'auto', height: 'auto' }}
               />
 
-              <span
-                className={cn(
-                  `text-[0.78rem] ${
-                    isActive ? 'text-primary bg-primary' : 'text-gray-400'
-                  }`,
-                )}
-              >
+              <span className={cn(`text-[0.78rem] ${isActive ? 'bg-primary text-primary' : 'text-gray-400'}`)}>
                 {rest.menu}
               </span>
             </div>
@@ -112,8 +105,8 @@ const BottomTab = () => {
               href={item.location}
               scroll={false}
               className={cn(
-                `cursor-pointer relative flex-grow text-center py-3 no-underline text-black w-[33%] flex justify-center items-center flex-col gap-1 ${
-                  isActive && 'text-primary rounded-md'
+                `relative flex w-[33%] flex-grow cursor-pointer flex-col items-center justify-center gap-1 py-3 text-center text-black no-underline ${
+                  isActive && 'rounded-md text-primary'
                 }`,
               )}
             >
@@ -126,15 +119,7 @@ const BottomTab = () => {
                 style={{ width: 'auto', height: 'auto' }}
               />
 
-              <span
-                className={cn(
-                  `text-[0.78rem] ${
-                    isActive ? 'text-primary' : 'text-gray-400'
-                  }`,
-                )}
-              >
-                {rest.menu}
-              </span>
+              <span className={cn(`text-[0.78rem] ${isActive ? 'text-primary' : 'text-gray-400'}`)}>{rest.menu}</span>
             </Link>
           );
         }

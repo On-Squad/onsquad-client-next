@@ -1,5 +1,5 @@
 import { apiFetch } from '../common';
-import { ResponseModel, MbtiType, HashTagType } from '../model';
+import type { HashTag, Mbti, ResponseModel } from '../model';
 
 export interface CrewHomeInfoGetFetchParams {
   /**
@@ -25,6 +25,13 @@ export interface CrewHomeInfoGetFetchParams {
 
 export interface CrewHomeInfoResponseProps extends ResponseModel {
   data: {
+    /**
+     * 크루 관리 권한 여부
+     * - true: 관리자
+     * - false: 일반 유저
+     */
+    canManage: boolean;
+
     /**
      * 크루 정보
      */
@@ -62,12 +69,12 @@ export interface CrewHomeInfoResponseProps extends ResponseModel {
       /**
        * 해시태그
        */
-      hashtags: [number, ...HashTagType[]];
+      hashtags: [number, ...HashTag[]];
 
       /**
        * 크루 주인
        */
-      crewOwner: {
+      owner: {
         /**
          * 크루주인 pk
          */
@@ -81,7 +88,7 @@ export interface CrewHomeInfoResponseProps extends ResponseModel {
         /**
          * mbti
          */
-        mbti: MbtiType;
+        mbti: Mbti;
       };
     };
 
@@ -153,7 +160,7 @@ export interface CrewHomeInfoResponseProps extends ResponseModel {
       /**
        * mbti
        */
-      mbti: MbtiType;
+      mbti: Mbti;
 
       /**
        * 크루 가입 일자
@@ -216,7 +223,7 @@ export interface CrewHomeInfoResponseProps extends ResponseModel {
       /**
        * 스쿼드 주인 정보
        */
-      squadOwner: {
+      leader: {
         /**
          * 스쿼드 주인 pk
          */
@@ -230,7 +237,7 @@ export interface CrewHomeInfoResponseProps extends ResponseModel {
         /**
          * 스쿼드 주인 엠비티아이
          */
-        mbti: MbtiType;
+        mbti: Mbti;
       };
     }[];
   };
@@ -240,12 +247,5 @@ export interface CrewHomeInfoResponseProps extends ResponseModel {
  * 크루 홈페이지 정보
  * - /crews/[slug]/home
  */
-export const crewHomeInfoGetFetch = ({
-  crewId,
-  page,
-  size,
-  category,
-}: CrewHomeInfoGetFetchParams) =>
-  apiFetch.get<CrewHomeInfoResponseProps>(
-    `/crews/${crewId}/main?page=${page}&size=${size}&category=${category}`,
-  );
+export const crewHomeInfoGetFetch = ({ crewId, page, size, category }: CrewHomeInfoGetFetchParams) =>
+  apiFetch.get<CrewHomeInfoResponseProps>(`/crews/${crewId}/main?page=${page}&size=${size}&category=${category}`);

@@ -4,11 +4,7 @@ const nextConfig = {
   reactStrictMode: false,
 
   images: {
-    domains: [
-      'onsquad-bucket.s3.ap-northeast-2.amazonaws.com',
-      't1.daumcdn.net',
-      'avatars.githubusercontent.com',
-    ],
+    domains: ['d3jao8gvkosd1k.cloudfront.net', 'img1.kakaocdn.net', 't1.daumcdn.net', 'avatars.githubusercontent.com'],
   },
 };
 

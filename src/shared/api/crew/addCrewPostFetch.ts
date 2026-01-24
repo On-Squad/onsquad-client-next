@@ -1,5 +1,5 @@
 import { apiFetch } from '../common';
-import { ResponseModel } from '../model';
+import type { ResponseModel } from '../model';
 
 export interface AddCrewPostFetchParams {
   name: string;
@@ -10,7 +10,9 @@ export interface AddCrewPostFetchParams {
   file: File;
 }
 
-export interface AddCrewResponseProps extends ResponseModel {}
+export interface AddCrewResponseProps extends ResponseModel {
+  data: '';
+}
 
 export const addCrewPostFetch = (params: AddCrewPostFetchParams) => {
   const { file, ...rest } = params;
@@ -19,7 +21,7 @@ export const addCrewPostFetch = (params: AddCrewPostFetchParams) => {
 
   formData.append('file', file);
   formData.append(
-    'crewCreateRequest',
+    'request',
     new Blob(
       [
         JSON.stringify({

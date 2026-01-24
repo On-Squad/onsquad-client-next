@@ -1,5 +1,5 @@
 import { apiFetch } from '../common';
-import { ResponseModel, MbtiType, HashTagType } from '../model';
+import type { HashTag, Mbti, ResponseModel } from '../model';
 
 export interface CrewDetailGetFetchParams {
   /**
@@ -11,57 +11,64 @@ export interface CrewDetailGetFetchParams {
 export interface CrewDetailResponseProps extends ResponseModel {
   data: {
     /**
-     * 크루 pk
+     * 크루 참여 여부
      */
-    id: number;
+    alreadyParticipant: boolean;
 
-    /**
-     * 크루 이름
-     */
-    name: string;
-
-    /**
-     * 크루 소개
-     */
-    introduce: string;
-
-    /**
-     * 크루 상세 정보
-     */
-    detail: string;
-
-    /**
-     * 크루 대표 이미지
-     * - 없을 경우 서버 default 이미지
-     */
-    imageUrl: string;
-
-    /**
-     * 카카오 오픈챗 링크
-     */
-    kakaoLink: string;
-
-    /**
-     * 해시태그
-     * - 첫번 째 인덱스는 멤버 수 int
-     */
-    hashtags: [number, ...HashTagType[]];
-
-    /**
-     * 크루 주인 이름
-     */
-    crewOwner: {
+    crew: {
       /**
-       * 크루 주인 pk
+       * 크루 pk
        */
       id: number;
 
       /**
-       * 주인 닉네임
+       * 크루 이름
        */
-      nickname: string;
+      name: string;
 
-      mbti: MbtiType;
+      /**
+       * 크루 소개
+       */
+      introduce: string;
+
+      /**
+       * 크루 상세 정보
+       */
+      detail: string;
+
+      /**
+       * 크루 대표 이미지
+       * - 없을 경우 서버 default 이미지
+       */
+      imageUrl: string;
+
+      /**
+       * 카카오 오픈챗 링크
+       */
+      kakaoLink: string;
+
+      /**
+       * 해시태그
+       * - 첫번 째 인덱스는 멤버 수 int
+       */
+      hashtags: [number, ...HashTag[]];
+
+      /**
+       * 크루 주인 이름
+       */
+      crewOwner: {
+        /**
+         * 크루 주인 pk
+         */
+        id: number;
+
+        /**
+         * 주인 닉네임
+         */
+        nickname: string;
+
+        mbti: Mbti;
+      };
     };
   };
 }

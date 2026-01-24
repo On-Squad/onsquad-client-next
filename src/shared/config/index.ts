@@ -1,7 +1,8 @@
-import { PATH } from './paths';
-import { type HashTagType } from '@/shared/api/model';
+import { type HashTag } from '@/shared/api/model';
 
-export type MBTIType =
+import { PATH } from './paths';
+
+export type Mbti =
   | 'ISTJ'
   | 'ISFJ'
   | 'INFJ'
@@ -72,7 +73,7 @@ export const HASH_TAG = [
   '카페러버',
   '분위기있는',
   '와인',
-] satisfies HashTagType[];
+] satisfies HashTag[];
 
 export const ACCORDION_HASH_TAG_LIST = [
   {
@@ -95,7 +96,7 @@ export const MBTI = [
   'ESFP',
   'ENFP',
   'ENTP',
-] satisfies MBTIType[];
+] satisfies Mbti[];
 
 export const MBTI_SELECT_OPTIONS = MBTI.map((mbti) => ({
   value: mbti,

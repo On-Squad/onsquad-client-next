@@ -1,18 +1,15 @@
 'use client';
 
 import { useRef } from 'react';
-import {
-  Controller,
-  useFormContext,
-  Path,
-  FieldValues,
-  FormProvider,
-} from 'react-hook-form';
 
-import { Input } from '@/components/Input';
-import { JoinSchemaType } from './validator';
-import { InputButton } from '@/components/InputButton';
 import Image from 'next/image';
+import { Controller, FieldValues, FormProvider, Path, useFormContext } from 'react-hook-form';
+
+import { Input } from '@/shared/ui/Input';
+import { InputButton } from '@/shared/ui/InputButton';
+
+import { JoinSchemaType } from './validator';
+
 interface AddressSearchProps<T extends FieldValues> {
   name: Path<T>;
   onAddressChange: (address: string) => void;
@@ -34,10 +31,7 @@ const AddressSearch = <T extends FieldValues>(props: AddressSearchProps<T>) => {
   };
 
   const execDaumPostcode = () => {
-    const currentScroll = Math.max(
-      document.body.scrollTop,
-      document.documentElement.scrollTop,
-    );
+    const currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
 
     new window.daum.Postcode({
       oncomplete: (data: any) => {
@@ -87,32 +81,17 @@ const AddressSearch = <T extends FieldValues>(props: AddressSearchProps<T>) => {
                 type="text"
                 readOnly
                 placeholder="주소를 검색해주세요."
-                button={
-                  <InputButton
-                    buttonText="주소검색"
-                    color="#000"
-                    onClick={() => searchRef.current?.click()}
-                  />
-                }
+                button={<InputButton buttonText="주소검색" color="#000" onClick={() => searchRef.current?.click()} />}
                 value={value as string}
               />
             )}
           />
         </FormProvider>
 
-        <input
-          ref={searchRef}
-          className="hidden"
-          type="button"
-          onClick={execDaumPostcode}
-          value="주소검색"
-        />
+        <input ref={searchRef} className="hidden" type="button" onClick={execDaumPostcode} value="주소검색" />
       </div>
 
-      <div
-        className="w-full h-auto relative border border-black my-1 hidden"
-        ref={wrapRef}
-      >
+      <div className="relative my-1 hidden h-auto w-full border border-black" ref={wrapRef}>
         <Image
           src="https://t1.daumcdn.net/postcode/resource/images/close.png"
           className="cursur-pointer absolute right-0 top-[-1px] z-10"

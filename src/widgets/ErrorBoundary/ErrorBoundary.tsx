@@ -1,6 +1,6 @@
 'use client';
 
-import { Component, ReactNode, ErrorInfo, ComponentType } from 'react';
+import { Component, ComponentType, ErrorInfo, ReactNode } from 'react';
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -57,12 +57,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     const { FallbackComponent, children } = props;
 
     if (hasError && error) {
-      return (
-        <FallbackComponent
-          error={error}
-          resetErrorBoundary={this.resetErrorBoundary}
-        />
-      );
+      return <FallbackComponent error={error} resetErrorBoundary={this.resetErrorBoundary} />;
     }
 
     return children;

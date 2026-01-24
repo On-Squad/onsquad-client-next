@@ -8,4 +8,5 @@ export const profileSchema = yup.object().shape({
   mbti: yup.string(),
   address: yup.string().required('주소를 입력해주세요.'),
   addressDetail: yup.string(),
+  profileImageFile: yup.mixed(),
 });

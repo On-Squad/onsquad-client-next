@@ -1,14 +1,14 @@
 import React from 'react';
-import { Appbar } from '@/shared/ui/Appbar';
+
 import { SquadDetail } from '@/features/squad/detail';
+
+import { Appbar } from '@/shared/ui/Appbar';
 
 interface SquadDetailPageProps {
   params: { id: string };
 }
 
-export default async function SquadDetailPage({
-  params,
-}: SquadDetailPageProps) {
+export default async function SquadDetailPage({ params }: SquadDetailPageProps) {
   const { id } = await params;
 
   return (

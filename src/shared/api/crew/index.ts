@@ -4,3 +4,4 @@ export * from './crewDetailGetFetch';
 export * from './crewCheckGetFetch';
 export * from './addCrewPostFetch';
 export * from './crewMainGetFetch';
+export * from './me/myCrewListGetFetch';

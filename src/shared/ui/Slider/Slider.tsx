@@ -2,11 +2,7 @@
 
 import { ReactNode } from 'react';
 
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from '@/components/ui/carousel';
+import { Carousel, CarouselContent, CarouselItem } from '@/shared/ui/ui/carousel';
 
 export interface SliderPropsType {
   slot: ReactNode[];

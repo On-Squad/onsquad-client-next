@@ -2,26 +2,26 @@
 
 import React from 'react';
 
-import { Article } from '@/components/Article';
-import { Text } from '@/components/Text';
-import { Button } from '@/components/ui/button';
+import { Article } from '@/shared/ui/Article';
+import { Text } from '@/shared/ui/Text';
+import { Button } from '@/shared/ui/ui/button';
 
 const MainDashboard = () => {
   return (
     <>
       <Article
-        className="w-full shadow-sm basis-2/5 min-h-96"
+        className="min-h-96 w-full basis-2/5 shadow-sm"
         slot={
           <div>
             <div className="flex items-center justify-between">
               <Text.lg className="font-semibold">
                 <h3>크루 랭킹</h3>
               </Text.lg>
-              <Button className="px-2 py-1.5 h-fit" variant="ghost">
+              <Button className="h-fit px-2 py-1.5" variant="ghost">
                 더보기
               </Button>
             </div>
-            <div className="flex flex-col items-center justify-center mt-24 grow gap-9">
+            <div className="mt-24 flex grow flex-col items-center justify-center gap-9">
               <Text.sm className="font-semibold">크루 랭킹이 없습니다.</Text.sm>
               <Button className="w-full">크루 개설하기</Button>
             </div>
@@ -30,7 +30,7 @@ const MainDashboard = () => {
       />
 
       <Article
-        className="w-full shadow-sm basis-3/5 min-h-96"
+        className="min-h-96 w-full basis-3/5 shadow-sm"
         slot={
           <div className="flex flex-col gap-6">
             <div>

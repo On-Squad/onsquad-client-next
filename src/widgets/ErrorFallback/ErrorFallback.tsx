@@ -1,24 +1,23 @@
 'use client';
 
-import { FallbackProps } from 'react-error-boundary';
-import { Alert } from '@/shared/ui/Alert';
+import { useRouter } from 'next/navigation';
 
+import { useEffect, useRef } from 'react';
+
+import { FallbackProps } from 'react-error-boundary';
+
+import { ResponseModel } from '@/shared/api/model';
+import { cn } from '@/shared/lib/utils';
+import { Alert } from '@/shared/ui/Alert';
 import { BUTTON } from '@/shared/ui/Alert/style';
 import { Button } from '@/shared/ui/ui/button';
-import { cn } from '@/shared/lib/utils';
-import { ResponseModel } from '@/shared/api/model';
-import { useRouter } from 'next/navigation';
-import { useRef, useEffect } from 'react';
 
 // 싱글톤 인스턴스를 추적하기 위한 전역 변수
 let isErrorFallbackMounted = false;
 
-interface ErrorFallbackProps extends FallbackProps { }
+interface ErrorFallbackProps extends FallbackProps {}
 
-export function ErrorFallback({
-  error,
-  resetErrorBoundary,
-}: ErrorFallbackProps) {
+export function ErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
   const router = useRouter();
   const hasHandledRef = useRef(false);
   const isNavigatingRef = useRef(false);
@@ -61,7 +60,7 @@ export function ErrorFallback({
       buttonSlot={
         <div className="w-full">
           <Button
-            className={cn(BUTTON.ACTION, 'rounded-bl-md w-full')}
+            className={cn(BUTTON.ACTION, 'w-full rounded-bl-md')}
             onClick={handleNavigation}
             disabled={isNavigatingRef.current}
           >
@@ -70,10 +69,7 @@ export function ErrorFallback({
         </div>
       }
     >
-      {
-        (error as Required<NonNullable<PropType<ResponseModel, 'error'>>>)
-          .message
-      }
+      {(error as Required<NonNullable<PropType<ResponseModel, 'error'>>>).message}
     </Alert>
   );
 }

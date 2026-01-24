@@ -1,7 +1,9 @@
 import React, { ReactNode } from 'react';
-import { cn } from '@/lib/utils';
-import { Button, type ButtonProps } from '@/components/ui/button';
+
 import { ChevronRight } from 'lucide-react';
+
+import { cn } from '@/shared/lib/utils';
+import { Button, type ButtonProps } from '@/shared/ui/ui/button';
 
 interface NavButtonPropsType extends ButtonProps {
   children?: ReactNode | ReactNode[];
@@ -13,15 +15,9 @@ interface NavButtonPropsType extends ButtonProps {
  */
 const NavButton = ({ children, className, ...props }: NavButtonPropsType) => {
   return (
-    <Button
-      variant="outline"
-      className={cn(`w-full p-3 border-0 ${className}`)}
-      {...props}
-    >
-      <div className="w-full flex justify-between items-center">
-        <span className="inline-block pt-0.5 font-medium text-black">
-          {children}
-        </span>
+    <Button variant="outline" className={cn(`w-full border-0 p-3 ${className}`)} {...props}>
+      <div className="flex w-full items-center justify-between">
+        <span className="inline-block pt-0.5 font-medium text-black">{children}</span>
         <ChevronRight size={24} stroke="#000" strokeWidth={1.2} />
       </div>
     </Button>

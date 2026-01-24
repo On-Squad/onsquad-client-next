@@ -1,2 +1,1 @@
-export const numberExtract = (value: string) =>
-  value.match(/\d*/g)?.filter(Boolean).join('');
+export const numberExtract = (value: string) => value.match(/\d*/g)?.filter(Boolean).join('');
