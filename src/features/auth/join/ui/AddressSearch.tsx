@@ -34,6 +34,7 @@ const AddressSearch = <T extends FieldValues>(props: AddressSearchProps<T>) => {
     const currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
 
     new window.daum.Postcode({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       oncomplete: (data: any) => {
         let addr = '';
 

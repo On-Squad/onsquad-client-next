@@ -1,5 +1,9 @@
 'use client';
 
+import React from 'react';
+
+import { LucideIcon } from 'lucide-react';
+
 import {
   Toast,
   // ToastClose,
@@ -23,7 +27,7 @@ export function Toaster() {
               {title && <ToastTitle className="mt-0.5 text-base font-semibold">{title}</ToastTitle>}
               {description && <ToastDescription>{description}</ToastDescription>}
             </div>
-            {icon}
+            {icon && React.cloneElement(icon as React.ReactElement<LucideIcon>)}
             {action}
             {/* <ToastClose /> */}
           </Toast>

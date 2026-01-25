@@ -1,7 +1,5 @@
 import React, { ReactNode } from 'react';
 
-import { Appbar } from '../Appbar';
-
 interface LayoutPropsType {
   children: ReactNode | ReactNode[];
 }

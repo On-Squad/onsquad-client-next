@@ -35,6 +35,7 @@ import { profileSchema } from '../model/profileSchema';
  */
 const ProfileForm = () => {
   const { toast, hide } = useToast();
+
   const router = useRouter();
 
   const session = useSession();
