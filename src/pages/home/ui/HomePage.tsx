@@ -5,21 +5,20 @@ import { CrewList } from '@/widgets/CrewList';
 import { MainDashboard } from '@/widgets/MainDashboard';
 import { SearchContainer } from '@/widgets/SearchContainer';
 
-import type { CrewListDataType } from '@/entities/crew';
+import type { CrewListData } from '@/entities/crew';
 import { crewQueries } from '@/entities/crew/api/crew.queries';
 
 import { withAppbar } from '@/shared/lib/hoc/withAppbar';
 import { getQueryClient } from '@/shared/lib/queries/get-query-client';
 import { Text } from '@/shared/ui/Text';
 
-// export const revalidate = 3600;
+export const revalidate = 3600;
 
 async function HomePage() {
   const queryClient = getQueryClient();
-
   await queryClient.prefetchQuery(crewQueries.list());
 
-  const crewListData = queryClient.getQueryData<CrewListDataType>(crewQueries.list().queryKey);
+  const crewListData = queryClient.getQueryData<CrewListData>(crewQueries.list().queryKey);
 
   return (
     <div className="h-full w-full bg-gray-50">

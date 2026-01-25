@@ -2,7 +2,7 @@ import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query
 
 import { CrewHome } from '@/widgets/crew-list';
 
-import type { CrewHomeDataType } from '@/entities/crew';
+import type { CrewHomeData } from '@/entities/crew';
 import { crewQueries } from '@/entities/crew/api/crew.queries';
 
 import { withAppbar } from '@/shared/lib/hoc/withAppbar';
@@ -32,7 +32,7 @@ async function CrewHomePage({ params, searchParams }: { params: { id: string }; 
 
   await getHomeData(queryClient, crewId, category);
 
-  const data = queryClient.getQueryData<CrewHomeDataType>(crewQueries.home({ crewId, category }).queryKey);
+  const data = queryClient.getQueryData<CrewHomeData>(crewQueries.home({ crewId, category }).queryKey);
 
   return (
     <>

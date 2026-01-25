@@ -6,7 +6,7 @@ import React from 'react';
 
 import { Plus } from 'lucide-react';
 
-import { type CrewListDataType } from '@/app/page';
+import { type CrewListData } from '@/entities/crew';
 
 import { PATH } from '@/shared/config/paths';
 import { Article } from '@/shared/ui/Article';
@@ -16,7 +16,7 @@ import { PostButton } from '@/shared/ui/PostButton';
 import { Text } from '@/shared/ui/Text';
 import { Button } from '@/shared/ui/ui/button';
 
-export type CrewDataType = ArrayType<CrewListDataType>;
+export type CrewDataType = ArrayType<CrewListData>;
 
 interface CrewListPropsType {
   list: CrewDataType[];
@@ -46,7 +46,7 @@ const CrewList = ({ list }: CrewListPropsType) => {
                     <CrewCard
                       key={index}
                       crewImage={crew?.imageUrl || ''}
-                      ownerName={crew.crewOwner?.nickname || ''}
+                      ownerName={crew.owner?.nickname || ''}
                       title={crew.name}
                       description={crew?.introduce || ''}
                       tagSlot={

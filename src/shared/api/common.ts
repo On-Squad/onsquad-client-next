@@ -2,6 +2,12 @@ import { auth } from '@/auth';
 import axios from 'axios';
 import { getSession } from 'next-auth/react';
 
+export const publicApiFetch = axios.create({
+  baseURL: 'http://43.203.4.6:8080/api',
+  headers: { 'Content-Type': 'application/json' },
+  timeout: 8000,
+});
+
 export const apiFetch = axios.create({
   baseURL: 'http://43.203.4.6:8080/api',
   headers: {

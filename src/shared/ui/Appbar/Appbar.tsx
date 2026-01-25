@@ -1,13 +1,11 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
-
-import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { useModalStackStore } from '@/store/useModalStackStore';
 import { ChevronLeft, Plus, Text as TextIcon } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { signIn, signOut } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -18,15 +16,7 @@ import { cn } from '@/shared/lib/utils';
 import { NavButton } from '@/shared/ui/NavButton';
 import { Button } from '@/shared/ui/ui/button';
 import { Separator } from '@/shared/ui/ui/separator';
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetOverlay,
-  SheetTitle,
-  SheetTrigger,
-} from '@/shared/ui/ui/sheet';
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from '@/shared/ui/ui/sheet';
 
 import { CountLabel } from '../CountLabel';
 import { Profile } from '../Profile';
@@ -37,40 +27,12 @@ export interface AppbarPropsType {
   title?: string;
 }
 
-//TODO: 뭔가 서버컴포넌트여야할 것 같아요....
 const Appbar = ({ isMenuHeader = true, title }: AppbarPropsType) => {
   const { data: session } = useSession();
 
   const modalStack = useModalStackStore((state) => state.modalStack);
-  const searchParams = useSearchParams();
-
-  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const router = useRouter();
-
-  useEffect(() => {
-    if (!searchParams) return;
-
-    const accessToken = searchParams.get('accessToken');
-    const refreshToken = searchParams.get('refreshToken');
-
-    if (accessToken && refreshToken) {
-      (async () => {
-        try {
-          await signIn('kakao', {
-            redirect: false,
-            callbackUrl: PATH.root,
-            accessToken,
-            refreshToken,
-          });
-
-          router.replace(PATH.root);
-        } catch (error) {
-          console.error(error);
-        }
-      })();
-    }
-  }, [searchParams, router]);
 
   if (!isMenuHeader) {
     return (
@@ -111,7 +73,7 @@ const Appbar = ({ isMenuHeader = true, title }: AppbarPropsType) => {
           </Button>
         ) : null}
 
-        <Sheet onOpenChange={(value) => setIsOpen(value)}>
+        <Sheet>
           <SheetTrigger asChild>
             <TextIcon color="#636363" strokeWidth={1.5} className="cursor-pointer" />
           </SheetTrigger>
@@ -142,8 +104,6 @@ const Appbar = ({ isMenuHeader = true, title }: AppbarPropsType) => {
                           const kakaoLoginRes = await userSocialLoginGetFetch({
                             platform: 'kakao',
                           });
-
-                          console.log(kakaoLoginRes, '카카오 로그인 응답');
 
                           location.href = kakaoLoginRes.headers.location;
                         } catch (error) {

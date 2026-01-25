@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import { Plus, Settings, Star } from 'lucide-react';
 import Image from 'next/image';
 
-import type { CrewHomeDataType } from '@/entities/crew';
+import type { CrewHomeData } from '@/entities/crew';
 
 import { cn } from '@/shared/lib/utils';
 import { Article } from '@/shared/ui/Article';
@@ -21,7 +21,7 @@ import { Text } from '@/shared/ui/Text';
 import { Button } from '@/shared/ui/ui/button';
 
 interface CrewHomeProps {
-  data?: CrewHomeDataType;
+  data?: CrewHomeData;
 }
 
 export const CrewHome = ({ data }: CrewHomeProps) => {

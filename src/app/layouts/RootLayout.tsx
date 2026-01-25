@@ -10,6 +10,8 @@ import '@/app/styles/globals.css';
 import { ErrorHandlingWrapper } from '@/widgets/ErrorBoundary';
 import { ErrorFallback } from '@/widgets/ErrorFallback';
 
+import { OAuthCallback } from '@/features/auth/login';
+
 import { cn } from '@/shared/lib/utils';
 import { Modal } from '@/shared/ui/Modal';
 import { ShowBottomTab } from '@/shared/ui/ShowBottomTab';
@@ -45,6 +47,7 @@ export default async function RootLayout({
         <SessionProvider>
           <ErrorHandlingWrapper fallbackComponent={ErrorFallback} suspenseFallback={<Spinner />}>
             <QueryProvider>
+              <OAuthCallback />
               <Wrapper>
                 <ShowBottomTab>{children}</ShowBottomTab>
               </Wrapper>

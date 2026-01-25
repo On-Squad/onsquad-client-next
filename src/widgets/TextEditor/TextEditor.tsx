@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+'use client';
+
+import { useEffect, useState } from 'react';
 
 import { EditorState } from 'draft-js';
-// useEffect 추가
-import dynamic from 'next/dynamic';
+import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-
-const Editor = dynamic(() => import('react-draft-wysiwyg').then((mod) => mod.Editor), { ssr: false });
 
 const TextEditor = () => {
   const [editorState, setEditorState] = useState<EditorState>(EditorState.createEmpty());

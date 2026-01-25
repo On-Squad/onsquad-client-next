@@ -1,4 +1,4 @@
-import { apiFetch } from '../common';
+import { publicApiFetch } from '../common';
 import type { HashTag, Mbti, ResponseModel } from '../model';
 
 export interface CrewListGetFetchParams {
@@ -68,10 +68,10 @@ export interface CrewListResponseProps extends ResponseModel {
 
 export const crewListGetFetch = (params?: CrewListGetFetchParams) => {
   if (params) {
-    return apiFetch.get<CrewListResponseProps>(
+    return publicApiFetch.get<CrewListResponseProps>(
       `/crews?size=${params.size}&page=${params.page}&name=${params.crewName}`,
     );
   }
 
-  return apiFetch.get<CrewListResponseProps>('/crews');
+  return publicApiFetch.get<CrewListResponseProps>('/crews');
 };

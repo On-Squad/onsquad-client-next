@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { CircleX } from 'lucide-react';
 import Image from 'next/image';
 
-import type { CrewDetailDataType } from '@/entities/crew';
+import type { CrewDetailData } from '@/entities/crew';
 
 import { TOAST } from '@/shared/config/toast';
 import { useToast } from '@/shared/lib/hooks/useToast';
@@ -18,7 +18,7 @@ import { Text } from '@/shared/ui/Text';
 import { Button } from '@/shared/ui/ui/button';
 
 interface CrewDetailProps {
-  data?: CrewDetailDataType;
+  data?: CrewDetailData;
 }
 
 export const CrewDetail = ({ data }: CrewDetailProps) => {

@@ -2,7 +2,7 @@ import { type ReactNode } from 'react';
 
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 
-import type { CrewDetailDataType } from '@/entities/crew';
+import type { CrewDetailData } from '@/entities/crew';
 import { crewQueries } from '@/entities/crew/api/crew.queries';
 
 import { getQueryClient } from '@/shared/lib/queries/get-query-client';
@@ -11,7 +11,7 @@ import { Appbar } from '@/shared/ui/Appbar';
 interface HydrateCrewDetailProps {
   id: string;
   searchParams?: { [key: string]: string | string[] | undefined };
-  children: (data?: CrewDetailDataType) => ReactNode;
+  children: (data?: CrewDetailData) => ReactNode;
 }
 
 const HydrateCrewDetail = async ({ id, children }: HydrateCrewDetailProps) => {
@@ -27,7 +27,7 @@ const HydrateCrewDetail = async ({ id, children }: HydrateCrewDetailProps) => {
     throw error;
   }
 
-  const crewDetailData = queryClient.getQueryData<CrewDetailDataType>(crewQueries.detail({ crewId }).queryKey);
+  const crewDetailData = queryClient.getQueryData<CrewDetailData>(crewQueries.detail({ crewId }).queryKey);
 
   return (
     <>
