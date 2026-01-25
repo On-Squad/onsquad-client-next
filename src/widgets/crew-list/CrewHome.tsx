@@ -147,7 +147,7 @@ export const CrewHome = ({ data }: CrewHomeProps) => {
                     <Text.base className="font-semibold">크루장</Text.base>
                     <div className="flex gap-1">
                       <Avatar className="h-4 w-4" />
-                      <Text.xs className="pt-[0.05rem] font-medium">{data?.crew.crewOwner.nickname}</Text.xs>
+                      <Text.xs className="pt-[0.05rem] font-medium">{data?.crew.owner.nickname}</Text.xs>
                     </div>
                   </div>
                   <div>
@@ -254,7 +254,7 @@ export const CrewHome = ({ data }: CrewHomeProps) => {
                 >
                   <div className="flex gap-1">
                     <Avatar className="h-4 w-4" />
-                    <Text.xs className="pt-[0.05rem] font-medium">{squad.squadOwner.nickname}</Text.xs>
+                    <Text.xs className="pt-[0.05rem] font-medium">{squad.leader.nickname}</Text.xs>
                   </div>
                   <div className="mt-2 line-clamp-4 max-h-14 text-ellipsis">
                     <Text.xs className="font-medium">{squad.content}</Text.xs>

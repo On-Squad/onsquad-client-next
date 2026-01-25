@@ -8,11 +8,13 @@ import { SearchContainer } from '@/widgets/SearchContainer';
 import type { CrewListDataType } from '@/entities/crew';
 import { crewQueries } from '@/entities/crew/api/crew.queries';
 
+import { withAppbar } from '@/shared/lib/hoc/withAppbar';
 import { getQueryClient } from '@/shared/lib/queries/get-query-client';
-import { Appbar } from '@/shared/ui/Appbar';
 import { Text } from '@/shared/ui/Text';
 
-export default async function HomePage() {
+// export const revalidate = 3600;
+
+async function HomePage() {
   const queryClient = getQueryClient();
 
   await queryClient.prefetchQuery(crewQueries.list());
@@ -21,7 +23,6 @@ export default async function HomePage() {
 
   return (
     <div className="h-full w-full bg-gray-50">
-      <Appbar />
       <div className="container px-2 pt-20">
         <div className="mt-6 flex w-full items-center justify-between rounded-xl bg-[#144A7D] p-9 ease-linear S2:flex-col SE:flex-col mobile:flex-col tablet:flex-col">
           <Image
@@ -75,3 +76,5 @@ export default async function HomePage() {
     </div>
   );
 }
+
+export default withAppbar(HomePage);

@@ -76,8 +76,7 @@ const Appbar = ({ isMenuHeader = true, title }: AppbarPropsType) => {
     return (
       <div
         className={cn(
-          'fixed left-1/2 top-0 z-[100] flex w-full min-w-[20rem] max-w-[45rem] -translate-x-1/2 transform items-center justify-between shadow-md-bottom',
-          modalStack.length > 0 ? 'bg-gray50 shadow-none' : 'bg-white',
+          'fixed left-1/2 top-0 z-[100] flex w-full min-w-[20rem] max-w-[45rem] -translate-x-1/2 transform items-center justify-between bg-white shadow-md-bottom',
         )}
       >
         <div className="ml-4 flex h-14 w-20 cursor-pointer items-center" onClick={() => router.back()}>
@@ -92,9 +91,7 @@ const Appbar = ({ isMenuHeader = true, title }: AppbarPropsType) => {
   return (
     <div
       className={cn(
-        `fixed left-1/2 top-0 z-[100] flex w-full min-w-[20rem] max-w-[45rem] -translate-x-1/2 transform items-center justify-between ${
-          !isOpen && 'shadow-md-bottom'
-        } ${modalStack.length > 0 ? 'bg-gray50 shadow-none' : 'bg-white'}`,
+        `fixed left-1/2 top-0 z-[100] flex w-full min-w-[20rem] max-w-[45rem] -translate-x-1/2 transform items-center justify-between bg-white shadow-md-bottom`,
       )}
     >
       <Link className="relative ml-4 h-20 w-20" href={PATH.root} scroll={false}>
@@ -115,7 +112,6 @@ const Appbar = ({ isMenuHeader = true, title }: AppbarPropsType) => {
         ) : null}
 
         <Sheet onOpenChange={(value) => setIsOpen(value)}>
-          <SheetOverlay />
           <SheetTrigger asChild>
             <TextIcon color="#636363" strokeWidth={1.5} className="cursor-pointer" />
           </SheetTrigger>

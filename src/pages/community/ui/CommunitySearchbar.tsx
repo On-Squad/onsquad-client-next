@@ -1,10 +1,10 @@
-import React from 'react';
+'use client';
 
 import { FormProvider, useFormContext } from 'react-hook-form';
 
 import { Searchbar } from '@/shared/ui/Searchbar';
 
-const Search = () => {
+const CommunitySearchbar = () => {
   const method = useFormContext();
 
   return (
@@ -14,4 +14,4 @@ const Search = () => {
   );
 };
 
-export default Search;
+export default CommunitySearchbar;

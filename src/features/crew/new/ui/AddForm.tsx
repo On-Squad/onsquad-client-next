@@ -2,7 +2,6 @@
 
 import { ChangeEvent, useRef, useState } from 'react';
 
-import { ACCORDION_HASH_TAG_LIST } from '@/constants';
 import { useModalStackStore } from '@/store/useModalStackStore';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { CircleX, ImagePlus, Loader2, X } from 'lucide-react';
@@ -11,9 +10,9 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { addCrewPostFetch } from '@/shared/api/crew/addCrewPostFetch';
 import { crewCheckGetFetch } from '@/shared/api/crew/crewCheckGetFetch';
+import { ACCORDION_HASH_TAG_LIST } from '@/shared/config';
 import { TOAST } from '@/shared/config/toast';
 import { useToast } from '@/shared/lib/hooks/useToast';
-import { getQueryClient } from '@/shared/lib/queries/get-query-client';
 import { useApiMutation } from '@/shared/lib/queries/useApiMutation';
 import { cn } from '@/shared/lib/utils';
 import { Accordion } from '@/shared/ui/Accordion';

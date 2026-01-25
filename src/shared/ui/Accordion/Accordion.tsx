@@ -36,7 +36,7 @@ const Accordion = (props: AccordionPropsType) => {
 
   const method = useFormContext();
 
-  const { getValues } = method;
+  const { getValues, trigger } = method;
 
   const parentSelectedItem = getValues(name) as string[];
 
@@ -49,12 +49,12 @@ const Accordion = (props: AccordionPropsType) => {
           <AccordionItem key={index} value={item.value}>
             <AccordionTrigger>{item.title}</AccordionTrigger>
             <AccordionContent>
-              <div className="grid max-h-72 grid-flow-row grid-cols-2 gap-1 overflow-auto">
+              <div className="grid max-h-72 grid-flow-row grid-cols-2 gap-1 overflow-auto pr-4">
                 {item.tags.map((tag, tagIndex) => (
                   <div
                     key={tagIndex}
                     className={cn(
-                      'flex h-[45px] cursor-pointer items-center justify-center rounded-lg border border-grayscale300 bg-grayscale200 text-lg text-grayscale400',
+                      'flex h-[45px] cursor-pointer items-center justify-center rounded-lg border border-grayscale200 bg-white text-lg text-grayscale400',
                       selectedItem.includes(tag) && 'border-secondary bg-secondary text-white',
                     )}
                     onClick={() => {
@@ -94,6 +94,8 @@ const Accordion = (props: AccordionPropsType) => {
             onClick={() => {
               onSubmit(selectedItem);
               onCancel?.();
+
+              trigger(name);
             }}
           >
             입력완료

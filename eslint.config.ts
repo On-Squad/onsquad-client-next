@@ -27,6 +27,7 @@ export default defineConfig([
       js,
     },
     rules: {
+      ...pluginReact.configs.flat.recommended.rules,
       'no-unused-vars': [
         'error',
         {
@@ -39,11 +40,11 @@ export default defineConfig([
       'no-undef': 'error',
       'no-console': ['error', { allow: ['warn', 'error', 'info'] }],
       'comma-dangle': 'off',
+      'react/react-in-jsx-scope': 'off',
       quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: true }],
       semi: 'warn',
     },
     ignores: ['node_modules', 'public', '.next'],
   },
-  tseslint.configs.recommended,
-  pluginReact.configs.flat.recommended,
+  ...tseslint.configs.recommended,
 ]);

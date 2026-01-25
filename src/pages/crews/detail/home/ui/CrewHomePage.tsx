@@ -1,19 +1,17 @@
-import React from 'react';
-
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
 
 import { CrewHome } from '@/widgets/crew-list';
 
 import type { CrewHomeDataType } from '@/entities/crew';
+import { crewQueries } from '@/entities/crew/api/crew.queries';
 
+import { withAppbar } from '@/shared/lib/hoc/withAppbar';
 import { getQueryClient } from '@/shared/lib/queries/get-query-client';
-import { CREW_HOME_INFO_QUERY_KEY, crewHomeInfoOptions } from '@/shared/lib/queries/options/crews/crewHomeInfoOptions';
-import { Appbar } from '@/shared/ui/Appbar';
 
 const getHomeData = async (queryClient: QueryClient, crewId: number, category: string) => {
   try {
     await queryClient.fetchQuery(
-      crewHomeInfoOptions({
+      crewQueries.home({
         crewId,
         category,
       }),
@@ -24,13 +22,7 @@ const getHomeData = async (queryClient: QueryClient, crewId: number, category: s
   }
 };
 
-export default async function CrewHomePage({
-  params,
-  searchParams,
-}: {
-  params: { id: string };
-  searchParams: { category: string };
-}) {
+async function CrewHomePage({ params, searchParams }: { params: { id: string }; searchParams: { category: string } }) {
   const { id } = await params;
   const { category = '' } = await searchParams;
 
@@ -40,14 +32,15 @@ export default async function CrewHomePage({
 
   await getHomeData(queryClient, crewId, category);
 
-  const data = queryClient.getQueryData<CrewHomeDataType>([CREW_HOME_INFO_QUERY_KEY, crewId, category]);
+  const data = queryClient.getQueryData<CrewHomeDataType>(crewQueries.home({ crewId, category }).queryKey);
 
   return (
     <>
-      <Appbar isMenuHeader={false} title={data?.crew?.name || '크루'} />
       <HydrationBoundary state={dehydrate(queryClient)}>
         <CrewHome data={data} />
       </HydrationBoundary>
     </>
   );
 }
+
+export default withAppbar(CrewHomePage);

@@ -10,10 +10,10 @@ interface AppbarConfig {
 export const withAppbar = <P extends object>(Component: React.ComponentType<P>, appbarConfig?: AppbarConfig) => {
   const WrappedComponent = (props: P) => {
     return (
-      <>
+      <div className="h-full w-full">
         <Appbar {...appbarConfig} />
         <Component {...props} />
-      </>
+      </div>
     );
   };
 

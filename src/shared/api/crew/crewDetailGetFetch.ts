@@ -56,7 +56,7 @@ export interface CrewDetailResponseProps extends ResponseModel {
       /**
        * 크루 주인 이름
        */
-      crewOwner: {
+      owner: {
         /**
          * 크루 주인 pk
          */
@@ -67,7 +67,7 @@ export interface CrewDetailResponseProps extends ResponseModel {
          */
         nickname: string;
 
-        mbti: Mbti;
+        mbti: Mbti | '';
       };
     };
   };

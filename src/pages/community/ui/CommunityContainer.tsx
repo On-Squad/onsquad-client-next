@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
@@ -11,12 +11,13 @@ import { useInView } from 'react-intersection-observer';
 
 import { crewQueries } from '@/entities/crew/api/crew.queries';
 
+import { cn } from '@/shared/lib';
 import { searchSchema } from '@/shared/ui/Searchbar/validator';
 import { Skeleton } from '@/shared/ui/Skeleton';
 import { Text } from '@/shared/ui/Text';
 
-import { CrewList } from './CrewList';
-import { Search } from './Search';
+import CrewList from './CommunityCrewList';
+import Search from './CommunitySearchbar';
 
 const CommunityContainer = () => {
   const { data: crewList, isLoading } = useQuery(crewQueries.list());
@@ -96,15 +97,17 @@ const CommunityContainer = () => {
           </div>
         </div>
       </div>
-      <div className="container px-5 pb-5">
+      <div className={cn('container px-5 pb-5', isScrollLoading && 'pb-14')}>
         <Text.lg className="pt-14 font-semibold">
           <h3>모집중인 크루</h3>
         </Text.lg>
         {isLoading ? <Skeleton.CrewList /> : <CrewList list={combinedList ?? []} />}
 
-        <div ref={ref} className="col-span-full flex h-10 justify-center">
-          {isScrollLoading && <Loader2 className="mt-6 h-6 w-6 animate-spin text-primary" />}
-        </div>
+        {combinedList.length > 0 && hasNextPage && (
+          <div ref={ref} className="absolute bottom-24 left-1/2 col-span-full flex h-10 justify-center">
+            {isScrollLoading && <Loader2 className="mt-6 h-6 w-6 animate-spin text-primary" />}
+          </div>
+        )}
       </div>
     </FormProvider>
   );

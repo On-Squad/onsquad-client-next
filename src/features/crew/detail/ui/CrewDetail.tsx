@@ -28,12 +28,14 @@ export const CrewDetail = ({ data }: CrewDetailProps) => {
 
   const { toast, hide } = useToast();
 
+  console.log(data);
+
   return (
     <div className="container min-h-[90vh] bg-white px-0 pt-12">
       <div
         className="w-full cursor-pointer bg-white transition-all duration-200 hover:shadow-md S2:w-full SE:w-full mobile:w-full tablet:w-full"
         onClick={() =>
-          router.push(`/crews/${data?.id}/home?category=전체`, {
+          router.push(`/crews/${data?.crew.id}/home?category=전체`, {
             scroll: false,
           })
         }
@@ -41,7 +43,7 @@ export const CrewDetail = ({ data }: CrewDetailProps) => {
         <div className="relative h-[360px] w-full overflow-hidden S2:w-full SE:w-full mobile:w-full tablet:w-full">
           {data ? (
             <Image
-              src={data.imageUrl || '/images/mock1.png'}
+              src={data.crew.imageUrl || '/images/mock1.png'}
               alt="크루이미지"
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -54,7 +56,7 @@ export const CrewDetail = ({ data }: CrewDetailProps) => {
               <Text.base className="font-medium">크루 스페이스</Text.base>
               <Badge className="bg-primary text-black">모집중</Badge>
             </div>
-            <Text.xl className="font-semibold">{data?.name}</Text.xl>
+            <Text.xl className="font-semibold">{data?.crew.name}</Text.xl>
           </div>
         </div>
       </div>
@@ -68,12 +70,12 @@ export const CrewDetail = ({ data }: CrewDetailProps) => {
               </h4>
               <div className="flex items-center gap-2">
                 <Avatar className="h-5 w-5" />
-                <Text.xs className="font-semibold text-black">{data?.crewOwner?.nickname}</Text.xs>
-                <Text.xs>{data?.crewOwner?.mbti ?? 'ESFP'}</Text.xs>
+                <Text.xs className="font-semibold text-black">{data?.crew.owner?.nickname}</Text.xs>
+                <Text.xs>{data?.crew.owner.mbti ?? 'ESFP'}</Text.xs>
               </div>
             </div>
             <Text.base className="font-medium">
-              <p>{data?.introduce}</p>
+              <p>{data?.crew.introduce}</p>
             </Text.base>
           </div>
         </div>
@@ -84,13 +86,13 @@ export const CrewDetail = ({ data }: CrewDetailProps) => {
               <Text.xl className="font-bold">크루 상세정보</Text.xl>
             </h4>
             <Text.base className="font-medium">
-              <p>{data?.detail}</p>
+              <p>{data?.crew.detail}</p>
             </Text.base>
           </div>
         </div>
 
         <div className="tagArea flex flex-wrap items-center gap-2 py-6">
-          {data?.hashtags.map((tag, index) => {
+          {data?.crew.hashtags.map((tag, index) => {
             if (index === 0) {
               return <Badge key={index}>멤버 수 {tag}+</Badge>;
             }

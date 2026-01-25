@@ -19,6 +19,8 @@ export const crewQueries = {
       queryFn: async () => {
         const res = await crewListGetFetch({ size, page, crewName });
 
+        console.log(res.data.data);
+
         return res.data.data;
       },
     }),
