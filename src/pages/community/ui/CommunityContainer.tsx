@@ -89,23 +89,22 @@ const CommunityContainer = () => {
   return (
     <FormProvider {...method}>
       <div className="min-h-40 bg-[#d9d9d9]">
-        <div className="pt-20">
-          <div className="flex min-h-56 items-end justify-center bg-[url('/images/search_banner.svg')] bg-cover bg-center bg-no-repeat">
-            <div className="container mx-auto w-2/3 pb-4 pt-6 S2:w-full SE:w-full mobile:w-full">
-              <Search />
-            </div>
+        <div className="flex min-h-56 items-end justify-center bg-[url('/images/search_banner.svg')] bg-cover bg-center bg-no-repeat">
+          <div className="mx-auto w-2/3 pb-4 pt-6 S2:w-full SE:w-full SE:px-2 mobile:w-full mobile:px-2">
+            <Search />
           </div>
         </div>
       </div>
-      <div className={cn('container px-5 pb-5', isScrollLoading && 'pb-14')}>
+      <div className={cn('container relative px-5 pb-5', isScrollLoading && 'pb-14')}>
         <Text.lg className="pt-14 font-semibold">
           <h3>모집중인 크루</h3>
         </Text.lg>
         {isLoading ? <Skeleton.CrewList /> : <CrewList list={combinedList ?? []} />}
 
         {combinedList.length > 0 && hasNextPage && (
-          <div ref={ref} className="absolute bottom-24 left-1/2 col-span-full flex h-10 justify-center">
-            {isScrollLoading && <Loader2 className="mt-6 h-6 w-6 animate-spin text-primary" />}
+          <div ref={ref} className="absolute bottom-[26px] left-[47.5%] col-span-full flex h-10 justify-center">
+            <Loader2 className="mt-6 h-6 w-6 animate-spin text-primary" />
+            {!isScrollLoading && <Loader2 className="mt-6 h-6 w-6 animate-spin text-primary" />}
           </div>
         )}
       </div>

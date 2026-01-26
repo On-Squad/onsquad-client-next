@@ -2,8 +2,6 @@
 
 import { usePathname } from 'next/navigation';
 
-import React from 'react';
-
 import { useModalStackStore } from '@/store/useModalStackStore';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';

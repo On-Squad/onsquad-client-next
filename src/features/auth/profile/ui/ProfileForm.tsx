@@ -173,7 +173,7 @@ const ProfileForm = () => {
 
   return (
     <FormProvider {...method}>
-      <div className="container bg-grayscale100 pt-20">
+      <div className="container bg-grayscale100 mt-20">
         <div className="pt-12">
           <div className="mb-12 flex w-full items-center justify-center gap-2">
             <div className="relative flex h-24 w-24 items-center justify-center rounded-3xl border border-[#f8f8f8]">

@@ -14,7 +14,6 @@ import { OAuthCallback } from '@/features/auth/login';
 
 import { cn } from '@/shared/lib/utils';
 import { Modal } from '@/shared/ui/Modal';
-import { ShowBottomTab } from '@/shared/ui/ShowBottomTab';
 import { Spinner } from '@/shared/ui/Spinner';
 import { Wrapper } from '@/shared/ui/Wrapper';
 import { Toaster } from '@/shared/ui/ui/toaster';
@@ -49,7 +48,7 @@ export default async function RootLayout({
             <QueryProvider>
               <OAuthCallback />
               <Wrapper>
-                <ShowBottomTab>{children}</ShowBottomTab>
+                {children}
               </Wrapper>
             </QueryProvider>
           </ErrorHandlingWrapper>
