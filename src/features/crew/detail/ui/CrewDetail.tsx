@@ -11,7 +11,6 @@ import Image from 'next/image';
 
 import { crewQueries } from '@/entities/crew/api/crew.queries';
 
-import { APPBAR_HEIGHT } from '@/shared/config';
 import { TOAST } from '@/shared/config/toast';
 import { useToast } from '@/shared/lib/hooks/useToast';
 import { cn } from '@/shared/lib/utils';
@@ -37,7 +36,7 @@ export const CrewDetail = ({ crewId }: CrewDetailProps) => {
   const isOwner = alreadyParticipant && data?.crew.owner.nickname === session?.nickname;
 
   return (
-    <div className={`-mx-5 -mb-5 -mt-12 min-h-[calc(100dvh-${APPBAR_HEIGHT}px)] bg-white px-0`}>
+    <div className="-mx-5 -mb-5 -mt-12 min-h-[93dvh] bg-white px-0">
       <div
         className="w-full cursor-pointer bg-white transition-all duration-200 hover:shadow-md S2:w-full SE:w-full mobile:w-full tablet:w-full"
         onClick={() =>
