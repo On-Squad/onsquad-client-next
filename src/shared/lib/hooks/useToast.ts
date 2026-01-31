@@ -1,3 +1,5 @@
+'use client';
+
 import { ReactElement, useRef } from 'react';
 
 import type { LucideIcon } from 'lucide-react';

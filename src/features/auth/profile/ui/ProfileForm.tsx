@@ -95,8 +95,6 @@ const ProfileForm = () => {
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const { files = [] } = e.target;
 
-    console.log(files);
-
     if (files && files.length > 0) {
       const uploadFile = files[0];
 
@@ -173,106 +171,104 @@ const ProfileForm = () => {
 
   return (
     <FormProvider {...method}>
-      <div className="container bg-grayscale100 mt-20">
-        <div className="pt-12">
-          <div className="mb-12 flex w-full items-center justify-center gap-2">
-            <div className="relative flex h-24 w-24 items-center justify-center rounded-3xl border border-[#f8f8f8]">
-              <div
-                className={cn(`relative h-full w-full cursor-pointer overflow-hidden rounded-3xl object-cover`)}
-                onClick={() => {
-                  fileRef.current?.click();
-                }}
-              >
-                <Image
-                  src={imageUrl}
-                  alt="profile"
-                  className="h-full w-full rounded-full object-cover"
-                  fill
-                  sizes="100%"
-                  priority
-                />
-                <div className="absolute bottom-0 right-0 flex items-center gap-2 rounded-full border border-grayscale300 bg-white p-1">
-                  <Camera size={12} stroke="#909090" />
-                </div>
+      <div className="bg-grayscale100">
+        <div className="mb-12 flex w-full items-center justify-center gap-2">
+          <div className="relative flex h-24 w-24 items-center justify-center rounded-3xl border border-[#f8f8f8]">
+            <div
+              className={cn(`relative h-full w-full cursor-pointer overflow-hidden rounded-3xl object-cover`)}
+              onClick={() => {
+                fileRef.current?.click();
+              }}
+            >
+              <Image
+                src={imageUrl}
+                alt="profile"
+                className="h-full w-full rounded-full object-cover"
+                fill
+                sizes="100%"
+                priority
+              />
+              <div className="absolute bottom-0 right-0 flex items-center gap-2 rounded-full border border-grayscale300 bg-white p-1">
+                <Camera size={12} stroke="#909090" />
               </div>
             </div>
           </div>
+        </div>
 
-          <input
-            type="file"
-            ref={fileRef}
-            className="hidden"
-            accept=".jpeg, .jpg, .png, .svg"
-            onChange={handleFileChange}
+        <input
+          type="file"
+          ref={fileRef}
+          className="hidden"
+          accept=".jpeg, .jpg, .png, .svg"
+          onChange={handleFileChange}
+        />
+
+        <div>
+          <Input
+            name="nickname"
+            type="text"
+            label="닉네임"
+            maxLength={8}
+            placeholder={session?.data?.nickname}
+            button={
+              <InputButton
+                buttonText="중복확인"
+                onClick={async () => {
+                  if (!(await trigger('nickname'))) return;
+
+                  nicknameCheck({ nickname: getValues('nickname') });
+                }}
+              />
+            }
           />
+        </div>
 
-          <div>
-            <Input
-              name="nickname"
-              type="text"
-              label="닉네임"
-              maxLength={8}
-              placeholder={session?.data?.nickname}
-              button={
-                <InputButton
-                  buttonText="중복확인"
-                  onClick={async () => {
-                    if (!(await trigger('nickname'))) return;
+        <div className="mt-6">
+          <Textarea name="introduce" label="나의 소개" placeholder="나의 소개글을 작성해주세요." />
+        </div>
 
-                    nicknameCheck({ nickname: getValues('nickname') });
-                  }}
-                />
+        <div className="mt-6">
+          <Select name="mbti" label="MBTI" options={MBTI_SELECT_OPTIONS} />
+        </div>
+
+        <div className="mt-6">
+          <Input
+            type="text"
+            className="w-full"
+            name="kakaoLink"
+            label="오픈 카톡 프로필"
+            placeholder="오픈 카톡 프로필 링크를 입력해주세요."
+          />
+        </div>
+
+        <div className="mt-6 flex w-full flex-col items-center gap-2">
+          <AddressSearch
+            name="address"
+            onAddressChange={(addr) => {
+              setValue('address', addr);
+
+              if (errors?.address) {
+                clearErrors('address');
+
+                return;
               }
-            />
-          </div>
-
-          <div className="mt-6">
-            <Textarea name="introduce" label="나의 소개" placeholder="나의 소개글을 작성해주세요." />
-          </div>
-
-          <div className="mt-6">
-            <Select name="mbti" label="MBTI" options={MBTI_SELECT_OPTIONS} />
-          </div>
-
-          <div className="mt-6">
-            <Input
-              type="text"
-              className="w-full"
-              name="kakaoLink"
-              label="오픈 카톡 프로필"
-              placeholder="오픈 카톡 프로필 링크를 입력해주세요."
-            />
-          </div>
-
-          <div className="mt-6 flex w-full flex-col items-center gap-2">
-            <AddressSearch
-              name="address"
-              onAddressChange={(addr) => {
-                setValue('address', addr);
-
-                if (errors?.address) {
-                  clearErrors('address');
-
-                  return;
-                }
-              }}
-            />
-            <Input name="addressDetail" type="text" />
-          </div>
+            }}
+          />
+          <Input name="addressDetail" type="text" />
         </div>
+      </div>
 
-        <div className="buttonArea mb-12 mt-36">
-          <Button className="w-full" onClick={handleSubmit} disabled={displaySpinner}>
-            {displaySpinner ? (
-              <div className="flex items-center justify-center gap-1">
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                프로필을 수정하고 있어요
-              </div>
-            ) : (
-              '프로필 수정'
-            )}
-          </Button>
-        </div>
+      <div className="buttonArea mb-12 mt-36">
+        <Button className="w-full" onClick={handleSubmit} disabled={displaySpinner}>
+          {displaySpinner ? (
+            <div className="flex items-center justify-center gap-1">
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              프로필을 수정하고 있어요
+            </div>
+          ) : (
+            '프로필 수정'
+          )}
+        </Button>
       </div>
     </FormProvider>
   );

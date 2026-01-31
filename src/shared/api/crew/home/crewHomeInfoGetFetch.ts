@@ -1,5 +1,5 @@
-import { apiFetch } from '../common';
-import type { HashTag, Mbti, ResponseModel } from '../model';
+import { apiFetch } from '../../common';
+import type { HashTag, Mbti, ResponseModel } from '../../model';
 
 export interface CrewHomeInfoGetFetchParams {
   /**
@@ -69,7 +69,7 @@ export interface CrewHomeInfoResponseProps extends ResponseModel {
       /**
        * 해시태그
        */
-      hashtags: [number, ...HashTag[]];
+      hashtags: HashTag[];
 
       /**
        * 크루 주인

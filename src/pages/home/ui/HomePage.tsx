@@ -3,12 +3,12 @@ import Image from 'next/image';
 
 import { CrewList } from '@/widgets/CrewList';
 import { MainDashboard } from '@/widgets/MainDashboard';
-import { SearchContainer } from '@/widgets/SearchContainer';
+
+// import { SearchContainer } from '@/widgets/SearchContainer';
 
 import type { CrewListData } from '@/entities/crew';
 import { crewQueries } from '@/entities/crew/api/crew.queries';
 
-import { withAppbar } from '@/shared/lib/hoc/withAppbar';
 import { getQueryClient } from '@/shared/lib/queries/get-query-client';
 import { Text } from '@/shared/ui/Text';
 
@@ -16,13 +16,14 @@ export const revalidate = 3600;
 
 async function HomePage() {
   const queryClient = getQueryClient();
+
   await queryClient.prefetchQuery(crewQueries.list());
 
   const crewListData = queryClient.getQueryData<CrewListData>(crewQueries.list().queryKey);
 
   return (
     <div className="h-full w-full bg-gray-50">
-      <div className="container px-2 pt-20">
+      <div className="">
         <div className="mt-6 flex w-full items-center justify-between rounded-xl bg-[#144A7D] p-9 ease-linear S2:flex-col SE:flex-col mobile:flex-col tablet:flex-col">
           <Image
             src="/images/main_banner.svg"
@@ -59,10 +60,10 @@ async function HomePage() {
             priority={true}
           />
         </div>
-        <div className="mx-auto mb-14 mt-6 w-1/2 S2:w-11/12 SE:w-11/12 mobile:w-11/12 tablet:w-11/12">
+        {/* <div className="mx-auto mb-14 mt-6 w-1/2 S2:w-11/12 SE:w-11/12 mobile:w-11/12 tablet:w-11/12">
           <SearchContainer />
-        </div>
-
+        </div> */}
+        <div className="mt-6" />
         <section className="flex w-full items-center justify-center gap-4 S2:flex-col SE:flex-col mobile:flex-col tablet:flex-col">
           <MainDashboard />
         </section>
@@ -76,4 +77,4 @@ async function HomePage() {
   );
 }
 
-export default withAppbar(HomePage);
+export default HomePage;

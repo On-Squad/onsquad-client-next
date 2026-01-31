@@ -8,8 +8,8 @@ import { CircleX, ImagePlus, Loader2, X } from 'lucide-react';
 import Image from 'next/image';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { addCrewPostFetch } from '@/shared/api/crew/addCrewPostFetch';
-import { crewCheckGetFetch } from '@/shared/api/crew/crewCheckGetFetch';
+import { addCrewPostFetch } from '@/shared/api/crew/new/addCrewPostFetch';
+import { crewCheckGetFetch } from '@/shared/api/crew/new/crewCheckGetFetch';
 import { ACCORDION_HASH_TAG_LIST } from '@/shared/config';
 import { TOAST } from '@/shared/config/toast';
 import { useToast } from '@/shared/lib/hooks/useToast';
@@ -148,143 +148,139 @@ const AddForm = () => {
 
   return (
     <FormProvider {...method}>
-      <div className="container bg-white pt-14">
-        <div className="pt-12">
-          <div>
-            <Input
-              name="name"
-              type="text"
-              placeholder="크루 이름을 지어주세요."
-              maxLength={15}
-              label="크루명"
-              disabled={!isDuplicate}
-              button={<InputButton disabled={!isDuplicate} buttonText="중복확인" onClick={handleCrewNameCheck} />}
-            />
-          </div>
+      <div>
+        <Input
+          name="name"
+          type="text"
+          placeholder="크루 이름을 지어주세요."
+          maxLength={15}
+          label="크루명"
+          disabled={!isDuplicate}
+          button={<InputButton disabled={!isDuplicate} buttonText="중복확인" onClick={handleCrewNameCheck} />}
+        />
+      </div>
 
-          <div className="mt-6">
-            <Textarea name="introduce" label="크루 소개" placeholder="크루 소개글을 작성해주세요." />
-          </div>
+      <div className="mt-6">
+        <Textarea name="introduce" label="크루 소개" placeholder="크루 소개글을 작성해주세요." />
+      </div>
 
-          <div className="mt-6">
-            <Label className="text-grayScale800 mb-2 block font-bold">대표이미지</Label>
-            <div className="flex h-40 w-full items-center justify-center rounded-md border border-[#f8f8f8]">
-              {watch('file') && imageUrl ? (
-                <div
-                  style={{
-                    backgroundImage: `url(${imageUrl})`,
-                    backgroundSize: 'contain',
-                    backgroundPosition: 'center',
-                  }}
-                  className={cn(`h-full w-full bg-cover bg-center bg-no-repeat object-cover`)}
-                >
-                  <Image
-                    className="h-full w-full rounded-md object-contain"
-                    src={imageUrl}
-                    alt="업로드 이미지"
-                    width={100}
-                    height={100}
-                  />
-                </div>
-              ) : (
-                <Button
-                  className="text-grayscale500 hover:text-grayscale600 active:text-grayscale700"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    fileRef.current?.click();
-                  }}
-                  variant="ghost"
-                >
-                  <div className="flex items-center gap-2">
-                    <>
-                      <ImagePlus size={16} />
-                      <span className="inline-block pt-0.5">대표이미지 등록</span>
-                    </>
-                  </div>
-                </Button>
-              )}
+      <div className="mt-6">
+        <Label className="text-grayScale800 mb-2 block font-bold">대표이미지</Label>
+        <div className="flex h-40 w-full items-center justify-center rounded-md border border-[#f8f8f8]">
+          {watch('file') && imageUrl ? (
+            <div
+              style={{
+                backgroundImage: `url(${imageUrl})`,
+                backgroundSize: 'contain',
+                backgroundPosition: 'center',
+              }}
+              className={cn(`h-full w-full bg-cover bg-center bg-no-repeat object-cover`)}
+            >
+              <Image
+                className="h-full w-full rounded-md object-contain"
+                src={imageUrl}
+                alt="업로드 이미지"
+                width={100}
+                height={100}
+              />
             </div>
-            {errors?.file && <p className="mt-2 text-left text-sm text-red-600">{errors?.file.message}</p>}
-            <input
-              type="file"
-              ref={fileRef}
-              className="hidden"
-              accept=".jpeg, .jpg, .png, .svg"
-              onChange={handleFileChange}
-            />
-          </div>
+          ) : (
+            <Button
+              className="text-grayscale500 hover:text-grayscale600 active:text-grayscale700"
+              onClick={(e) => {
+                e.preventDefault();
+                fileRef.current?.click();
+              }}
+              variant="ghost"
+            >
+              <div className="flex items-center gap-2">
+                <>
+                  <ImagePlus size={16} />
+                  <span className="inline-block pt-0.5">대표이미지 등록</span>
+                </>
+              </div>
+            </Button>
+          )}
+        </div>
+        {errors?.file && <p className="mt-2 text-left text-sm text-red-600">{errors?.file.message}</p>}
+        <input
+          type="file"
+          ref={fileRef}
+          className="hidden"
+          accept=".jpeg, .jpg, .png, .svg"
+          onChange={handleFileChange}
+        />
+      </div>
 
-          <div className="mt-6">
-            <Textarea name="detail" label="크루 상세정보" placeholder="크루 상세정보를 작성해주세요." />
-          </div>
+      <div className="mt-6">
+        <Textarea name="detail" label="크루 상세정보" placeholder="크루 상세정보를 작성해주세요." />
+      </div>
 
-          <div className="mt-6">
-            <Input
-              name="hashtags"
-              type="text"
-              placeholder="크루를 나타내는 해시태그를 선택해주세요."
-              maxLength={15}
-              value=""
-              disabled={true}
-              label="크루명"
-              button={
-                <InputButton
-                  buttonText="선택하기"
-                  onClick={() =>
-                    setModal(
-                      <FormProvider {...method}>
-                        <BottomSheet title="크루 해시태그" isOpen={true} onClose={onClose}>
-                          <Accordion
-                            name="hashtags"
-                            list={ACCORDION_HASH_TAG_LIST}
-                            defaultValue={['hashtag']}
-                            onSubmit={(args: string[]) => setValue('hashtags', args)}
-                            onCancel={onClose}
-                          />
-                        </BottomSheet>
-                      </FormProvider>,
-                    )
-                  }
-                />
+      <div className="mt-6">
+        <Input
+          name="hashtags"
+          type="text"
+          placeholder="크루를 나타내는 해시태그를 선택해주세요."
+          maxLength={15}
+          value=""
+          disabled={true}
+          label="크루명"
+          button={
+            <InputButton
+              buttonText="선택하기"
+              onClick={() =>
+                setModal(
+                  <FormProvider {...method}>
+                    <BottomSheet title="크루 해시태그" isOpen={true} onClose={onClose}>
+                      <Accordion
+                        name="hashtags"
+                        list={ACCORDION_HASH_TAG_LIST}
+                        defaultValue={['hashtag']}
+                        onSubmit={(args: string[]) => setValue('hashtags', args)}
+                        onCancel={onClose}
+                      />
+                    </BottomSheet>
+                  </FormProvider>,
+                )
               }
             />
-          </div>
-          <div className="mt-3 flex flex-wrap items-center gap-1">
-            {watch('hashtags')?.map((item, index) => (
-              <Badge
-                key={index}
-                className="flex cursor-pointer gap-1 rounded-xl border border-secondary bg-white text-secondary hover:bg-secondary/10 active:bg-secondary/20"
-                onClick={() => {
-                  const hashtags = getValues('hashtags');
+          }
+        />
+      </div>
+      <div className="mt-3 flex flex-wrap items-center gap-1">
+        {watch('hashtags')?.map((item, index) => (
+          <Badge
+            key={index}
+            className="flex cursor-pointer gap-1 rounded-xl border border-secondary bg-white text-secondary hover:bg-secondary/10 active:bg-secondary/20"
+            onClick={() => {
+              const hashtags = getValues('hashtags');
 
-                  const filteredHashtags = [...(hashtags ?? [])].filter((tag) => tag !== item);
+              const filteredHashtags = [...(hashtags ?? [])].filter((tag) => tag !== item);
 
-                  setValue('hashtags', filteredHashtags);
-                }}
-              >
-                <span>{item}</span>
-                <X className="mb-0.5 text-black" size={12} />
-              </Badge>
-            ))}
-          </div>
+              setValue('hashtags', filteredHashtags);
+            }}
+          >
+            <span>{item}</span>
+            <X className="mb-0.5 text-black" size={12} />
+          </Badge>
+        ))}
+      </div>
 
-          <div className="mt-6">
-            <Input type="text" name="kakaoLink" label="크루 소통방" placeholder="크루 소통방 링크를 입력해주세요." />
-          </div>
-        </div>
+      <div className="mt-6">
+        <Input type="text" name="kakaoLink" label="크루 소통방" placeholder="크루 소통방 링크를 입력해주세요." />
+      </div>
 
-        <div className="buttonArea mb-12 mt-36">
-          <Button className="w-full" onClick={handleSubmit} disabled={displaySpinner}>
-            {displaySpinner ? (
-              <div className="flex items-center justify-center gap-1">
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                크루를 생성하고 있어요
-              </div>
-            ) : (
-              '크루 개설'
-            )}
-          </Button>
-        </div>
+      <div className="buttonArea mb-12 mt-36">
+        <Button className="w-full" onClick={handleSubmit} disabled={displaySpinner}>
+          {displaySpinner ? (
+            <div className="flex items-center justify-center gap-1">
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              크루를 생성하고 있어요
+            </div>
+          ) : (
+            '크루 개설'
+          )}
+        </Button>
       </div>
     </FormProvider>
   );

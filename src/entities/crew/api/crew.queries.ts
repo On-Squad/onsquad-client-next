@@ -1,9 +1,11 @@
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 
 import {
+  type CrewAnnounceGetFetchParams,
   type CrewDetailGetFetchParams,
   type CrewHomeInfoGetFetchParams,
   type CrewListGetFetchParams,
+  crewAnnounceGetFetch,
   crewDetailGetFetch,
   crewHomeInfoGetFetch,
   crewListGetFetch,
@@ -71,6 +73,16 @@ export const crewQueries = {
       queryKey: [...crewQueries.root(), 'home', crewId, category],
       queryFn: async () => {
         const res = await crewHomeInfoGetFetch({ crewId, category });
+
+        return res.data;
+      },
+    }),
+
+  announceList: ({ crewId }: CrewAnnounceGetFetchParams) =>
+    queryOptions({
+      queryKey: [...crewQueries.lists(), 'announce', crewId],
+      queryFn: async () => {
+        const res = await crewAnnounceGetFetch({ crewId });
 
         return res.data;
       },

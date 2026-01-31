@@ -10,7 +10,7 @@ import { useToast } from '@/shared/lib/hooks/useToast';
 export const useApiMutation = <
   TMutationKey extends [string, Record<string, unknown>?],
   TMutationFnData extends ResponseModel,
-  TInvalidateKey extends [string, Record<string, unknown>?],
+  TInvalidateKey extends unknown[],
   TError = Error,
   TVariables = void,
   TContext = unknown,

@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { useSelectedLayoutSegments } from 'next/navigation';
 
 import { useModalStackStore } from '@/store/useModalStackStore';
 import { useSession } from 'next-auth/react';
@@ -16,7 +16,7 @@ import { BUTTON } from '../Alert/style';
 import { Button } from '../ui/button';
 
 const BottomTab = () => {
-  const pathname = usePathname();
+  const segments = useSelectedLayoutSegments();
   const { data: session } = useSession();
 
   const setModal = useModalStackStore((state) => state.pushModal);
@@ -27,7 +27,9 @@ const BottomTab = () => {
       {TAB_MENUS.map((item) => {
         const { location, ...rest } = item;
 
-        const isActive = pathname === location;
+        const lastSegment = segments?.[segments.length - 1] || null;
+        const locationSegment = location === '/' ? null : location.split('/').filter(Boolean)[0];
+        const isActive = lastSegment === locationSegment;
 
         if (!session && location === '/crews') {
           return (
@@ -52,7 +54,6 @@ const BottomTab = () => {
                               className={BUTTON.ACTION}
                               onClick={() => {
                                 onClose();
-
                                 window.location.href = PATH.login;
                               }}
                             >
@@ -69,7 +70,6 @@ const BottomTab = () => {
                               className="cursor-pointer text-blue400 underline"
                               onClick={() => {
                                 onClose();
-
                                 window.location.href = PATH.join;
                               }}
                             >

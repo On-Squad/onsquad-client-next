@@ -1,9 +1,14 @@
 import { AddForm } from '@/features/crew/new';
 
-import { withAppbar } from '@/shared/lib/hoc/withAppbar';
+import AddCrewHeader from './AddCrewHeader';
 
 function AddCrewPage() {
-  return <AddForm />;
+  return (
+    <>
+      <AddCrewHeader />
+      <AddForm />
+    </>
+  );
 }
 
-export default withAppbar(AddCrewPage);
+export default AddCrewPage;

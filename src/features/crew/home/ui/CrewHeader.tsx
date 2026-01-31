@@ -1,0 +1,43 @@
+'use client';
+
+import { Settings } from 'lucide-react';
+import Image from 'next/image';
+
+import { Text } from '@/shared/ui/Text';
+import { Button } from '@/shared/ui/ui/button';
+
+interface CrewHeaderProps {
+  crew?: {
+    imageUrl?: string;
+    name: string;
+  };
+}
+
+export const CrewHeader = ({ crew }: CrewHeaderProps) => {
+  return (
+    <div className="w-full cursor-pointer bg-white transition-all duration-200 hover:shadow-md S2:w-full SE:w-full mobile:w-full tablet:w-full">
+      <div className="relative h-[360px] w-full overflow-hidden S2:w-full SE:w-full mobile:w-full tablet:w-full">
+        <Image
+          src={crew?.imageUrl || '/images/mock1.png'}
+          alt="크루이미지"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="w-full px-4"
+        />
+        <div className="bg-gradient-to-t absolute bottom-0 left-0 flex w-full flex-col gap-3 overflow-hidden truncate bg-black bg-opacity-20 from-black via-black/30 to-transparent px-5 py-2 font-bold text-white backdrop-blur-sm">
+          <div className="flex items-center justify-between">
+            <Text.base className="font-medium">크루 스페이스</Text.base>
+
+            <Button
+              variant="ghost"
+              className="px-2 text-grayscale50 hover:bg-[0] hover:text-inherit active:scale-110 active:bg-[0]"
+            >
+              <Settings size={20} />
+            </Button>
+          </div>
+          <Text.xl className="font-semibold">{crew?.name}</Text.xl>
+        </div>
+      </div>
+    </div>
+  );
+};

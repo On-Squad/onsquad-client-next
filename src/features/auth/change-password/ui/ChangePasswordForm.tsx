@@ -1,7 +1,5 @@
 'use client';
 
-import React, { useLayoutEffect } from 'react';
-
 import { yupResolver } from '@hookform/resolvers/yup';
 import { isEmpty } from 'es-toolkit/compat';
 import { Loader2 } from 'lucide-react';
@@ -15,13 +13,13 @@ import { useChangePasswordMutation } from '../model/useChangePasswordMutation';
 
 const ChangePasswordForm = () => {
   const method = useForm({
+    mode: 'onChange',
     resolver: yupResolver(changePasswordSchema),
     defaultValues: {
       currentPassword: '',
       newPassword: '',
       newPasswordConfirm: '',
     },
-    mode: 'onChange',
   });
 
   const {
@@ -43,16 +41,6 @@ const ChangePasswordForm = () => {
   const isError = errors.currentPassword || errors.newPassword || errors.newPasswordConfirm;
 
   const handleSubmit = submit(async () => await changePassword(getValues()));
-
-  useLayoutEffect(() => {
-    const body = document.body;
-
-    body.style.backgroundColor = '#f8f8f8';
-
-    return () => {
-      body.style.backgroundColor = '';
-    };
-  }, []);
 
   return (
     <FormProvider {...method}>

@@ -20,11 +20,13 @@ import { loginSchema } from './validator';
 
 const LoginForm = () => {
   const router = useRouter();
+
   const { toast, hide } = useToast();
 
   const [displaySpinner, setDisplaySpinner] = useState<boolean>(false);
 
   const method = useForm({
+    mode: 'onChange',
     resolver: yupResolver(loginSchema),
     values: {
       email: '',

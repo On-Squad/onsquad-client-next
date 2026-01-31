@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import { CircleCheck, CircleX, Loader2 } from 'lucide-react';
@@ -25,12 +25,10 @@ const JoinForm = () => {
   const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
   const [isEmailAuth, setIsEmailAuth] = useState<boolean>(false);
   const [isEmailAuthSuccess, setIsEmailAuthSuccess] = useState<boolean>(false);
-  const [isNicknameValid, setIsNicknameValid] = useState<boolean>(false);
 
   const { toast } = useToast();
 
   const { mutateAsync: userJoin, isPending: isUserJoinPending } = useApiMutation({
-    mutationKey: ['@user-join'],
     fetcher: userJoinPostFetch,
     options: {
       onSuccess: (data) => {
@@ -148,6 +146,7 @@ const JoinForm = () => {
   });
 
   const method = useForm({
+    mode: 'onChange',
     resolver: yupResolver(joinSchema),
     values: {
       email: '',
@@ -191,11 +190,9 @@ const JoinForm = () => {
 
   const handleAuthCodeSend = async () => {
     try {
-      const res = await sendEmailAuthCode({
+      await sendEmailAuthCode({
         email: getValues('email'),
       });
-
-      console.log(res);
     } catch (error) {
       console.error(error);
     }

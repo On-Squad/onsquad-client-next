@@ -4,11 +4,13 @@ import { useRouter } from 'next/navigation';
 
 import { useState } from 'react';
 
+import { useQuery } from '@tanstack/react-query';
 import { CircleX } from 'lucide-react';
 import Image from 'next/image';
 
-import type { CrewDetailData } from '@/entities/crew';
+import { crewQueries } from '@/entities/crew/api/crew.queries';
 
+import { APPBAR_HEIGHT } from '@/shared/config';
 import { TOAST } from '@/shared/config/toast';
 import { useToast } from '@/shared/lib/hooks/useToast';
 import { cn } from '@/shared/lib/utils';
@@ -18,20 +20,22 @@ import { Text } from '@/shared/ui/Text';
 import { Button } from '@/shared/ui/ui/button';
 
 interface CrewDetailProps {
-  data?: CrewDetailData;
+  crewId: number;
 }
 
-export const CrewDetail = ({ data }: CrewDetailProps) => {
+export const CrewDetail = ({ crewId }: CrewDetailProps) => {
   const router = useRouter();
-
-  const [isApply, setIsApply] = useState<boolean>(false);
 
   const { toast, hide } = useToast();
 
-  console.log(data);
+  const [isApply, setIsApply] = useState<boolean>(false);
+
+  const { data } = useQuery(crewQueries.detail({ crewId }));
+
+  const alreadyParticipant = data?.alreadyParticipant ?? false;
 
   return (
-    <div className="container min-h-[90vh] bg-white px-0 pt-12">
+    <div className={`-mx-5 -mb-5 -mt-12 min-h-[calc(100dvh-${APPBAR_HEIGHT}px)] bg-white px-0`}>
       <div
         className="w-full cursor-pointer bg-white transition-all duration-200 hover:shadow-md S2:w-full SE:w-full mobile:w-full tablet:w-full"
         onClick={() =>
@@ -100,28 +104,30 @@ export const CrewDetail = ({ data }: CrewDetailProps) => {
           })}
         </div>
 
-        <div className="buttonArea flex flex-col items-center gap-4 pb-12 pt-6">
-          <Button
-            className={cn(`w-full disabled:cursor-not-allowed disabled:bg-grayscale100 disabled:text-grayscale500`)}
-            disabled={isApply}
-            onClick={() => {
-              setIsApply(true);
+        {!alreadyParticipant && (
+          <div className="buttonArea flex flex-col items-center gap-4 pb-12 pt-6">
+            <Button
+              className={cn(`w-full disabled:cursor-not-allowed disabled:bg-grayscale100 disabled:text-grayscale500`)}
+              disabled={isApply}
+              onClick={() => {
+                setIsApply(true);
 
-              toast({
-                title: '가입 신청이 완료되었어요',
-                icon: <CircleX onClick={() => hide()} />,
-                className: TOAST.primary,
-              });
-            }}
-          >
-            {isApply ? '가입 신청 완료' : '가입 신청하기'}
-          </Button>
-          {isApply ? (
-            <Button className="w-fit" variant="ghost" onClick={() => setIsApply(false)}>
-              취소
+                toast({
+                  title: '가입 신청이 완료되었어요',
+                  icon: <CircleX onClick={() => hide()} />,
+                  className: TOAST.primary,
+                });
+              }}
+            >
+              {isApply ? '가입 신청 완료' : '가입 신청하기'}
             </Button>
-          ) : null}
-        </div>
+            {isApply ? (
+              <Button className="w-fit" variant="ghost" onClick={() => setIsApply(false)}>
+                취소
+              </Button>
+            ) : null}
+          </div>
+        )}
       </div>
     </div>
   );

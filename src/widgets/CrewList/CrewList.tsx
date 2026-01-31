@@ -2,8 +2,6 @@
 
 import { useRouter } from 'next/navigation';
 
-import React from 'react';
-
 import { Plus } from 'lucide-react';
 
 import { type CrewListData } from '@/entities/crew';
@@ -28,7 +26,7 @@ const CrewList = ({ list }: CrewListPropsType) => {
   return (
     <>
       <Article
-        className="min-h-96 w-full bg-inherit"
+        className="min-h-96 w-full bg-inherit px-0"
         slot={
           <div>
             <div className="flex items-center justify-between">
