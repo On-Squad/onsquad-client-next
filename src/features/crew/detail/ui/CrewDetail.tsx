@@ -6,6 +6,7 @@ import { useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 import { CircleX } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 
 import { crewQueries } from '@/entities/crew/api/crew.queries';
@@ -25,7 +26,7 @@ interface CrewDetailProps {
 
 export const CrewDetail = ({ crewId }: CrewDetailProps) => {
   const router = useRouter();
-
+  const { data: session } = useSession();
   const { toast, hide } = useToast();
 
   const [isApply, setIsApply] = useState<boolean>(false);
@@ -33,6 +34,7 @@ export const CrewDetail = ({ crewId }: CrewDetailProps) => {
   const { data } = useQuery(crewQueries.detail({ crewId }));
 
   const alreadyParticipant = data?.alreadyParticipant ?? false;
+  const isOwner = alreadyParticipant && data?.crew.owner.nickname === session?.nickname;
 
   return (
     <div className={`-mx-5 -mb-5 -mt-12 min-h-[calc(100dvh-${APPBAR_HEIGHT}px)] bg-white px-0`}>
@@ -58,7 +60,11 @@ export const CrewDetail = ({ crewId }: CrewDetailProps) => {
           <div className="absolute bottom-0 left-0 flex w-full flex-col gap-3 overflow-hidden truncate bg-black bg-opacity-20 px-5 py-2 font-bold text-white backdrop-blur-sm">
             <div className="flex items-center justify-between">
               <Text.base className="font-medium">크루 스페이스</Text.base>
-              <Badge className="bg-primary text-black">모집중</Badge>
+              <div className="flex items-center gap-2">
+                {alreadyParticipant ? <Badge className="bg-primary300 text-black">참여중인 크루</Badge> : null}
+                {isOwner ? <Badge className="bg-primary400 text-black">크루장</Badge> : null}
+                <Badge className="bg-primary text-black">모집중</Badge>
+              </div>
             </div>
             <Text.xl className="font-semibold">{data?.crew.name}</Text.xl>
           </div>

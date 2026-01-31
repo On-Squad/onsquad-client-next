@@ -47,7 +47,6 @@ export const useApiMutation = <
     },
     onError: (error) => {
       if (error instanceof Error) {
-        console.log(error.message);
         toast({
           title: error.message,
           className: TOAST.error,
