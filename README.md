@@ -21,6 +21,8 @@ $ touch .env.local
 
 $ npx auth secret # AUTH.SECRET 키를 생성합니다.
 
+$ cp ./.env.example .env # 환경변수를 세팅합니다.
+
 $ npm run dev
 ```
 
