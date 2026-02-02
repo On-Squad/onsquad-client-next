@@ -6,9 +6,14 @@ import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
 import { languages } from '@codemirror/language-data';
 import { EditorView } from '@codemirror/view';
 import { githubLight } from '@uiw/codemirror-theme-github';
+import dayjs from 'dayjs';
 import { Image as ImageIcon } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import remarkGfm from 'remark-gfm';
+
+import { CREW_PATH } from '@/shared/config/paths';
+import { supabase } from '@/shared/lib/supabse/createClient';
 
 const CodeMirror = dynamic(() => import('@uiw/react-codemirror'), { ssr: false });
 const ReactMarkdown = dynamic(() => import('react-markdown'), { ssr: false });
@@ -22,6 +27,8 @@ interface TextEditorProps {
 type EditorTab = 'write' | 'preview';
 
 const TextEditor = ({ value = '', onChange, placeholder }: TextEditorProps) => {
+  const { data: session } = useSession();
+
   const [content, setContent] = useState<string>(value);
   const [activeTab, setActiveTab] = useState<EditorTab>('write');
   const [editorHeight, setEditorHeight] = useState<number>(300);
@@ -51,9 +58,23 @@ const TextEditor = ({ value = '', onChange, placeholder }: TextEditorProps) => {
 
     if (!file) return;
 
-    // TODO: 실제 이미지 업로드 API 연동
-    // 임시로 로컬 URL 사용
-    const imageUrl = URL.createObjectURL(file);
+    const userEmail = session?.email || 'unknown';
+
+    const fileName = `${dayjs().unix()}_${userEmail}_${CREW_PATH.announce}`;
+
+    const { data, error } = await supabase.storage
+      .from(process.env.NEXT_PUBLIC_SUPABASE_BUCKET!)
+      .upload(fileName, file);
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    const { data: urlData } = supabase.storage.from(process.env.NEXT_PUBLIC_SUPABASE_BUCKET!).getPublicUrl(data.path);
+
+    const imageUrl = urlData.publicUrl;
+
     insertText(`\n![이미지](${imageUrl})\n`);
   };
 

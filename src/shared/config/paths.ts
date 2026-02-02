@@ -23,3 +23,7 @@ export const ROOT_PATH = {
   login: 'login' as const,
   join: 'join' as const,
 };
+
+export const CREW_PATH = {
+  announce: 'announce' as const,
+};
