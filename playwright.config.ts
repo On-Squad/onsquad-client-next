@@ -14,12 +14,20 @@ export default defineConfig({
   },
 
   projects: [
+    { name: 'setup', testMatch: /.*\.setup\.ts/ },
+    {
+      name: 'e2e',
+      testMatch: /.*\.spec\.ts/,
+      use: {
+        storageState: './__test__/fixtures/auth/user.json',
+      },
+      dependencies: ['setup'],
+    },
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
   ],
-
   webServer: {
     command: 'yarn dev',
     url: 'http://localhost:3000',
