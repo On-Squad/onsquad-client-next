@@ -58,6 +58,7 @@ const Appbar = ({ isMenuHeader = true, title }: AppbarPropsType) => {
     >
       <Link className="relative ml-4 h-20 w-20" href={PATH.root} scroll={false}>
         <Image src="/icons/onsquad_logo.svg" alt="온스쿼드" fill priority />
+        <h1 className="sr-only">온스쿼드</h1>
       </Link>
 
       <div className="relative mr-4 flex items-center gap-2">

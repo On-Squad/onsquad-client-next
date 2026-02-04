@@ -44,3 +44,6 @@ next-env.d.ts
 
 /playwright-report
 /test-results
+
+# E2E 테스트 fixtures
+__tests__/fixtures/user.json

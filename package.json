@@ -11,6 +11,7 @@
     "test": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
+    "test:e2e:setup": "playwright test --project=setup",
     "lint": "eslint . --fix",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
@@ -84,6 +85,7 @@
     "@types/react-dom": "19.2.3",
     "@types/react-draft-wysiwyg": "^1.13.8",
     "@vitejs/plugin-react": "^5.1.2",
+    "dotenv": "^17.2.3",
     "eslint": "^9.39.2",
     "eslint-config-next": "16.1.4",
     "eslint-plugin-react": "^7.37.5",
