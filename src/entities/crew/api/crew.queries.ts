@@ -1,10 +1,12 @@
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 
 import {
+  type CrewAnnounceDetailGetFetchParams,
   type CrewAnnounceGetFetchParams,
   type CrewDetailGetFetchParams,
   type CrewHomeInfoGetFetchParams,
   type CrewListGetFetchParams,
+  crewAnnounceDetailGetFetch,
   crewAnnounceGetFetch,
   crewDetailGetFetch,
   crewHomeInfoGetFetch,
@@ -36,7 +38,7 @@ export const crewQueries = {
         });
         return {
           data: res.data.data,
-          nextPage: res.data.data.length === 10 ? pageParam + 1 : undefined,
+          nextPage: res.data.data.resultsSize === 10 ? pageParam + 1 : undefined,
         };
       },
       getNextPageParam: (lastPage) => lastPage.nextPage,
@@ -85,6 +87,16 @@ export const crewQueries = {
         const res = await crewAnnounceGetFetch({ crewId });
 
         return res.data;
+      },
+    }),
+
+  announceDetail: ({ crewId, announceId }: CrewAnnounceDetailGetFetchParams) =>
+    queryOptions({
+      queryKey: [...crewQueries.lists(), 'announce', crewId, announceId],
+      queryFn: async () => {
+        const res = await crewAnnounceDetailGetFetch({ crewId, announceId });
+
+        return res.data.data;
       },
     }),
 };

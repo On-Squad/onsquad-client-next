@@ -18,10 +18,12 @@ export const useApiMutation = <
   mutationKey,
   fetcher,
   invalidateKey,
+  invalidateKeys,
   options,
 }: {
   mutationKey?: TMutationKey;
   invalidateKey?: TInvalidateKey;
+  invalidateKeys?: TInvalidateKey[];
   fetcher: (variables: TVariables) => Promise<AxiosResponse<TMutationFnData>>;
   options?: Omit<UseMutationOptions<TMutationFnData, TError, TVariables, TContext>, 'mutationKey' | 'mutationFn'>;
 }): UseMutationResult<TMutationFnData, TError, TVariables, TContext> => {
@@ -43,6 +45,12 @@ export const useApiMutation = <
     onSuccess: () => {
       if (invalidateKey) {
         queryClient.invalidateQueries({ queryKey: invalidateKey });
+      }
+
+      if (invalidateKeys) {
+        invalidateKeys.forEach((key) => {
+          queryClient.invalidateQueries({ queryKey: key });
+        });
       }
     },
     onError: (error) => {

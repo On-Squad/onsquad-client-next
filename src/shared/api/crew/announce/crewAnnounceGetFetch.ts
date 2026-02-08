@@ -1,5 +1,7 @@
+import type { CrewRole } from '@/shared/types';
+
 import { apiFetch } from '../../common';
-import { ResponseModel } from '../../model';
+import type { ResponseModel } from '../../model';
 
 export interface CrewAnnounceGetFetchParams {
   crewId: number;
@@ -7,11 +9,12 @@ export interface CrewAnnounceGetFetchParams {
 
 export interface CrewAnnounceListResponseProps extends ResponseModel {
   data: {
-    /**
-     * 공지사항 작성 가능 여부
-     */
-    canWrite: boolean;
-
+    states: {
+      /**
+       * 공지사항 작성 가능 여부
+       */
+      canWrite: boolean;
+    };
     /**
      * 공지사항 리스트
      */
@@ -36,15 +39,23 @@ export interface CrewAnnounceListResponseProps extends ResponseModel {
         /**
          * 공지사항 상단 고정 여부
          */
-        fixed: boolean;
+        pinned: boolean;
         /**
          * 공지사항 상단 고정 일자
          */
-        fixedAt: string;
+        pinnedAt: string;
+
         writer: {
           id: number;
           nickname: string;
           role: string;
+        };
+
+        states: {
+          /**
+           * 공지사항 작성자 역할
+           */
+          role: CrewRole;
         };
       },
     ];

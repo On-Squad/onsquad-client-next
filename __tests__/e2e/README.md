@@ -7,7 +7,7 @@ Playwright 기반 E2E 테스트를 작성하는 디렉토리입니다.
 ### 모든 테스트 실행
 
 ```bash
-npm run test:e2e
+yarn test:e2e
 ```
 
 ### 특정 테스트 실행
@@ -19,7 +19,7 @@ npx playwright test appbar.spec.ts
 ### UI 모드로 실행
 
 ```bash
-npm run test:e2e:ui
+yarn test:e2e:ui
 ```
 
 ## 인증 Setup

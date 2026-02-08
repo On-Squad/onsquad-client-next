@@ -179,6 +179,7 @@ const config = {
         'scarlet-red700': '#8D1E16',
         'scarlet-red800': '#820618',
         'scarlet-red900': '#471D14',
+        star: '#FFCD29',
       },
       borderRadius: {
         lg: 'var(--radius)',

@@ -59,7 +59,7 @@ const CommunityContainer = () => {
             pages: [
               {
                 data: crewList,
-                nextPage: crewList.length === 10 ? 2 : undefined,
+                nextPage: crewList.results.length === 10 ? 2 : undefined,
               },
             ],
             pageParams: [1],
@@ -67,7 +67,7 @@ const CommunityContainer = () => {
         : undefined,
   });
 
-  const combinedList = data?.pages.flatMap((page) => page.data) ?? [];
+  const combinedList = data?.pages.flatMap((page) => page.data.results) ?? [];
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
@@ -102,7 +102,10 @@ const CommunityContainer = () => {
         {isLoading ? <Skeleton.CrewList /> : <CrewList list={combinedList ?? []} />}
 
         {combinedList.length > 0 && hasNextPage && (
-          <div ref={ref} className="absolute bottom-[26px] left-[47.5%] col-span-full flex h-10 justify-center">
+          <div
+            ref={ref}
+            className="absolute bottom-[26px] left-1/2 col-span-full flex h-10 -translate-x-1/2 justify-center"
+          >
             <Loader2 className="mt-6 h-6 w-6 animate-spin text-primary" />
             {!isScrollLoading && <Loader2 className="mt-6 h-6 w-6 animate-spin text-primary" />}
           </div>

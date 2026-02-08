@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
 import { languages } from '@codemirror/language-data';
@@ -32,6 +32,8 @@ const TextEditor = ({ value = '', onChange, placeholder }: TextEditorProps) => {
   const [content, setContent] = useState<string>(value);
   const [activeTab, setActiveTab] = useState<EditorTab>('write');
   const [editorHeight, setEditorHeight] = useState<number>(300);
+
+  const editorContainerRef = useRef<HTMLDivElement>(null);
 
   const handleChange = (val: string) => {
     setContent(val);
@@ -79,12 +81,12 @@ const TextEditor = ({ value = '', onChange, placeholder }: TextEditorProps) => {
   };
 
   useEffect(() => {
-    const layoutElement = document.getElementById('no-tab-wrapper');
+    const layoutElement = editorContainerRef.current;
 
     const calculateHeight = () => {
-      if (!layoutElement) return;
+      if (!editorContainerRef.current) return;
 
-      const height = layoutElement.clientHeight - 420;
+      const height = editorContainerRef.current.clientHeight - 51;
 
       setEditorHeight(height);
     };
@@ -97,7 +99,7 @@ const TextEditor = ({ value = '', onChange, placeholder }: TextEditorProps) => {
   }, []);
 
   return (
-    <div className="w-full">
+    <div className="flex h-full w-full flex-col justify-between">
       <div className="flex border-b border-gray-200 bg-gray-50">
         <button
           type="button"
@@ -119,7 +121,7 @@ const TextEditor = ({ value = '', onChange, placeholder }: TextEditorProps) => {
         </button>
       </div>
 
-      <div className="overflow-hidden rounded-b-lg border border-gray-200">
+      <div ref={editorContainerRef} className="grow overflow-hidden rounded-b-lg border border-gray-200">
         {activeTab === 'write' ? (
           <div>
             <div className="flex items-center gap-2 border-b border-gray-200 bg-white px-4 py-2">

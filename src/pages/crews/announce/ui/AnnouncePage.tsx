@@ -4,7 +4,6 @@ import { AnnounceList } from '@/features/crew/announce';
 
 import { crewQueries } from '@/entities/crew/api/crew.queries';
 
-import { type CrewAnnounceListResponseProps } from '@/shared/api/crew';
 import { getQueryClient } from '@/shared/lib/queries';
 
 interface AnnouncePageProps {
@@ -20,13 +19,9 @@ export default async function AnnouncePage({ params }: AnnouncePageProps) {
 
   await queryClient.prefetchQuery(crewQueries.announceList({ crewId }));
 
-  const announceListData = queryClient.getQueryData<CrewAnnounceListResponseProps>(
-    crewQueries.announceList({ crewId }).queryKey,
-  );
-
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <AnnounceList data={announceListData?.data} crewId={crewId} />
+      <AnnounceList crewId={crewId} />
     </HydrationBoundary>
   );
 }

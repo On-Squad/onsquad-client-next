@@ -10,65 +10,65 @@ export interface CrewDetailGetFetchParams {
 
 export interface CrewDetailResponseProps extends ResponseModel {
   data: {
-    /**
-     * 크루 참여 여부
-     */
-    alreadyParticipant: boolean;
-
-    crew: {
+    states: {
       /**
-       * 크루 pk
+       * 크루 참여 여부
+       */
+      alreadyParticipant: boolean;
+    };
+
+    /**
+     * 크루 pk
+     */
+    id: number;
+
+    /**
+     * 크루 이름
+     */
+    name: string;
+
+    /**
+     * 크루 소개
+     */
+    introduce: string;
+
+    /**
+     * 크루 상세 정보
+     */
+    detail: string;
+
+    /**
+     * 크루 대표 이미지
+     * - 없을 경우 서버 default 이미지
+     */
+    imageUrl: string;
+
+    /**
+     * 카카오 오픈챗 링크
+     */
+    kakaoLink: string;
+
+    /**
+     * 해시태그
+     * - 첫번 째 인덱스는 멤버 수 int
+     */
+    hashtags: [number, ...HashTag[]];
+
+    /**
+     * 크루 주인 이름
+     */
+    owner: {
+      /**
+       * 크루 주인 pk
        */
       id: number;
 
       /**
-       * 크루 이름
+       * 주인 닉네임
        */
-      name: string;
+      nickname: string;
 
-      /**
-       * 크루 소개
-       */
-      introduce: string;
-
-      /**
-       * 크루 상세 정보
-       */
-      detail: string;
-
-      /**
-       * 크루 대표 이미지
-       * - 없을 경우 서버 default 이미지
-       */
-      imageUrl: string;
-
-      /**
-       * 카카오 오픈챗 링크
-       */
-      kakaoLink: string;
-
-      /**
-       * 해시태그
-       * - 첫번 째 인덱스는 멤버 수 int
-       */
-      hashtags: [number, ...HashTag[]];
-
-      /**
-       * 크루 주인 이름
-       */
-      owner: {
-        /**
-         * 크루 주인 pk
-         */
-        id: number;
-
-        /**
-         * 주인 닉네임
-         */
-        nickname: string;
-
-        mbti: Mbti | '';
-      };
+      mbti: Mbti | '';
     };
   };
 }

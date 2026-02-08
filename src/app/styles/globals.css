@@ -4,6 +4,9 @@
 
 @layer base {
   :root {
+    --app-header-height: 3.5rem;
+    --app-tab-height: 5rem;
+
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 

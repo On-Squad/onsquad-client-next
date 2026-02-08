@@ -69,7 +69,7 @@ async function HomePage() {
         </section>
         <section>
           <HydrationBoundary state={dehydrate(queryClient)}>
-            <CrewList list={crewListData ?? []} />
+            <CrewList list={crewListData?.results ?? []} />
           </HydrationBoundary>
         </section>
       </div>

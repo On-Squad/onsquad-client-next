@@ -17,7 +17,7 @@ async function CrewDetailLayout({ children, params }: { children: React.ReactNod
 
   const crewDetailData = queryClient.getQueryData<CrewDetailData>(crewQueries.detail({ crewId }).queryKey);
 
-  const appBarTitle = crewDetailData?.crew?.name;
+  const appBarTitle = crewDetailData?.name;
   return (
     <>
       <Appbar isMenuHeader={false} title={appBarTitle} />

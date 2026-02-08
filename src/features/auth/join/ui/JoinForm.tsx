@@ -25,6 +25,7 @@ const JoinForm = () => {
   const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
   const [isEmailAuth, setIsEmailAuth] = useState<boolean>(false);
   const [isEmailAuthSuccess, setIsEmailAuthSuccess] = useState<boolean>(false);
+  const [isNicknameValid, setIsNicknameValid] = useState<boolean>(false);
 
   const { toast } = useToast();
 

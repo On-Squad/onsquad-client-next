@@ -35,11 +35,11 @@ export default {
             password: credentials?.password as string,
           });
 
-          const { accessToken, refreshToken } = loginResponse.data.data;
-
           if (loginResponse.data.error) {
             throw new InvalidLoginError(loginResponse.data.error.message);
           }
+
+          const { accessToken, refreshToken } = loginResponse.data.data;
 
           const userInfoResponse = await userInfoGetFetch({
             accessToken,

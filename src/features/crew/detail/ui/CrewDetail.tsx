@@ -32,15 +32,15 @@ export const CrewDetail = ({ crewId }: CrewDetailProps) => {
 
   const { data } = useQuery(crewQueries.detail({ crewId }));
 
-  const alreadyParticipant = data?.alreadyParticipant ?? false;
-  const isOwner = alreadyParticipant && data?.crew.owner.nickname === session?.nickname;
+  const alreadyParticipant = data?.states.alreadyParticipant ?? false;
+  const isOwner = alreadyParticipant && data?.owner.nickname === session?.nickname;
 
   return (
-    <div className="-mx-5 -mb-5 -mt-12 min-h-[93dvh] bg-white px-0">
+    <div className="-mx-5 -mt-5 h-full min-h-[93dvh] bg-white px-0">
       <div
-        className="w-full cursor-pointer bg-white transition-all duration-200 hover:shadow-md S2:w-full SE:w-full mobile:w-full tablet:w-full"
+        className="w-full cursor-pointer transition-all duration-200 hover:shadow-md S2:w-full SE:w-full mobile:w-full tablet:w-full"
         onClick={() =>
-          router.push(`/crews/${data?.crew.id}/home?category=전체`, {
+          router.push(`/crews/${data?.id}/home?category=전체`, {
             scroll: false,
           })
         }
@@ -48,7 +48,7 @@ export const CrewDetail = ({ crewId }: CrewDetailProps) => {
         <div className="relative h-[360px] w-full overflow-hidden S2:w-full SE:w-full mobile:w-full tablet:w-full">
           {data ? (
             <Image
-              src={data.crew.imageUrl || '/images/mock1.png'}
+              src={data.imageUrl || '/images/mock1.png'}
               alt="크루이미지"
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -62,15 +62,14 @@ export const CrewDetail = ({ crewId }: CrewDetailProps) => {
               <div className="flex items-center gap-2">
                 {alreadyParticipant ? <Badge className="bg-primary300 text-black">참여중인 크루</Badge> : null}
                 {isOwner ? <Badge className="bg-primary400 text-black">크루장</Badge> : null}
-                <Badge className="bg-primary text-black">모집중</Badge>
               </div>
             </div>
-            <Text.xl className="font-semibold">{data?.crew.name}</Text.xl>
+            <Text.xl className="font-semibold">{data?.name}</Text.xl>
           </div>
         </div>
       </div>
 
-      <div className="px-5">
+      <div className="mb-6 px-5">
         <div className="py-6">
           <div className="flex flex-col gap-2">
             <div className="flex gap-3">
@@ -79,12 +78,12 @@ export const CrewDetail = ({ crewId }: CrewDetailProps) => {
               </h4>
               <div className="flex items-center gap-2">
                 <Avatar className="h-5 w-5" />
-                <Text.xs className="font-semibold text-black">{data?.crew.owner?.nickname}</Text.xs>
-                <Text.xs>{data?.crew.owner.mbti ?? 'ESFP'}</Text.xs>
+                <Text.xs className="font-semibold text-black">{data?.owner?.nickname}</Text.xs>
+                <Text.xs>{data?.owner.mbti ?? 'ESFP'}</Text.xs>
               </div>
             </div>
             <Text.base className="font-medium">
-              <p>{data?.crew.introduce}</p>
+              <p>{data?.introduce}</p>
             </Text.base>
           </div>
         </div>
@@ -95,13 +94,13 @@ export const CrewDetail = ({ crewId }: CrewDetailProps) => {
               <Text.xl className="font-bold">크루 상세정보</Text.xl>
             </h4>
             <Text.base className="font-medium">
-              <p>{data?.crew.detail}</p>
+              <p>{data?.detail}</p>
             </Text.base>
           </div>
         </div>
 
         <div className="tagArea flex flex-wrap items-center gap-2 py-6">
-          {data?.crew.hashtags.map((tag, index) => {
+          {data?.hashtags.map((tag, index) => {
             if (index === 0) {
               return <Badge key={index}>멤버 수 {tag}+</Badge>;
             }

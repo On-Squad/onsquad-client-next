@@ -4,9 +4,9 @@ const NoTabLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div
       id="no-tab-wrapper"
-      className="fixed inset-x-0 top-14 mx-auto h-[calc(100vh-3.5rem)] max-w-[45rem] overflow-y-auto bg-[#f8f8f8]"
+      className="fixed inset-x-0 top-[var(--app-header-height)] z-0 mx-auto flex h-[calc(100svh-var(--app-header-height))] max-w-[45rem] overflow-y-auto bg-[#f8f8f8]"
     >
-      <div className="mx-auto mt-12 px-5 pb-5">{children}</div>
+      <div className="mx-auto grow p-5">{children}</div>
     </div>
   );
 };

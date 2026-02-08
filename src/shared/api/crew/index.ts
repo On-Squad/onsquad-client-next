@@ -7,3 +7,6 @@ export * from './crewMainGetFetch';
 export * from './me/myCrewListGetFetch';
 export * from './announce/crewAnnounceGetFetch';
 export * from './announce/crewAnnouncePostFetch';
+export * from './announce/crewAnnounceDetailGetFetch';
+export * from './announce/announcePinPatchFetch';
+export * from './announce/crewAnnouncePutFetch';

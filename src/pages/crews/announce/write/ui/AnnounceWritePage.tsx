@@ -10,7 +10,7 @@ export default async function AnnounceWritePage({ params }: { params: { id: stri
   return (
     <>
       <Appbar isMenuHeader={false} title="공지사항" />
-      <WriteForm crewId={crewId} />
+      <WriteForm crewId={crewId} mode="add" />
     </>
   );
 }

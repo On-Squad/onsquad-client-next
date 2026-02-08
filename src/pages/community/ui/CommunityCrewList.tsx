@@ -10,7 +10,7 @@ import { Text } from '@/shared/ui/Text';
 import { COMMUNITY_CONTAINER_HEIGHT } from '../config';
 
 interface CrewListDataProps {
-  list: PropType<CrewListResponseProps, 'data'>;
+  list: PropType<PropType<CrewListResponseProps, 'data'>, 'results'>;
 }
 
 const CommunityCrewList = ({ list: crewList }: CrewListDataProps) => {

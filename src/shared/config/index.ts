@@ -2,6 +2,8 @@ import { type HashTag } from '@/shared/api/model';
 
 import { PATH } from './paths';
 
+export const DEFAULT_PROFILE_IMAGE = '/icons/default_profile.svg';
+
 export const APPBAR_HEIGHT = 56;
 
 export type Mbti =

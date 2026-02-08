@@ -4,14 +4,7 @@ import React from 'react';
 
 import { LucideIcon } from 'lucide-react';
 
-import {
-  Toast,
-  // ToastClose,
-  ToastDescription,
-  ToastProvider,
-  ToastTitle,
-  ToastViewport,
-} from '@/shared/ui/ui/toast';
+import { Toast, ToastDescription, ToastProvider, ToastTitle, ToastViewport } from '@/shared/ui/ui/toast';
 
 import { useToast } from './use-toast';
 
