@@ -256,19 +256,18 @@ const ProfileForm = () => {
           />
           <Input name="addressDetail" type="text" />
         </div>
-      </div>
-
-      <div className="buttonArea mb-12 mt-36">
-        <Button className="w-full" onClick={handleSubmit} disabled={displaySpinner}>
-          {displaySpinner ? (
-            <div className="flex items-center justify-center gap-1">
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              프로필을 수정하고 있어요
-            </div>
-          ) : (
-            '프로필 수정'
-          )}
-        </Button>
+        <div className="mt-36 h-full pb-12">
+          <Button className="w-full" onClick={handleSubmit} disabled={displaySpinner}>
+            {displaySpinner ? (
+              <div className="flex items-center justify-center gap-1">
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                프로필을 수정하고 있어요
+              </div>
+            ) : (
+              '프로필 수정'
+            )}
+          </Button>
+        </div>
       </div>
     </FormProvider>
   );

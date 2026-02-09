@@ -36,7 +36,7 @@ export const CrewDetail = ({ crewId }: CrewDetailProps) => {
   const isOwner = alreadyParticipant && data?.owner.nickname === session?.nickname;
 
   return (
-    <div className="-mx-5 -mt-5 h-full min-h-[93dvh] bg-white px-0">
+    <div className="-mx-5 -mt-5 h-full min-h-[calc(100%+1.25rem)] bg-white px-0">
       <div
         className="w-full cursor-pointer transition-all duration-200 hover:shadow-md S2:w-full SE:w-full mobile:w-full tablet:w-full"
         onClick={() =>
