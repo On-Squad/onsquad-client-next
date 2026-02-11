@@ -88,7 +88,7 @@ const CommunityContainer = () => {
 
   return (
     <FormProvider {...method}>
-      <div className="-mx-5 min-h-40 bg-[#d9d9d9]">
+      <div className="-mx-5 -mt-6 min-h-40 bg-[#d9d9d9]">
         <div className="flex min-h-56 items-end justify-center bg-[url('/images/search_banner.svg')] bg-cover bg-center bg-no-repeat">
           <div className="mx-auto w-2/3 pb-4 pt-6 S2:w-full SE:w-full SE:px-2 mobile:w-full mobile:px-2">
             <Search />

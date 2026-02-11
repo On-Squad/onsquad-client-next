@@ -15,8 +15,8 @@ interface CrewHeaderProps {
 
 export const CrewHeader = ({ crew }: CrewHeaderProps) => {
   return (
-    <div className="w-full cursor-pointer bg-white transition-all duration-200 hover:shadow-md S2:w-full SE:w-full mobile:w-full tablet:w-full">
-      <div className="relative h-[360px] w-full overflow-hidden S2:w-full SE:w-full mobile:w-full tablet:w-full">
+    <div className="h-full w-full cursor-pointer bg-white transition-all duration-200 hover:shadow-md S2:w-full SE:w-full mobile:w-full tablet:w-full">
+      <div className="relative h-[calc(50dvh-var(--app-header-height))] w-full overflow-hidden S2:w-full SE:w-full mobile:w-full tablet:w-full">
         <Image
           src={crew?.imageUrl || '/images/mock1.png'}
           alt="크루이미지"

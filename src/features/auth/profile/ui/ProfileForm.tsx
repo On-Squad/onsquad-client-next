@@ -175,7 +175,7 @@ const ProfileForm = () => {
         <div className="mb-12 flex w-full items-center justify-center gap-2">
           <div className="relative flex h-24 w-24 items-center justify-center rounded-3xl border border-[#f8f8f8]">
             <div
-              className={cn(`relative h-full w-full cursor-pointer overflow-hidden rounded-3xl object-cover`)}
+              className={cn(`h-full w-full cursor-pointer overflow-hidden rounded-3xl object-cover`)}
               onClick={() => {
                 fileRef.current?.click();
               }}

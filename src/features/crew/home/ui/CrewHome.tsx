@@ -13,7 +13,7 @@ interface CrewHomeProps {
 
 export const CrewHome = ({ data }: CrewHomeProps) => {
   return (
-    <div className="-mx-5 -mt-12">
+    <div className="-mx-5 -mt-5 min-h-[calc(100dvh-var(--app-header-height))]">
       <CrewHeader crew={data?.crew} />
       <div className="mt-6">
         <CrewInfoSlider announces={data?.announces} crewInfo={data?.crew} />

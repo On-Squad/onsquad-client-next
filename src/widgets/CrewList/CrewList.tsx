@@ -69,7 +69,7 @@ const CrewList = ({ list }: CrewListPropsType) => {
         <Button
           className="h-fit p-2 font-semibold text-[#909090] hover:text-[#6C6C6C] active:text-[#464646]"
           variant="ghost"
-          onClick={() => router.push(PATH.community, { scroll: false })}
+          onClick={() => router.push(PATH.community, { scroll: true })}
         >
           모집중인 크루 더 보러가기
         </Button>

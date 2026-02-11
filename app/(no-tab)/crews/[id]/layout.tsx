@@ -1,1 +1,1 @@
-export { default } from '@/app/layouts/CrewLayout';
+export { CrewLayout as default } from '@/app/layouts';

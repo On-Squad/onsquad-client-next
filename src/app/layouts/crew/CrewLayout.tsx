@@ -6,7 +6,7 @@ import { crewQueries } from '@/entities/crew/api/crew.queries';
 import { getQueryClient } from '@/shared/lib/queries';
 import { Appbar } from '@/shared/ui/Appbar';
 
-import NoTabContentLayout from './NoTabContentLayout';
+import NoTabContentLayout from '../NoTabContentLayout';
 
 async function CrewDetailLayout({ children, params }: { children: React.ReactNode; params: { id: string } }) {
   const { id } = await params;

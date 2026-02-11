@@ -36,7 +36,7 @@ export const CrewDetail = ({ crewId }: CrewDetailProps) => {
   const isOwner = alreadyParticipant && data?.owner.nickname === session?.nickname;
 
   return (
-    <div className="-mx-5 -mt-5 h-full min-h-[calc(100%+1.25rem)] bg-white px-0">
+    <div className="-mx-5 -mt-5 min-h-[calc(100dvh-var(--app-header-height))] bg-white px-0">
       <div
         className="w-full cursor-pointer transition-all duration-200 hover:shadow-md S2:w-full SE:w-full mobile:w-full tablet:w-full"
         onClick={() =>
@@ -45,7 +45,7 @@ export const CrewDetail = ({ crewId }: CrewDetailProps) => {
           })
         }
       >
-        <div className="relative h-[360px] w-full overflow-hidden S2:w-full SE:w-full mobile:w-full tablet:w-full">
+        <div className="relative h-[calc(50dvh-var(--app-header-height))] w-full overflow-hidden S2:w-full SE:w-full mobile:w-full tablet:w-full">
           {data ? (
             <Image
               src={data.imageUrl || '/images/mock1.png'}
@@ -70,7 +70,7 @@ export const CrewDetail = ({ crewId }: CrewDetailProps) => {
       </div>
 
       <div className="mb-6 px-5">
-        <div className="py-6">
+        <div className="my-6">
           <div className="flex flex-col gap-2">
             <div className="flex gap-3">
               <h4>
@@ -88,7 +88,7 @@ export const CrewDetail = ({ crewId }: CrewDetailProps) => {
           </div>
         </div>
 
-        <div className="py-6">
+        <div className="my-6">
           <div className="flex flex-col gap-2">
             <h4>
               <Text.xl className="font-bold">크루 상세정보</Text.xl>
@@ -99,7 +99,7 @@ export const CrewDetail = ({ crewId }: CrewDetailProps) => {
           </div>
         </div>
 
-        <div className="tagArea flex flex-wrap items-center gap-2 py-6">
+        <div className="tagArea my-6 flex flex-wrap items-center gap-2">
           {data?.hashtags.map((tag, index) => {
             if (index === 0) {
               return <Badge key={index}>멤버 수 {tag}+</Badge>;

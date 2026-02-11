@@ -56,7 +56,7 @@ const Appbar = ({ isMenuHeader = true, title }: AppbarPropsType) => {
         `fixed left-1/2 top-0 z-[100] flex w-full min-w-[20rem] max-w-[45rem] -translate-x-1/2 transform items-center justify-between bg-white shadow-md-bottom`,
       )}
     >
-      <Link className="relative ml-4 h-20 w-20" href={PATH.root} scroll={false}>
+      <Link className="relative ml-4 h-14 w-20" href={PATH.root} scroll={false}>
         <Image src="/icons/onsquad_logo.svg" alt="온스쿼드" fill priority />
         <h1 className="sr-only">온스쿼드</h1>
       </Link>
@@ -78,7 +78,7 @@ const Appbar = ({ isMenuHeader = true, title }: AppbarPropsType) => {
           <SheetTrigger asChild>
             <TextIcon color="#636363" strokeWidth={1.5} className="cursor-pointer" />
           </SheetTrigger>
-          <SheetContent className="no-scroll-bar top-20 overflow-y-auto rounded-tl-2xl bg-grayscale100 focus-visible:border-0 focus-visible:outline-0">
+          <SheetContent className="no-scroll-bar top-[var(--app-header-height)] overflow-y-auto rounded-tl-2xl bg-grayscale100 focus-visible:border-0 focus-visible:outline-0">
             <SheetTitle className="mt-5">
               <Profile session={session} />
             </SheetTitle>
