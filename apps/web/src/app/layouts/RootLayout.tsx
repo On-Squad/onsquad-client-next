@@ -22,6 +22,7 @@ import { Toaster } from '@/shared/ui/ui/toaster';
 import { QueryProvider, SessionProvider } from '../providers';
 import { NavDirectionTracker } from '../providers/NavDirectionTracker';
 import NotificationProvider from '../providers/notification-provider';
+import { MutationErrorProvider } from '../providers/mutation-error-provider';
 import { ObservabilityProvider } from '../providers/observability-provider';
 import UserProvider from '../providers/user-provider';
 import { WebViewBridge } from '../providers/webview-bridge';
@@ -66,6 +67,7 @@ export default async function RootLayout({
                       </Suspense>
                       <Wrapper>{children}</Wrapper>
                       <Toaster />
+                      <MutationErrorProvider />
                       <DebugOverlay />
                     </NotificationProvider>
                   </QueryProvider>

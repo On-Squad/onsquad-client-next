@@ -1,13 +1,11 @@
 import { UseMutationOptions, UseMutationResult, useMutation } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
-import { CircleX } from 'lucide-react';
 
 import type { ApiResponse } from '@/shared/api/common';
 import { ResponseModel } from '@/shared/api/model';
-import { TOAST } from '@/shared/config/toast';
 import { isTokenExpiredError } from '@/shared/lib/auth/isTokenExpiredError';
-import { useToast } from '@/shared/lib/hooks/useToast';
 
+import { presentMutationError } from './mutationErrorPresenter';
 import { QueryError } from './useApiQuery';
 
 export const useApiMutation = <
@@ -28,8 +26,6 @@ export const useApiMutation = <
   options?: Omit<UseMutationOptions<TMutationFnData, TError, TVariables, TContext>, 'mutationKey' | 'mutationFn'>;
 }): UseMutationResult<TMutationFnData, TError, TVariables, TContext> => {
   const queryClient = useQueryClient();
-
-  const { toast, hide } = useToast();
 
   return useMutation<TMutationFnData, TError, TVariables, TContext>({
     mutationFn: async (variables: TVariables) => {
@@ -59,12 +55,9 @@ export const useApiMutation = <
         return error;
       }
 
+      // 어떻게 보여줄지는 플랫폼이 정한다 — 여기서는 실패 사실만 넘긴다.
       if (error instanceof Error) {
-        toast({
-          title: error.message,
-          className: TOAST.error,
-          icon: <CircleX onClick={() => hide()} />,
-        });
+        presentMutationError(error);
       }
 
       return error;
