@@ -19,6 +19,7 @@ describe('getRuntimeContext', () => {
       bridgeVersion: 3,
       appVersion: '1.2.0',
       os: 'android',
+      methods: ['shell.ready'],
       tapAt: 1_000,
       webviewCreatedAt: 1_200,
     });

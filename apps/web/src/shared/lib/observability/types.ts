@@ -1,20 +1,5 @@
-/**
- * RN 셸이 웹 로드 전에 주입하는 앱 정보. 일반 브라우저에서는 undefined.
- *
- * 이 객체는 앱과 맺은 계약이다. 스토어에 깔린 구버전 앱은 업데이트되지 않으므로
- * **필드는 추가만 하고 삭제·의미 변경을 하지 않는다.** (Phase 1 에서 methods 가 추가된다)
- */
-export interface AppInfo {
-  /** 계약 버전. 웹이 앱의 능력 범위를 판정하는 기준 */
-  bridgeVersion: number;
-  /** 앱 빌드 버전 (예: '1.2.0') */
-  appVersion: string;
-  os: 'ios' | 'android';
-  /** 사용자가 이 화면을 요청한 시각(epoch ms). 웹뷰 생성 이전 구간을 재기 위한 0초 기준 */
-  tapAt?: number;
-  /** WebView 인스턴스가 생성된 시각(epoch ms) */
-  webviewCreatedAt?: number;
-}
+// 앱 정보의 계약은 브릿지 패키지가 단일 출처다. 여기서 다시 정의하지 않는다.
+export type { AppInfo } from '@onsquad/bridge';
 
 /** 모든 리포트에 공통으로 붙는 실행 환경 태그. "재현이 안 되는" 버그를 좁히는 단서다. */
 export interface RuntimeContext {

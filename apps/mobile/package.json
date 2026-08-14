@@ -11,6 +11,7 @@
     "start": "react-native start"
   },
   "dependencies": {
+    "@onsquad/bridge": "workspace:^",
     "react": "19.2.3",
     "react-native": "0.86.0",
     "react-native-bootsplash": "7.3.1",

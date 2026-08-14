@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-import { buildAppInfoScript } from '../appInfo';
+import { buildAppInfo } from '../appInfo';
 
 /**
  * 웹에 주입할 앱 정보 스크립트를 만든다.
@@ -13,7 +13,7 @@ export const useAppInfoScript = () => {
   const scriptRef = useRef<string | null>(null);
 
   if (scriptRef.current === null) {
-    scriptRef.current = buildAppInfoScript(Date.now());
+    scriptRef.current = buildAppInfo(Date.now());
   }
 
   return scriptRef.current;

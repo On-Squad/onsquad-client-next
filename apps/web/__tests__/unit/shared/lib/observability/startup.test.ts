@@ -20,6 +20,7 @@ describe('buildReport', () => {
       bridgeVersion: 1,
       appVersion: '1.0.0',
       os: 'ios',
+      methods: [],
       tapAt: origin - 1_000,
       webviewCreatedAt: origin - 400,
     };

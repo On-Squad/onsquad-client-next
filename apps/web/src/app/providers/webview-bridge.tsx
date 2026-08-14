@@ -2,14 +2,22 @@
 
 import { useEffect } from 'react';
 
+import { install, shellReady } from '@/shared/lib/bridge';
+
 /**
- * RN WebView 셸에 "웹 준비 완료"를 알린다.
- * 마운트(=하이드레이션 완료) 시점에 신호 → 네이티브 스플래시(BootSplash) 해제.
- * 일반 브라우저에서는 ReactNativeWebView 가 없어 no-op.
+ * 브릿지 채널을 열고 RN 셸에 "웹 준비 완료"를 알린다.
+ *
+ * `install()` 이 먼저다 — 네이티브 → 웹 진입점(`window.__onNative`)이 없으면
+ * 우리가 보낸 요청의 응답을 받을 곳이 없다.
+ * 일반 브라우저에서는 둘 다 no-op 이다.
  */
 export function WebViewBridge() {
   useEffect(() => {
-    window.ReactNativeWebView?.postMessage('APP_READY');
+    const uninstall = install();
+
+    shellReady();
+
+    return uninstall;
   }, []);
 
   return null;

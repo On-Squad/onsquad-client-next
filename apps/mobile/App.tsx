@@ -6,7 +6,7 @@
  * @format
  */
 
-import { useRef, type ComponentRef } from 'react';
+import { useCallback, useRef, type ComponentRef } from 'react';
 import { useColorScheme, StatusBar, StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { WebView, type WebViewMessageEvent } from 'react-native-webview';
@@ -14,6 +14,7 @@ import { WebView, type WebViewMessageEvent } from 'react-native-webview';
 import { useAndroidHardwareBack } from './src/hooks/useAndroidHardwareBack';
 import { useAppInfoScript } from './src/hooks/useAppInfoScript';
 import { useBackGesture } from './src/hooks/useBackGesture';
+import { useBridgeMessages } from './src/hooks/useBridgeMessages';
 import { useSplashScreen } from './src/hooks/useSplashScreen';
 
 // iOS·Android 모두 localhost 를 사용한다. (Android 는 `adb reverse tcp:3000 tcp:3000` 로 호스트에 매핑 — run-emulator 스킬)
@@ -26,17 +27,27 @@ function App() {
   const webRef = useRef<ComponentRef<typeof WebView>>(null);
 
   const { hideSplash, handleMessage: handleSplashMessage } = useSplashScreen();
-  const { backGestureEnabled, handleMessage: handleBackGestureMessage } = useBackGesture();
+  const { backGestureEnabled, setBackGestureEnabled, handleMessage: handleBackGestureMessage } = useBackGesture();
   const { onNavigationStateChange } = useAndroidHardwareBack(webRef);
   const appInfoScript = useAppInfoScript();
 
-  // 웹→네이티브 메시지를 각 관심사 훅으로 라우팅한다.
-  const onMessage = (event: WebViewMessageEvent) => {
-    const data = event.nativeEvent.data;
+  // 계약 이전 평문 신호. 구버전 웹 번들이 캐시에 남아 있을 수 있어 유지한다.
+  const handleLegacyMessage = useCallback(
+    (data: string) => {
+      handleSplashMessage(data);
+      handleBackGestureMessage(data);
+    },
+    [handleSplashMessage, handleBackGestureMessage],
+  );
 
-    handleSplashMessage(data);
-    handleBackGestureMessage(data);
-  };
+  const handleBridgeMessage = useBridgeMessages({
+    webRef,
+    onReady: hideSplash,
+    onBackGestureChange: setBackGestureEnabled,
+    onLegacyMessage: handleLegacyMessage,
+  });
+
+  const onMessage = (event: WebViewMessageEvent) => handleBridgeMessage(event.nativeEvent.data);
 
   return (
     <SafeAreaProvider>
