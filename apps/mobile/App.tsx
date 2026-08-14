@@ -12,6 +12,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { WebView, type WebViewMessageEvent } from 'react-native-webview';
 
 import { useAndroidHardwareBack } from './src/hooks/useAndroidHardwareBack';
+import { useAppInfoScript } from './src/hooks/useAppInfoScript';
 import { useBackGesture } from './src/hooks/useBackGesture';
 import { useSplashScreen } from './src/hooks/useSplashScreen';
 
@@ -27,6 +28,7 @@ function App() {
   const { hideSplash, handleMessage: handleSplashMessage } = useSplashScreen();
   const { backGestureEnabled, handleMessage: handleBackGestureMessage } = useBackGesture();
   const { onNavigationStateChange } = useAndroidHardwareBack(webRef);
+  const appInfoScript = useAppInfoScript();
 
   // 웹→네이티브 메시지를 각 관심사 훅으로 라우팅한다.
   const onMessage = (event: WebViewMessageEvent) => {
@@ -49,6 +51,9 @@ function App() {
           onMessage={onMessage}
           onError={hideSplash}
           onNavigationStateChange={onNavigationStateChange}
+          // 앱 정보(버전·OS·시작 시각)를 콘텐츠 로드 전에 주입 → 웹이 첫 렌더부터 환경을 태깅하고
+          // '탭 → 첫 화면' 중 앱 구간을 계산할 수 있다.
+          injectedJavaScriptBeforeContentLoaded={appInfoScript}
           // iOS: 자동 콘텐츠 인셋 비활성화 → 웹이 safe-area 를 직접 처리(env(safe-area-inset-*))
           contentInsetAdjustmentBehavior="never"
           // iOS: back 버튼 헤더 화면에서만 엣지 스와이프 뒤로가기 허용(웹 신호로 토글)

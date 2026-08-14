@@ -14,6 +14,7 @@ import { ErrorFallback } from '@/widgets/ErrorFallback';
 import { OAuthCallback } from '@/features/auth/login';
 
 import { cn } from '@/shared/lib/utils';
+import { DebugOverlay } from '@/shared/ui/DebugOverlay';
 import { Spinner } from '@/shared/ui/Spinner';
 import { Wrapper } from '@/shared/ui/Wrapper';
 import { Toaster } from '@/shared/ui/ui/toaster';
@@ -21,6 +22,7 @@ import { Toaster } from '@/shared/ui/ui/toaster';
 import { QueryProvider, SessionProvider } from '../providers';
 import { NavDirectionTracker } from '../providers/NavDirectionTracker';
 import NotificationProvider from '../providers/notification-provider';
+import { ObservabilityProvider } from '../providers/observability-provider';
 import UserProvider from '../providers/user-provider';
 import { WebViewBridge } from '../providers/webview-bridge';
 
@@ -50,6 +52,7 @@ export default async function RootLayout({
 
         <Script strategy="lazyOnload" src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" />
         <body className={cn('bg-background antialiased')}>
+          <ObservabilityProvider />
           <WebViewBridge />
           <NavDirectionTracker />
           <OverlayProvider>
@@ -63,6 +66,7 @@ export default async function RootLayout({
                       </Suspense>
                       <Wrapper>{children}</Wrapper>
                       <Toaster />
+                      <DebugOverlay />
                     </NotificationProvider>
                   </QueryProvider>
                 </ErrorHandlingWrapper>
