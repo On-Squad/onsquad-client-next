@@ -1,6 +1,7 @@
 import { refreshSession } from '@/shared/lib/auth/sessionRefresh';
 
 import { ErrorCode, type ResponseModel } from './model';
+import { getIsBrowserRuntime } from './runtime';
 
 // 공통 요청 타임아웃 15초 (백엔드 무응답 시 무한 대기 방지)
 const REQUEST_TIMEOUT_MS = 15_000;
@@ -62,8 +63,9 @@ class ApiClient {
 
     let response: Response;
 
+    // BFF(/api/bff)는 브라우저에만 있다. 서버·RN 은 API 를 직접 호출하고 토큰을 명시적으로 넘긴다.
     const base =
-      typeof window !== 'undefined' && this.options.clientBaseUrl ? this.options.clientBaseUrl : this.options.baseUrl;
+      getIsBrowserRuntime() && this.options.clientBaseUrl ? this.options.clientBaseUrl : this.options.baseUrl;
 
     try {
       response = await fetch(`${base}${path}`, {
@@ -78,7 +80,8 @@ class ApiClient {
     } catch (error) {
       // 타임아웃(AbortController) → 시스템 에러 노출 대신 재시도 토스트 안내 후 친화적 에러로 변환.
       if (controller.signal.aborted) {
-        if (typeof window !== 'undefined') {
+        // 웹 전용 토스트다. 동적 import 라 브라우저가 아닐 땐 모듈 자체를 불러오지 않는다.
+        if (getIsBrowserRuntime()) {
           const { showTimeoutToast } = await import('@/shared/lib/toast/showTimeoutToast');
 
           showTimeoutToast();
@@ -99,7 +102,7 @@ class ApiClient {
     // 인증 인스턴스(BFF) + 브라우저에서 토큰 만료 응답을 받으면, 세션을 1회 갱신한 뒤 원요청을 재시도한다.
     // refreshSession 은 single-flight(useSession().update 기반)라 동시 만료 요청들이 갱신 1회를 공유한다.
     // 갱신 실패 시 재시도하지 않고 만료 응답을 그대로 흘려보내 상위(QueryCache.onError)에서 로그아웃되게 한다.
-    if (allowRetry && this.options.withAuth && typeof window !== 'undefined' && isTokenExpired(response.status, meta)) {
+    if (allowRetry && this.options.withAuth && getIsBrowserRuntime() && isTokenExpired(response.status, meta)) {
       const refreshed = await refreshSession();
 
       if (refreshed) {
