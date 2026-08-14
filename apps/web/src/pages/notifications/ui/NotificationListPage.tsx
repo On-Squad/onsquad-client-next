@@ -1,4 +1,4 @@
-import { NoTabContentLayout } from '@/app/layouts';
+import { NoTabContentLayout } from '@/widgets/NoTabContentLayout';
 
 import { NotificationList } from '@/features/notification/list';
 

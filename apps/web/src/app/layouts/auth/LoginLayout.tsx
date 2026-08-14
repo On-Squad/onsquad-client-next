@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { Appbar } from '@/shared/ui/Appbar';
+import { NoTabContentLayout } from '@/widgets/NoTabContentLayout';
 
-import NoTabContentLayout from '../NoTabContentLayout';
+import { Appbar } from '@/shared/ui/Appbar';
 
 const LoginLayout = ({ children }: { children: React.ReactNode }) => {
   return <NoTabContentLayout header={<Appbar title="로그인" />}>{children}</NoTabContentLayout>;

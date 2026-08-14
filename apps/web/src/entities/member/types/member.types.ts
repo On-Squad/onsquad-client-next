@@ -1,4 +1,4 @@
-import type { SquadUserInfo } from '@/entities/squad';
+import type { SquadUserInfo } from '@/shared/types';
 
 /** 내 스쿼드(참여/신청) 공통 스쿼드 요약 */
 export interface MySquadSummary {

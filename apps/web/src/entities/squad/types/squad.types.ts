@@ -1,4 +1,20 @@
-export type SquadCategory = '게임' | '배드민턴' | '테니스' | '풋살' | '축구' | '탁구' | '당구' | '농구' | '야구' | '레저' | '물놀이' | '겨울' | '문화';
+// --- API 레이어 타입 ---
+import type { SquadUserInfo } from '@/shared/types';
+
+export type SquadCategory =
+  | '게임'
+  | '배드민턴'
+  | '테니스'
+  | '풋살'
+  | '축구'
+  | '탁구'
+  | '당구'
+  | '농구'
+  | '야구'
+  | '레저'
+  | '물놀이'
+  | '겨울'
+  | '문화';
 
 export type SquadMemberRole = '크루장' | '매니저' | '일반';
 
@@ -27,21 +43,6 @@ export interface Squad {
   crewName: string;
   crewImageUrl?: string;
   createdAt: string;
-}
-
-// --- API 레이어 타입 ---
-
-import type { Mbti } from '@/shared/api/model';
-
-export interface SquadUserInfo {
-  /** 유저 pk */
-  id: number;
-  /** 닉네임 */
-  nickname: string;
-  /** 자기소개 */
-  introduce: string;
-  /** mbti */
-  mbti: Mbti | '';
 }
 
 export interface SquadDetailStates {

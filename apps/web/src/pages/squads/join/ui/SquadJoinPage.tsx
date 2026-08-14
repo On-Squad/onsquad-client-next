@@ -1,4 +1,4 @@
-import { NoTabContentLayout } from '@/app/layouts';
+import { NoTabContentLayout } from '@/widgets/NoTabContentLayout';
 
 import { SquadJoin } from '@/features/squad/join';
 

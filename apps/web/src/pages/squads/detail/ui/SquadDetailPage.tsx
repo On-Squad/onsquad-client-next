@@ -1,4 +1,4 @@
-import { NoTabContentLayout } from '@/app/layouts';
+import { NoTabContentLayout } from '@/widgets/NoTabContentLayout';
 
 import { SquadDetail, SquadDetailAppbar } from '@/features/squad/detail';
 

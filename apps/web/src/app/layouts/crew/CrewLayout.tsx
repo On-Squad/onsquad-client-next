@@ -1,6 +1,6 @@
-import { CrewDetailAppbar } from '@/features/crew/detail';
+import { NoTabContentLayout } from '@/widgets/NoTabContentLayout';
 
-import NoTabContentLayout from '../NoTabContentLayout';
+import { CrewDetailAppbar } from '@/features/crew/detail';
 
 async function CrewDetailLayout({ children, params }: { children: React.ReactNode; params: Promise<{ id: string }> }) {
   const { id } = await params;

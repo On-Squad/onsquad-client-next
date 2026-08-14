@@ -1,8 +1,8 @@
-import { MOCK_SQUAD } from '@/entities/squad';
-
-import { NoTabContentLayout } from '@/app/layouts';
+import { NoTabContentLayout } from '@/widgets/NoTabContentLayout';
 
 import { SquadRecruit } from '@/features/squad/recruit';
+
+import { MOCK_SQUAD } from '@/entities/squad';
 
 import { Appbar } from '@/shared/ui/Appbar';
 
