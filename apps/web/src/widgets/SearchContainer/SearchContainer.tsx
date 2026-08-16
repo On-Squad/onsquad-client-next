@@ -1,6 +1,6 @@
 'use client';
 
-import { yupResolver } from '@hookform/resolvers/yup';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { Searchbar } from '@/shared/ui/Searchbar';
@@ -8,7 +8,7 @@ import { searchSchema } from '@/shared/ui/Searchbar/validator';
 
 const SearchContainer = () => {
   const method = useForm({
-    resolver: yupResolver(searchSchema),
+    resolver: zodResolver(searchSchema),
     values: {
       search: '',
     },

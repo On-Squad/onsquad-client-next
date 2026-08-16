@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
-import { yupResolver } from '@hookform/resolvers/yup';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { debounce } from 'es-toolkit';
 import { Loader2 } from 'lucide-react';
@@ -26,7 +26,7 @@ const CommunityContainer = () => {
   const { data: crewList } = useQuery({ ...crewQueries.list(), throwOnError: false });
 
   const method = useForm({
-    resolver: yupResolver(searchSchema),
+    resolver: zodResolver(searchSchema),
     values: {
       search: '',
     },
