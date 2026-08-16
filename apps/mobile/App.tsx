@@ -1,29 +1,40 @@
 /**
- * Phase 1.5 Task 1 — 토큰 재사용 검증용 임시 화면.
- * Task 4 에서 네비게이터로 교체한다. 원래 웹뷰 셸은 git 이력에 있다.
+ * Phase 1.5 Task 3 — 배선 검증용 임시 화면.
+ * 화면을 만들기 전에 "RN 이 entities/crew 로 실제 백엔드와 통신되는가" 만 확인한다.
+ * Task 4 에서 네비게이터로 교체한다.
  */
-import { useEffect } from 'react';
-import { Text, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { ScrollView, Text } from 'react-native';
 import BootSplash from 'react-native-bootsplash';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+
+import { crewQueries } from '@/entities/crew';
 
 import './global.css';
+import { initShellSession } from './src/auth/session';
+
+initShellSession();
 
 function App() {
-  // 웹뷰 셸을 걷어내면서 스플래시를 내리는 주체가 사라졌다. 여기서 직접 내린다.
+  const [status, setStatus] = useState('요청 중…');
+
   useEffect(() => {
     void BootSplash.hide({ fade: true });
+
+    const options = crewQueries.list({ page: 1, size: 3 });
+
+    Promise.resolve(options.queryFn?.({} as never))
+      .then((data) => setStatus(`성공\n${JSON.stringify(data, null, 2).slice(0, 400)}`))
+      .catch((error: unknown) => setStatus(`실패\n${String(error)}`));
   }, []);
 
   return (
     <SafeAreaProvider>
-      {/* 스플래시 배경도 주황이라 구분이 안 된다. 흰 배경 위에 색 블록을 얹어 판정한다. */}
-      <View className="flex-1 items-center justify-center gap-s-30 bg-white">
-        <View className="h-32 w-32 items-center justify-center rounded-2xl bg-primary500">
-          <Text className="text-75 font-bold text-white">primary500</Text>
-        </View>
-        <Text className="text-100 font-bold">NativeWind 토큰 확인</Text>
-      </View>
+      <SafeAreaView className="flex-1 bg-white">
+        <ScrollView contentContainerClassName="p-s-30">
+          <Text className="text-75">{status}</Text>
+        </ScrollView>
+      </SafeAreaView>
     </SafeAreaProvider>
   );
 }
