@@ -1,6 +1,7 @@
 const path = require('path');
 
 const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
+const { withNativeWind } = require('nativewind/metro');
 
 /**
  * Metro configuration (pnpm 모노레포)
@@ -24,4 +25,5 @@ const config = {
   },
 };
 
-module.exports = mergeConfig(getDefaultConfig(projectRoot), config);
+// NativeWind v4 는 Metro 트랜스포머로 CSS 를 컴파일한다 — 이걸 감싸지 않으면 className 이 동작하지 않는다.
+module.exports = withNativeWind(mergeConfig(getDefaultConfig(projectRoot), config), { input: './global.css' });
