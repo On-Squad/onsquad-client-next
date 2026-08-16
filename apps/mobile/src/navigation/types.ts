@@ -2,4 +2,5 @@
 export type RootStackParamList = {
   CrewList: undefined;
   CrewDetail: { crewId: number; crewName: string };
+  CrewNew: undefined;
 };
