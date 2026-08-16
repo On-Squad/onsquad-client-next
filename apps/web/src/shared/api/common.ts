@@ -1,5 +1,6 @@
 import { refreshSession } from '@/shared/lib/auth/sessionRefresh';
 
+import { getProvidedAccessToken } from './accessTokenProvider';
 import { ErrorCode, type ResponseModel } from './model';
 import { getIsBrowserRuntime } from './runtime';
 import { notifyRequestTimeout } from './timeoutNotifier';
@@ -44,11 +45,16 @@ class ApiClient {
    * 인증 헤더 주입.
    * - 클라이언트: 인증 호출은 BFF(/api/bff)로 가며 BFF가 서버 세션 토큰을 주입한다(여기선 미주입).
    * - 서버: 호출자가 명시적으로 넘긴 `accessToken` 만 사용한다.
+   * - RN: 셸이 세션을 쥐므로 등록된 provider 에서 꺼낸다.
+   *
+   * 명시적 인자가 항상 우선이다. 브라우저는 둘 다 비어 있는 것이 정상이다.
    */
   private getAuthHeaders(accessToken?: string): Record<string, string> {
     if (!this.options.withAuth) return {};
 
-    return accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
+    const token = accessToken ?? getProvidedAccessToken();
+
+    return token ? { Authorization: `Bearer ${token}` } : {};
   }
 
   private async request<T>(
