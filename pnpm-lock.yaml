@@ -249,11 +249,8 @@ importers:
       vaul:
         specifier: ^1.0.0
         version: 1.1.2(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      yup:
-        specifier: ^1.4.0
-        version: 1.7.1
       zod:
-        specifier: 4.4.3
+        specifier: ^4.4.3
         version: 4.4.3
       zustand:
         specifier: ^4.5.2
@@ -15212,7 +15209,8 @@ snapshots:
       object-assign: 4.1.1
       react-is: 16.13.1
 
-  property-expr@2.0.6: {}
+  property-expr@2.0.6:
+    optional: true
 
   property-information@7.2.0: {}
 
@@ -16148,7 +16146,8 @@ snapshots:
 
   through@2.3.8: {}
 
-  tiny-case@1.0.3: {}
+  tiny-case@1.0.3:
+    optional: true
 
   tinybench@2.9.0: {}
 
@@ -16175,7 +16174,8 @@ snapshots:
 
   toidentifier@1.0.1: {}
 
-  toposort@2.0.2: {}
+  toposort@2.0.2:
+    optional: true
 
   tough-cookie@6.0.1:
     dependencies:
@@ -16251,7 +16251,8 @@ snapshots:
 
   type-fest@0.7.1: {}
 
-  type-fest@2.19.0: {}
+  type-fest@2.19.0:
+    optional: true
 
   type-fest@4.41.0: {}
 
@@ -16747,6 +16748,7 @@ snapshots:
       tiny-case: 1.0.3
       toposort: 2.0.2
       type-fest: 2.19.0
+    optional: true
 
   zod-validation-error@4.0.2(zod@4.4.3):
     dependencies:
