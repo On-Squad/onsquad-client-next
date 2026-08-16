@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { yupResolver } from '@hookform/resolvers/yup';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { CircleCheck, CircleX, Loader2 } from 'lucide-react';
 import { FormProvider, useForm } from 'react-hook-form';
 
@@ -149,7 +149,7 @@ const JoinForm = () => {
 
   const method = useForm({
     mode: 'onChange',
-    resolver: yupResolver(joinSchema),
+    resolver: zodResolver(joinSchema),
     values: {
       email: '',
       authCode: '',
