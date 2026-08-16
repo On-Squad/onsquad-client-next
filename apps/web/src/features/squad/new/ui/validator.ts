@@ -1,31 +1,20 @@
-import * as yup from 'yup';
+import { z } from 'zod';
 
-export const createSquadSchema = yup.object().shape({
-  title: yup.string().required('제목을 입력해주세요'),
-  content: yup.string().required('내용을 입력해주세요'),
-  capacity: yup
+const URL_REGEXP = /^(https?:\/\/[^\s/$.?#].[^\s]*)$/;
+
+export const createSquadSchema = z.object({
+  title: z.string().min(1, '제목을 입력해주세요'),
+  content: z.string().min(1, '내용을 입력해주세요'),
+  capacity: z
     .string()
-    .required('모집 인원을 입력해주세요')
-    .test('min-capacity', '모집 인원은 1명 이상이어야 합니다', (value) => {
-      if (!value) return false;
-      return Number(value) >= 1;
-    }),
-  address: yup.string().required('주소를 검색해주세요'),
-  addressDetail: yup.string().required('상세 주소를 입력해주세요'),
-  categories: yup
-    .array()
-    .of(yup.string().required())
-    .min(1, '카테고리를 선택해주세요')
-    .max(5, '최대 5개까지 선택할 수 있어요')
-    .required('카테고리를 선택해주세요'),
-  kakaoLink: yup
-    .string()
-    .required('카카오 오픈채팅 링크를 입력해주세요')
-    .matches(/^(https?:\/\/[^\s/$.?#].[^\s]*)$/, '유효한 URL을 입력해주세요'),
-  discordLink: yup
-    .string()
-    .default('')
-    .matches(/^(https?:\/\/[^\s/$.?#].[^\s]*)$/, { message: '유효한 URL을 입력해주세요', excludeEmptyString: true }),
+    .min(1, '모집 인원을 입력해주세요')
+    .refine((value) => Number(value) >= 1, '모집 인원은 1명 이상이어야 합니다'),
+  address: z.string().min(1, '주소를 검색해주세요'),
+  addressDetail: z.string().min(1, '상세 주소를 입력해주세요'),
+  categories: z.array(z.string()).min(1, '카테고리를 선택해주세요').max(5, '최대 5개까지 선택할 수 있어요'),
+  kakaoLink: z.string().min(1, '카카오 오픈채팅 링크를 입력해주세요').regex(URL_REGEXP, '유효한 URL을 입력해주세요'),
+  // yup 의 excludeEmptyString 대응 — 빈 문자열이거나, URL 형식이거나.
+  discordLink: z.union([z.literal(''), z.string().regex(URL_REGEXP, '유효한 URL을 입력해주세요')]).default(''),
 });
 
-export type CreateSquadFormValues = yup.InferType<typeof createSquadSchema>;
+export type CreateSquadFormValues = z.infer<typeof createSquadSchema>;

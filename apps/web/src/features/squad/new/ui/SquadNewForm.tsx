@@ -4,10 +4,11 @@ import { useSearchParams } from 'next/navigation';
 
 import { useState } from 'react';
 
-import { yupResolver } from '@hookform/resolvers/yup';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { CircleX, Loader2, X } from 'lucide-react';
 import { overlay } from 'overlay-kit';
 import { FormProvider, useForm } from 'react-hook-form';
+import type { z } from 'zod';
 
 import { crewQueries } from '@/entities/crew';
 import { SQUAD_CATEGORIES } from '@/entities/squad';
@@ -48,8 +49,8 @@ const SquadNewForm = () => {
     invalidateKey: crewQueries.root(),
   });
 
-  const method = useForm<CreateSquadFormValues>({
-    resolver: yupResolver(createSquadSchema),
+  const method = useForm<z.input<typeof createSquadSchema>, unknown, CreateSquadFormValues>({
+    resolver: zodResolver(createSquadSchema),
     defaultValues: {
       categories: [],
       address: '',
