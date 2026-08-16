@@ -2,7 +2,7 @@
 
 import { ChangeEvent, useRef, useState } from 'react';
 
-import { yupResolver } from '@hookform/resolvers/yup';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { CircleX, ImagePlus, Loader2, X } from 'lucide-react';
 import Image from 'next/image';
 import { overlay } from 'overlay-kit';
@@ -63,7 +63,7 @@ const CrewForm = ({ mode, defaultValues, initialImageUrl, submitting, onSubmit }
   const fileRef = useRef<HTMLInputElement>(null);
 
   const method = useForm({
-    resolver: yupResolver(addCrewSchema),
+    resolver: zodResolver(addCrewSchema),
     defaultValues: {
       name: defaultValues?.name ?? '',
       introduce: defaultValues?.introduce ?? '',
