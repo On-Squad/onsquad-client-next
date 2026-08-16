@@ -1,6 +1,6 @@
-import * as yup from 'yup';
+import { z } from 'zod';
 
-export const announceSchema = yup.object().shape({
-  title: yup.string().required('제목을 입력해주세요.'),
-  content: yup.string().required('공지사항 내용을 입력해주세요.'),
+export const announceSchema = z.object({
+  title: z.string().min(1, '제목을 입력해주세요.'),
+  content: z.string().min(1, '공지사항 내용을 입력해주세요.'),
 });

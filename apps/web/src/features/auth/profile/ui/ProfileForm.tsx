@@ -2,7 +2,7 @@
 
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
-import { yupResolver } from '@hookform/resolvers/yup';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Camera, CircleCheck, CircleX, Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -48,7 +48,7 @@ const ProfileForm = () => {
   const fileRef = useRef<HTMLInputElement>(null);
 
   const method = useForm({
-    resolver: yupResolver(profileSchema),
+    resolver: zodResolver(profileSchema),
     defaultValues: {
       nickname: '',
       introduce: '',
@@ -109,11 +109,11 @@ const ProfileForm = () => {
     }
   };
 
-  const handleSubmit = submit(async () => {
+  const handleSubmit = submit(async (data) => {
     try {
       const formValues = {
         ...getValues(),
-        mbti: getValues('mbti') ?? '',
+        mbti: data.mbti,
       };
 
       await updateProfileMutate(getUpdateProfileCleansingData(formValues));

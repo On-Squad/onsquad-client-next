@@ -1,6 +1,6 @@
 'use client';
 
-import { yupResolver } from '@hookform/resolvers/yup';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { isEmpty } from 'es-toolkit/compat';
 import { Loader2 } from 'lucide-react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
@@ -14,7 +14,7 @@ import { useChangePasswordMutation } from '../model/useChangePasswordMutation';
 const ChangePasswordForm = () => {
   const method = useForm({
     mode: 'onChange',
-    resolver: yupResolver(changePasswordSchema),
+    resolver: zodResolver(changePasswordSchema),
     defaultValues: {
       currentPassword: '',
       newPassword: '',
