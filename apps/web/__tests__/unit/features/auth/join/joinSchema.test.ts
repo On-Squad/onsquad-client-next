@@ -92,10 +92,23 @@ describe('joinSchema', () => {
       const result = joinSchema.safeParse({ ...validJoin, passwordConfirm: '' });
 
       expect(result.success).toBe(false);
-      // passwordConfirm 이 비면 필드 레벨 required 체크가 먼저 issues[0] 을 채운다.
-      // 교차 필드 refine 은 그 뒤에 실행되어 issues 배열 어딘가에 붙으므로 배열 전체에서 찾는다.
+      // 사용자에게 실제로 보이는 것은 이 필드의 첫 메시지다(react-hook-form 이 그렇게 쓴다).
+      // 배열 포함 여부로 느슨하게 두면 표시 문구가 바뀌어도 통과해버린다.
       if (!result.success) {
-        expect(result.error.issues.map((issue) => issue.message)).toContain('비밀번호가 일치하지 않습니다.');
+        expect(result.error.issues[0].message).toBe('비밀번호가 일치하지 않습니다.');
+      }
+    });
+
+    it('비밀번호와 확인을 둘 다 비우면 다시 입력하라고 안내한다', () => {
+      const result = joinSchema.safeParse({ ...validJoin, password: '', passwordConfirm: '' });
+
+      expect(result.success).toBe(false);
+      // 둘 다 비면 "일치하지 않는다"가 아니라 "한 번 더 입력하라"가 나와야 한다.
+      // 이 분기를 안 잠그면 확인란 메시지 로직의 절반이 검증되지 않는다.
+      if (!result.success) {
+        const confirmIssue = result.error.issues.find((issue) => issue.path[0] === 'passwordConfirm');
+
+        expect(confirmIssue?.message).toBe('비밀번호를 한 번 더 입력해주세요.');
       }
     });
 
