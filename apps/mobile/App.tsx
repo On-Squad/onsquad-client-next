@@ -17,10 +17,12 @@ import { useBackGesture } from './src/hooks/useBackGesture';
 import { useBridgeMessages } from './src/hooks/useBridgeMessages';
 import { useSplashScreen } from './src/hooks/useSplashScreen';
 
+// 개발(__DEV__)은 로컬 웹, 릴리즈는 배포 웹을 본다.
 // iOS·Android 모두 localhost 를 사용한다. (Android 는 `adb reverse tcp:3000 tcp:3000` 로 호스트에 매핑 — run-emulator 스킬)
 // localhost 를 쓰는 이유: MSW Service Worker 가 보안 컨텍스트(localhost/https)에서만 등록되기 때문(10.0.2.2 비보안 → worker 실패 → 흰 화면).
-// 배포 시 운영 웹 URL 로 교체한다.
-const WEB_URL = 'http://onsquad-client-next.vercel.app/';
+const DEV_WEB_URL = 'http://localhost:3000/';
+const PROD_WEB_URL = 'https://onsquad-client-next.vercel.app/';
+const WEB_URL = __DEV__ ? DEV_WEB_URL : PROD_WEB_URL;
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -69,6 +71,9 @@ function App() {
           contentInsetAdjustmentBehavior="never"
           // iOS: back 버튼 헤더 화면에서만 엣지 스와이프 뒤로가기 허용(웹 신호로 토글)
           allowsBackForwardNavigationGestures={backGestureEnabled}
+          // iOS 16.4+ 는 이걸 켜야 Safari 개발자용 메뉴에 웹뷰가 뜬다(WKWebView.inspectable).
+          // 릴리즈에서 앱 내부를 열어볼 수 있으면 안 되므로 개발 빌드에서만 켠다.
+          webviewDebuggingEnabled={__DEV__}
         />
       </View>
     </SafeAreaProvider>
