@@ -2,6 +2,7 @@ import { refreshSession } from '@/shared/lib/auth/sessionRefresh';
 
 import { ErrorCode, type ResponseModel } from './model';
 import { getIsBrowserRuntime } from './runtime';
+import { notifyRequestTimeout } from './timeoutNotifier';
 
 // 공통 요청 타임아웃 15초 (백엔드 무응답 시 무한 대기 방지)
 const REQUEST_TIMEOUT_MS = 15_000;
@@ -78,14 +79,11 @@ class ApiClient {
         },
       });
     } catch (error) {
-      // 타임아웃(AbortController) → 시스템 에러 노출 대신 재시도 토스트 안내 후 친화적 에러로 변환.
+      // 타임아웃(AbortController) → 시스템 에러 노출 대신 재시도 안내 후 친화적 에러로 변환.
       if (controller.signal.aborted) {
-        // 웹 전용 토스트다. 동적 import 라 브라우저가 아닐 땐 모듈 자체를 불러오지 않는다.
-        if (getIsBrowserRuntime()) {
-          const { showTimeoutToast } = await import('@/shared/lib/toast/showTimeoutToast');
-
-          showTimeoutToast();
-        }
+        // 무엇을 보여줄지는 플랫폼이 등록한다. 여기서는 사실만 알린다.
+        // (동적 import 로 웹 전용 모듈을 숨기려 해도 Metro 는 같은 번들에 적재한다)
+        notifyRequestTimeout();
 
         throw new Error('잠시 후 다시 시도해 주세요.');
       }
