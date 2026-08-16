@@ -1,6 +1,6 @@
 'use client';
 
-import { yupResolver } from '@hookform/resolvers/yup';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery } from '@tanstack/react-query';
 import { CircleCheck, CircleX } from 'lucide-react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -39,7 +39,7 @@ export const WriteForm = ({ crewId, announceId, mode }: WriteFormProps) => {
   const data = announceDetailRes?.data;
 
   const method = useForm({
-    resolver: yupResolver(announceSchema),
+    resolver: zodResolver(announceSchema),
     values: {
       title: data?.title ?? '',
       content: data?.content ?? '',

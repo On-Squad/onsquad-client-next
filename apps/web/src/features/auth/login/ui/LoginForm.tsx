@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { yupResolver } from '@hookform/resolvers/yup';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { CircleX } from 'lucide-react';
 import { signIn } from 'next-auth/react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -26,7 +26,7 @@ const LoginForm = () => {
 
   const method = useForm({
     mode: 'onChange',
-    resolver: yupResolver(loginSchema),
+    resolver: zodResolver(loginSchema),
     values: {
       email: '',
       password: '',
