@@ -14,7 +14,7 @@ import { type VariantProps, cva } from 'class-variance-authority';
  * `hover:` 는 그대로 둔다. 모바일 웹에서도 hover 는 뜨지 않으므로 "웹과 동일"이 이미 성립한다.
  */
 export const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-offset-2 focus-visible:outline-primary [-webkit-tap-highlight-color:transparent] touch-manipulation',
+  'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-offset-2 focus-visible:outline-primary [-webkit-tap-highlight-color:transparent] touch-manipulation',
   {
     variants: {
       variant: {

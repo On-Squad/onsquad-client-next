@@ -13,7 +13,15 @@ export function BackButton() {
   const navigation = useNavigation();
 
   return (
-    <Pressable onPress={() => navigation.goBack()} hitSlop={8}>
+    // 아이콘만 있는 버튼이라 접근성 이름을 직접 준다.
+    // 안 주면 접근성 트리에 "generic element" 로만 잡혀 보이스오버가 읽지 못한다
+    // (시스템 기본 백버튼은 "back button" 으로 잡힌다 — 실측으로 확인).
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel="뒤로 가기"
+      onPress={() => navigation.goBack()}
+      hitSlop={8}
+    >
       <ChevronLeft color={CHEVRON_COLOR} strokeWidth={CHEVRON_STROKE_WIDTH} />
     </Pressable>
   );

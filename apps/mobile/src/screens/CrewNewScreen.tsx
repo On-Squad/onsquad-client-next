@@ -108,8 +108,13 @@ export function CrewNewScreen({ navigation }: Props) {
           label="크루 이름"
           placeholder="크루 이름을 입력해주세요."
           button={
-            <Pressable onPress={checkName} className="rounded-md bg-grayscale100 px-s-20 py-s-10">
-              <RNText className="text-75 text-grayscale600">{nameChecked ? '확인됨' : '중복확인'}</RNText>
+            /* 위치·색은 웹 `shared/ui/InputButton` 과 같다 — 입력창 안 우측에 겹쳐 놓는다.
+               absolute 를 안 주면 RN 은 flow 로 흘려 입력창 아래에 붙는다. */
+            <Pressable
+              onPress={checkName}
+              className="absolute right-2 top-2 items-center justify-center rounded-md bg-[#f8f8f8] px-2 py-1"
+            >
+              <RNText className="text-xs text-grayscale500">{nameChecked ? '확인됨' : '중복확인'}</RNText>
             </Pressable>
           }
         />
