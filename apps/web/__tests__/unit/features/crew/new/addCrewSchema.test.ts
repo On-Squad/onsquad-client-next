@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { addCrewSchema } from '@/features/crew/new/ui/validator';
+import { addCrewSchema } from '@/features/crew/new/model/addCrewSchema';
 
 const validCrew = {
   name: '테스트 크루',

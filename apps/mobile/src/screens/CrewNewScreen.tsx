@@ -8,7 +8,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { crewCheckGetFetch } from '@/entities/crew/api/new/crewCheckGetFetch';
-import { addCrewSchema } from '@/features/crew/new/ui/validator';
+import { addCrewSchema } from '@/features/crew/new/model/addCrewSchema';
 import { HASH_TAG } from '@/shared/config';
 
 import { Badge } from '../shared/ui/Badge';

@@ -10,7 +10,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { crewCheckGetFetch } from '@/entities/crew/api/new/crewCheckGetFetch';
 
-import { addCrewSchema } from '@/features/crew/new/ui/validator';
+import { addCrewSchema } from '@/features/crew/new/model/addCrewSchema';
 
 import { ACCORDION_HASH_TAG_LIST } from '@/shared/config';
 import { TOAST } from '@/shared/config/toast';
