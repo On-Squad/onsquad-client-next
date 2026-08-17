@@ -103,10 +103,16 @@ class ApiClient {
 
     const meta = body as ResponseModel | undefined;
 
-    // 인증 인스턴스(BFF) + 브라우저에서 토큰 만료 응답을 받으면, 세션을 1회 갱신한 뒤 원요청을 재시도한다.
-    // refreshSession 은 single-flight(useSession().update 기반)라 동시 만료 요청들이 갱신 1회를 공유한다.
+    // 인증 인스턴스가 토큰 만료 응답을 받으면, 세션을 1회 갱신한 뒤 원요청을 재시도한다.
+    // refreshSession 은 single-flight 라 동시 만료 요청들이 갱신 1회를 공유하고,
+    // **등록된 갱신 함수가 없으면 false 를 반환하므로 레지스트리 자체가 게이트다.**
+    //   브라우저 → session-provider('use client')가 등록 → 재시도
+    //   Next 서버 → 등록 경로가 없음 → 재시도 안 함
+    //   RN      → 셸의 authService 가 등록 → 재시도
+    // 여기에 getIsBrowserRuntime() 를 두면 RN 이 막힌다 — 그 플래그는 75행에서 BFF 경유 여부도
+    // 결정하는데 RN 은 거기서 false 여야 해서, 하나로 두 요구를 만족시킬 수 없다.
     // 갱신 실패 시 재시도하지 않고 만료 응답을 그대로 흘려보내 상위(QueryCache.onError)에서 로그아웃되게 한다.
-    if (allowRetry && this.options.withAuth && getIsBrowserRuntime() && isTokenExpired(response.status, meta)) {
+    if (allowRetry && this.options.withAuth && isTokenExpired(response.status, meta)) {
       const refreshed = await refreshSession();
 
       if (refreshed) {
