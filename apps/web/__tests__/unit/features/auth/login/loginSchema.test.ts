@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { loginSchema } from '@/features/auth/login/ui/validator';
+import { loginSchema } from '@/features/auth/login/model/loginSchema';
 
 const validLogin = {
   email: 'test@example.com',

@@ -15,7 +15,7 @@ import { Input } from '@/shared/ui/Input';
 import { Spinner } from '@/shared/ui/Spinner';
 import { Button } from '@/shared/ui/ui/button';
 
-import { loginSchema } from './validator';
+import { loginSchema } from '../model/loginSchema';
 
 const LoginForm = () => {
   const { handlePageMove, handleReplace } = usePageMove();
