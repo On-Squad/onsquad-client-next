@@ -1,3 +1,52 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* apps/web/src/app/styles/globals.css 의 라이트 모드 값과 동일해야 한다.
+   RN 은 globals.css 를 읽지 않으므로 여기서 다시 선언한다.
+
+   tailwind.config.ts 의 shadcn 색상은 전부 hsl(var(--x)) 형태라
+   이 선언이 없으면 bg-primary 같은 클래스가 값 없이 렌더된다.
+   Phase 1.5 가 검증한 것은 리터럴 계열(primary500 = #FF7800)뿐이었다.
+
+   --app-header-height / --app-tab-height 는 env(safe-area-inset-*) 를 쓰므로 옮기지 않는다.
+   safe-area 는 네이티브 헤더가 처리한다 (native-migration-plan.md §2.0). */
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 25 100% 50%;
+    --primary-hover: 25 100% 45%;
+    --primary-active: 25 100% 40%;
+    --primary-foreground: 210 40% 98%;
+
+    --kakao: 54 100% 49%;
+    --kakao-hover: 52 96% 51%;
+    --kakao-text: 0 36% 16%;
+
+    --secondary: 25 100% 37%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+  }
+}
