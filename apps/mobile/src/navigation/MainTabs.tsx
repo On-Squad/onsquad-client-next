@@ -2,6 +2,7 @@ import { Home, Search } from 'lucide-react-native';
 
 import { type BottomTabBarButtonProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
+import { useAuth } from '../auth/AuthProvider';
 import { CrewListScreen } from '../screens/CrewListScreen';
 import { HomeScreen } from '../screens/HomeScreen';
 import { CrewNewTabButton } from './CrewNewTabButton';
@@ -39,6 +40,10 @@ const renderCrewNewTabButton = (props: BottomTabBarButtonProps) => <CrewNewTabBu
  * 초기 선택은 홈이다. 웹에서 `/` 가 진입점이기 때문이다.
  */
 export function MainTabs() {
+  // MainTabs 는 AuthProvider 안쪽이라 훅을 쓸 수 있다.
+  // listeners 콜백이 이 **값**을 닫는다 — 렌더 중 컴포넌트를 정의하는 것과는 다르다.
+  const { isAuthenticated } = useAuth();
+
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -68,9 +73,10 @@ export function MainTabs() {
         options={{ tabBarButton: renderCrewNewTabButton }}
         listeners={({ navigation }) => ({
           tabPress: (event) => {
-            // 탭 전환을 막고 루트 스택의 개설 화면으로 보낸다.
+            // 탭 전환을 막고 루트 스택으로 보낸다.
+            // 비로그인이면 개설 대신 로그인부터 — 웹 BottomTab 이 LoginAlert 를 띄우는 자리다.
             event.preventDefault();
-            navigation.getParent()?.navigate('CrewNew');
+            navigation.getParent()?.navigate(isAuthenticated ? 'CrewNew' : 'Login');
           },
         })}
       />

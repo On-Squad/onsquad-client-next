@@ -11,6 +11,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryClientProvider } from '@tanstack/react-query';
 
 import './global.css';
+import { AuthProvider } from './src/auth/AuthProvider';
 import { initShellSession } from './src/auth/session';
 import { RootNavigator } from './src/navigation/RootNavigator';
 import { queryClient } from './src/query/queryClient';
@@ -26,7 +27,10 @@ function App() {
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
-        <RootNavigator />
+        {/* AuthProvider 가 queryClient.clear() 를 부르므로 QueryClientProvider 안쪽이어야 한다. */}
+        <AuthProvider>
+          <RootNavigator />
+        </AuthProvider>
       </QueryClientProvider>
     </SafeAreaProvider>
   );

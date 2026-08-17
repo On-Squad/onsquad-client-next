@@ -8,6 +8,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useAndroidExitConfirm } from '../hooks/useAndroidExitConfirm';
 import { CrewDetailScreen } from '../screens/CrewDetailScreen';
 import { CrewNewScreen } from '../screens/CrewNewScreen';
+import { LoginScreen } from '../screens/LoginScreen';
 import { appHeaderOptions } from '../shared/ui/AppHeader';
 import { MainTabs } from './MainTabs';
 import type { MainTabParamList, RootStackParamList } from './types';
@@ -51,6 +52,13 @@ export function RootNavigator() {
           options={({ route }) => appHeaderOptions({ title: route.params.crewName })}
         />
         <Stack.Screen name="CrewNew" component={CrewNewScreen} options={appHeaderOptions({ title: '크루 개설' })} />
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          // 로그인은 흐름을 잠시 가로막는 것이지 이동이 아니다.
+          // 아래로 내려 닫는 제스처도 네이티브가 준다.
+          options={{ ...appHeaderOptions({ title: '로그인' }), presentation: 'modal' }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

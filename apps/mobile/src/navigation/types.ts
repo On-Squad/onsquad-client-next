@@ -18,4 +18,6 @@ export type RootStackParamList = {
   MainTabs: NavigatorScreenParams<MainTabParamList> | undefined;
   CrewDetail: { crewId: number; crewName: string };
   CrewNew: undefined;
+  /** 인증이 필요한 지점에서 모달로 뜬다. 앱 전체를 막는 게이트가 아니다. */
+  Login: undefined;
 };
