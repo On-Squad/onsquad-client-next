@@ -1,10 +1,12 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQuery } from '@tanstack/react-query';
-import { Image, ScrollView, Text, View } from 'react-native';
+import { Image, ScrollView, View } from 'react-native';
 
 import { crewQueries } from '@/entities/crew';
 
+import { Badge } from '../shared/ui/Badge';
 import { ScreenError, ScreenLoading } from '../shared/ui/ScreenState';
+import { Text } from '../shared/ui/Text';
 import type { RootStackParamList } from '../navigation/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CrewDetail'>;
@@ -32,24 +34,22 @@ export function CrewDetailScreen({ route }: Props) {
         <View className="h-48 w-full rounded-xl bg-grayscale200" />
       )}
 
-      <Text className="mt-s-30 text-150 font-bold">{crew.name}</Text>
-      <Text className="mt-s-10 text-75 text-grayscale600">멤버 {crew.memberCount}명</Text>
+      <Text.xl className="mt-s-30 font-semibold">{crew.name}</Text.xl>
+      <Text.xs className="mt-s-10 text-grayscale600">멤버 {crew.memberCount}명</Text.xs>
 
-      <Text className="mt-s-30 text-100">{crew.introduce}</Text>
-      <Text className="mt-s-20 text-75 text-grayscale600">{crew.detail}</Text>
+      <Text.base className="mt-s-30 font-medium">{crew.introduce}</Text.base>
+      <Text.base className="mt-s-20 font-medium text-grayscale600">{crew.detail}</Text.base>
 
       <View className="mt-s-30 flex-row flex-wrap gap-s-10">
         {crew.hashtags.map((tag) => (
-          <View key={String(tag)} className="rounded-full bg-grayscale100 px-s-20 py-s-10">
-            <Text className="text-75 text-grayscale600">#{String(tag)}</Text>
-          </View>
+          <Badge key={String(tag)} label={String(tag)} />
         ))}
       </View>
 
       <View className="mt-s-40 border-t border-grayscale200 pt-s-30">
-        <Text className="text-75 text-grayscale600">크루장</Text>
-        <Text className="mt-s-10 text-100 font-semibold">{crew.owner.nickname}</Text>
-        <Text className="mt-s-10 text-75 text-grayscale600">{crew.owner.introduce}</Text>
+        <Text.xl className="font-bold">크루장</Text.xl>
+        <Text.xs className="mt-s-10 font-semibold text-black">{crew.owner.nickname}</Text.xs>
+        <Text.xs className="mt-s-10 text-grayscale600">{crew.owner.introduce}</Text.xs>
       </View>
     </ScrollView>
   );
