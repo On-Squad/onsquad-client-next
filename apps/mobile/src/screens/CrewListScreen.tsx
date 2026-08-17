@@ -5,7 +5,7 @@ import { FlatList, View } from 'react-native';
 import { crewQueries } from '@/entities/crew';
 
 import { CrewCard } from '../components/CrewCard';
-import { ScreenError, ScreenLoading } from '../components/ScreenState';
+import { ScreenError, ScreenLoading } from '../shared/ui/ScreenState';
 import type { RootStackParamList } from '../navigation/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CrewList'>;

@@ -10,7 +10,7 @@ import { crewCheckGetFetch } from '@/entities/crew/api/new/crewCheckGetFetch';
 import { addCrewSchema } from '@/features/crew/new/ui/validator';
 import { HASH_TAG } from '@/shared/config';
 
-import { Chip } from '../components/Chip';
+import { Badge } from '../shared/ui/Badge';
 import { FormField } from '../components/FormField';
 import type { RootStackParamList } from '../navigation/types';
 
@@ -151,7 +151,7 @@ export function CrewNewScreen({ navigation }: Props) {
 
         <View className="flex-row flex-wrap gap-s-10">
           {hashtags.map((tag) => (
-            <Chip key={tag} label={tag} onRemove={() => toggleTag(tag)} />
+            <Badge key={tag} label={tag} onRemove={() => toggleTag(tag)} />
           ))}
         </View>
 
@@ -192,7 +192,7 @@ export function CrewNewScreen({ navigation }: Props) {
             <ScrollView>
               <View className="flex-row flex-wrap gap-s-10">
                 {HASH_TAG.map((tag) => (
-                  <Chip key={tag} label={tag} selected={hashtags.includes(tag)} onPress={() => toggleTag(tag)} />
+                  <Badge key={tag} label={tag} selected={hashtags.includes(tag)} onPress={() => toggleTag(tag)} />
                 ))}
               </View>
             </ScrollView>

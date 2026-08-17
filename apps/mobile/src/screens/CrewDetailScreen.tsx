@@ -4,7 +4,7 @@ import { Image, ScrollView, Text, View } from 'react-native';
 
 import { crewQueries } from '@/entities/crew';
 
-import { ScreenError, ScreenLoading } from '../components/ScreenState';
+import { ScreenError, ScreenLoading } from '../shared/ui/ScreenState';
 import type { RootStackParamList } from '../navigation/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CrewDetail'>;

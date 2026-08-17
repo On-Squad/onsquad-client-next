@@ -1,6 +1,6 @@
 import { Pressable, Text, View } from 'react-native';
 
-interface ChipProps {
+interface BadgeProps {
   label: string;
   /** 넘기면 우측에 삭제 버튼이 붙는다. */
   onRemove?: () => void;
@@ -10,7 +10,7 @@ interface ChipProps {
 }
 
 /** 웹의 `shared/ui/Badge` 에 대응하는 RN 조각. 해시태그 표시와 선택 양쪽에 쓴다. */
-export function Chip({ label, onRemove, onPress, selected = false }: ChipProps) {
+export function Badge({ label, onRemove, onPress, selected = false }: BadgeProps) {
   const body = (
     <View
       className={[
