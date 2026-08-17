@@ -1,16 +1,30 @@
-import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  getFocusedRouteNameFromRoute,
+  useNavigationContainerRef,
+} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Pressable } from 'react-native';
 
 import { useAndroidExitConfirm } from '../hooks/useAndroidExitConfirm';
 import { CrewDetailScreen } from '../screens/CrewDetailScreen';
-import { CrewListScreen } from '../screens/CrewListScreen';
 import { CrewNewScreen } from '../screens/CrewNewScreen';
 import { appHeaderOptions } from '../shared/ui/AppHeader';
-import { Text } from '../shared/ui/Text';
-import type { RootStackParamList } from './types';
+import { MainTabs } from './MainTabs';
+import type { MainTabParamList, RootStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
+
+/**
+ * 탭 화면의 헤더 제목.
+ *
+ * 웹은 탭 화면에서 GlobalHeader(로고 · 알림 벨 · 프로필 시트)를 쓰지만
+ * 인증 · 알림 카운트 · Sheet 드로어를 끌고 온다. 지금은 제목만 둔다.
+ */
+const TAB_TITLES: Record<keyof MainTabParamList, string> = {
+  Home: '온스쿼드',
+  Community: '크루 탐색',
+  CrewNewTab: '온스쿼드',
+};
 
 export function RootNavigator() {
   const navigationRef = useNavigationContainerRef<RootStackParamList>();
@@ -21,20 +35,14 @@ export function RootNavigator() {
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator>
         <Stack.Screen
-          name="CrewList"
-          component={CrewListScreen}
-          options={({ navigation }) =>
-            appHeaderOptions({
-              title: '크루 탐색',
-              headerRight: () => (
-                <Pressable onPress={() => navigation.navigate('CrewNew')} hitSlop={8}>
-                  {/* 원래 text-75(10px) 였다. Text.xxs 가 0.65rem(10.4px) 로 가장 가깝다 —
-                      웹에 대응물이 없는 RN 전용 요소라 크기를 바꾸지 않는다. */}
-                  <Text.xxs className="font-semibold text-primary500">개설</Text.xxs>
-                </Pressable>
-              ),
-            })
-          }
+          name="MainTabs"
+          component={MainTabs}
+          options={({ route }) => {
+            // 초기 렌더에는 undefined 다 — 그때는 initialRouteName 인 Home 을 쓴다.
+            const focused = (getFocusedRouteNameFromRoute(route) ?? 'Home') as keyof MainTabParamList;
+
+            return appHeaderOptions({ title: TAB_TITLES[focused] });
+          }}
         />
         <Stack.Screen
           name="CrewDetail"
