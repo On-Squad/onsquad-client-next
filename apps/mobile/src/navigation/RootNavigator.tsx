@@ -1,7 +1,8 @@
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Pressable } from 'react-native';
 
+import { useAndroidExitConfirm } from '../hooks/useAndroidExitConfirm';
 import { CrewDetailScreen } from '../screens/CrewDetailScreen';
 import { CrewListScreen } from '../screens/CrewListScreen';
 import { CrewNewScreen } from '../screens/CrewNewScreen';
@@ -12,8 +13,12 @@ import type { RootStackParamList } from './types';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export function RootNavigator() {
+  const navigationRef = useNavigationContainerRef<RootStackParamList>();
+
+  useAndroidExitConfirm(navigationRef);
+
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator>
         <Stack.Screen
           name="CrewList"
