@@ -49,7 +49,15 @@ done
 echo "부팅 완료:"
 "$ADB" devices
 
-# WebView 가 호스트 web dev(:3000)에 접근하도록 매핑.
-# localhost(보안 컨텍스트) 사용 → MSW Service Worker 등록 가능. (run-emulator 스킬)
+# 에뮬레이터의 localhost 는 에뮬레이터 자신이다. 호스트로 뚫어줘야 한다.
+#
+#   3000 — WebView 가 호스트 web dev 에 접근. localhost(보안 컨텍스트)를 써야
+#          MSW Service Worker 등록이 된다.
+#   8080 — RN 네이티브 화면이 백엔드 API 를 직접 호출한다(index.js 의
+#          NEXT_PUBLIC_API_BASE_URL 기본값). 웹뷰 시절엔 웹이 BFF 로 갔으니 필요 없었지만
+#          RN-first 로 오면서 필요해졌다. 없으면 화면이 조용히 에러 상태로 뜬다.
 "$ADB" reverse tcp:3000 tcp:3000 || true
-echo "adb reverse tcp:3000 tcp:3000 설정됨 (web dev 서버 필요: pnpm --filter web dev)"
+"$ADB" reverse tcp:8080 tcp:8080 || true
+echo "adb reverse 설정됨: 3000(web dev) · 8080(backend API)"
+echo "  web dev 서버: pnpm --filter web dev"
+echo "  백엔드:       ~/Desktop/onsquad-back"
