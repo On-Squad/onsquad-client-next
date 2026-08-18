@@ -6,6 +6,13 @@ import { cn } from '@/shared/lib/utils';
 type TextPropsType = {
   children: ReactNode | ReactNode[];
   className?: string;
+  /**
+   * 넘치면 말줄임한다.
+   *
+   * 웹의 `line-clamp-*` · `truncate` 대응물이다 — 그 유틸들은 NativeWind 에 없어서
+   * RN 내장 prop 을 쓴다.
+   */
+  numberOfLines?: number;
 };
 
 /**
@@ -15,8 +22,10 @@ type TextPropsType = {
  * 화면 이관 시 JSX 를 그대로 옮길 수 있게 하는 것이 이 형태를 유지하는 이유다.
  */
 const createText = () => {
-  const TextComponent = ({ children, className }: TextPropsType, size: string) => (
-    <RNText className={cn(size, className)}>{children}</RNText>
+  const TextComponent = ({ children, className, numberOfLines }: TextPropsType, size: string) => (
+    <RNText className={cn(size, className)} numberOfLines={numberOfLines}>
+      {children}
+    </RNText>
   );
 
   return {
