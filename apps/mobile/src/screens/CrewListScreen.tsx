@@ -6,7 +6,7 @@ import { FlatList, View } from 'react-native';
 
 import { crewQueries } from '@/entities/crew';
 
-import { CrewCard } from '../components/CrewCard';
+import { CrewCard } from '../entities/crew/ui/CrewCard';
 import { ScreenError, ScreenLoading } from '../shared/ui/ScreenState';
 import type { MainTabParamList, RootStackParamList } from '../navigation/types';
 

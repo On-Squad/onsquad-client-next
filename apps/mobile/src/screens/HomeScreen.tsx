@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { crewQueries } from '@/entities/crew';
 
-import { CrewCard } from '../components/CrewCard';
+import { CrewCard } from '../entities/crew/ui/CrewCard';
 import type { MainTabParamList, RootStackParamList } from '../navigation/types';
 import { ScreenError, ScreenLoading } from '../shared/ui/ScreenState';
 import { Text } from '../shared/ui/Text';
