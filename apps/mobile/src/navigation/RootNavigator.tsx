@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { useAndroidExitConfirm } from '../hooks/useAndroidExitConfirm';
 import { CrewDetailScreen } from '../screens/CrewDetailScreen';
+import { CrewHomeScreen } from '../screens/CrewHomeScreen';
 import { CrewNewScreen } from '../screens/CrewNewScreen';
 import { LoginScreen } from '../screens/LoginScreen';
 import { appHeaderOptions } from '../shared/ui/AppHeader';
@@ -49,6 +50,12 @@ export function RootNavigator() {
           name="CrewDetail"
           component={CrewDetailScreen}
           // 목록에서 넘긴 이름을 헤더에 쓴다 — 상세 응답을 기다리지 않고 즉시 보인다.
+          options={({ route }) => appHeaderOptions({ title: route.params.crewName })}
+        />
+        <Stack.Screen
+          name="CrewHome"
+          component={CrewHomeScreen}
+          // 상세에서 넘긴 이름을 헤더에 쓴다 — 홈 응답을 기다리지 않고 즉시 보인다.
           options={({ route }) => appHeaderOptions({ title: route.params.crewName })}
         />
         <Stack.Screen name="CrewNew" component={CrewNewScreen} options={appHeaderOptions({ title: '크루 개설' })} />
