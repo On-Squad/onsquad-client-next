@@ -3,13 +3,7 @@
   "compilerOptions": {
     "types": [
       "jest"
-    ],
-    "baseUrl": ".",
-    "paths": {
-      "@/*": [
-        "../web/src/*"
-      ]
-    }
+    ]
   },
   "include": [
     "**/*.ts",
