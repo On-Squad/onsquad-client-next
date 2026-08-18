@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 
-import { cn } from '@/shared/lib/utils';
+import { cn } from '../../lib/utils';
 
 interface ArticleProps {
   slot: ReactNode;

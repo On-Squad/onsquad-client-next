@@ -4,8 +4,8 @@ import dayjs from 'dayjs';
 import { Star } from 'lucide-react-native';
 
 import type { CrewHomeData } from '@/entities/crew';
-import { getRoleText } from '@/shared/lib/utils/getRoleText';
-import type { CrewRole } from '@/shared/types';
+import { getRoleText } from '../../../../shared/lib/getRoleText';
+import type { CrewRole } from '../../../../shared/types';
 
 import { Article } from '../../../../shared/ui/Article';
 import { Avatar } from '../../../../shared/ui/Avatar';

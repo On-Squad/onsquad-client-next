@@ -3,7 +3,7 @@ import { Pressable, View } from 'react-native';
 
 import { ChevronRight } from 'lucide-react-native';
 
-import { cn } from '@/shared/lib/utils';
+import { cn } from '../../lib/utils';
 
 import { Text } from '../Text';
 

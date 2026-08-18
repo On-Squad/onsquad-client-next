@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
 
-import { cn } from '@/shared/lib/utils';
+import { cn } from '../../lib/utils';
 
 export interface CardPropsType {
   title: string | ReactNode;

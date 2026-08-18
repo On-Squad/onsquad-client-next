@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Text as RNText } from 'react-native';
 
-import { cn } from '@/shared/lib/utils';
+import { cn } from '../../lib/utils';
 
 type TextPropsType = {
   children: ReactNode | ReactNode[];

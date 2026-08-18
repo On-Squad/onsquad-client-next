@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { ActivityIndicator, Pressable } from 'react-native';
 
-import { cn } from '@/shared/lib/utils';
+import { cn } from '../../lib/utils';
 
 import { type ButtonVariantProps, buttonVariants } from './buttonVariants';
 

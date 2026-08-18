@@ -3,7 +3,7 @@ import { Pressable, Text, View } from 'react-native';
 
 import { X } from 'lucide-react-native';
 
-import { cn } from '@/shared/lib/utils';
+import { cn } from '../../lib/utils';
 
 interface BadgeProps {
   children: ReactNode;

@@ -3,7 +3,7 @@ import { Image, View } from 'react-native';
 
 import { SvgUri } from 'react-native-svg';
 
-import { cn } from '@/shared/lib/utils';
+import { cn } from '../../lib/utils';
 
 import NoProfile from '../../../assets/icons/no_profile.svg';
 

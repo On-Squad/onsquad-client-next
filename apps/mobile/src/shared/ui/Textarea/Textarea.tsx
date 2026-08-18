@@ -3,7 +3,7 @@ import { TextInput, View } from 'react-native';
 
 import { type FieldValues, type Path, Controller, useFormContext } from 'react-hook-form';
 
-import { numberExtract } from '@/shared/lib/utils/numberExtract';
+import { numberExtract } from '../../lib/numberExtract';
 
 import { Text } from '../Text';
 
