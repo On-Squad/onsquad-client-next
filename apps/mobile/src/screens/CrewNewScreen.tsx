@@ -7,9 +7,9 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { crewCheckGetFetch } from '@/entities/crew/api/new/crewCheckGetFetch';
-import { addCrewSchema } from '@/features/crew/new/model/addCrewSchema';
-import { HASH_TAG } from '@/shared/config';
+import { crewCheckGetFetch } from '../entities/crew/api/crewCheckGetFetch';
+import { addCrewSchema } from '../features/crew/new/model/addCrewSchema';
+import { HASH_TAG } from '../shared/config/hashTag';
 
 import { Badge } from '../shared/ui/Badge';
 import { Button } from '../shared/ui/Button';

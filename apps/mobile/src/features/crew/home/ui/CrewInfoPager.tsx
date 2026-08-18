@@ -1,6 +1,6 @@
 import { FlatList, View, useWindowDimensions } from 'react-native';
 
-import type { CrewHomeData } from '@/entities/crew';
+import type { CrewHomeData } from '../../../../entities/crew/types/crew.types';
 
 import { CrewAnnouncePanel } from './CrewAnnouncePanel';
 import { CrewInfoPanel } from './CrewInfoPanel';

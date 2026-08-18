@@ -3,7 +3,7 @@ import { Alert, Image, Pressable, ScrollView, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQuery } from '@tanstack/react-query';
 
-import { crewQueries } from '@/entities/crew';
+import { crewQueries } from '../entities/crew/api/crew.queries';
 
 import MOCK_CREW_IMAGE from '../assets/images/mock1.png';
 import { useAuth } from '../auth/AuthProvider';

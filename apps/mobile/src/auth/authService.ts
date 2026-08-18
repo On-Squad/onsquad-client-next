@@ -1,6 +1,6 @@
-import { userLoginPostFetch } from '@/entities/auth/api/userLoginPostFetch';
-import { tokenRefreshGetFetch } from '@/shared/api/auth/tokenRefreshGetFetch';
-import { registerSessionRefresh } from '@/shared/lib/auth/sessionRefresh';
+import { userLoginPostFetch } from '../entities/auth/api/userLoginPostFetch';
+import { tokenRefreshGetFetch } from '../shared/api/auth/tokenRefreshGetFetch';
+import { registerSessionRefresh } from '../shared/lib/auth/sessionRefresh';
 
 import { clearShellSession, getShellRefreshToken, setShellAccessToken, setShellRefreshToken } from './session';
 import { clearTokens, loadTokens, saveTokens } from './tokenStorage';

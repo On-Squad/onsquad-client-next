@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import dayjs from 'dayjs';
 import { Star } from 'lucide-react-native';
 
-import type { CrewHomeData } from '@/entities/crew';
+import type { CrewHomeData } from '../../../../entities/crew/types/crew.types';
 import { getRoleText } from '../../../../shared/lib/getRoleText';
 import type { CrewRole } from '../../../../shared/types';
 

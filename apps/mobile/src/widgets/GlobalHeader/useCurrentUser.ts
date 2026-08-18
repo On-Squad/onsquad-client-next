@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { userInfoGetFetch } from '@/entities/auth/api/userInfoGetFetch';
+import { userInfoGetFetch } from '../../entities/auth/api/userInfoGetFetch';
 
 /**
  * 로그인한 사용자 정보.
@@ -13,7 +13,7 @@ import { userInfoGetFetch } from '@/entities/auth/api/userInfoGetFetch';
 export const useCurrentUser = (isAuthenticated: boolean) => {
   const { data } = useQuery({
     queryKey: ['auth', 'me'],
-    queryFn: () => userInfoGetFetch({}),
+    queryFn: () => userInfoGetFetch(),
     enabled: isAuthenticated,
     staleTime: 5 * 60 * 1000,
   });

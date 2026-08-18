@@ -5,7 +5,7 @@ import type { CompositeScreenProps } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQuery } from '@tanstack/react-query';
 
-import { crewQueries } from '@/entities/crew';
+import { crewQueries } from '../entities/crew/api/crew.queries';
 
 import { CrewCard } from '../entities/crew/ui/CrewCard';
 import type { MainTabParamList, RootStackParamList } from '../navigation/types';

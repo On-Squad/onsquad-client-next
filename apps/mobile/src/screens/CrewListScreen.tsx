@@ -4,7 +4,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQuery } from '@tanstack/react-query';
 import { FlatList, View } from 'react-native';
 
-import { crewQueries } from '@/entities/crew';
+import { crewQueries } from '../entities/crew/api/crew.queries';
 
 import { CrewCard } from '../entities/crew/ui/CrewCard';
 import { ScreenError, ScreenLoading } from '../shared/ui/ScreenState';

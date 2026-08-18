@@ -3,7 +3,7 @@ import { ScrollView, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQuery } from '@tanstack/react-query';
 
-import { crewQueries } from '@/entities/crew';
+import { crewQueries } from '../entities/crew/api/crew.queries';
 
 import { CrewHomeHeader } from '../features/crew/home/ui/CrewHomeHeader';
 import { CrewInfoPager } from '../features/crew/home/ui/CrewInfoPager';

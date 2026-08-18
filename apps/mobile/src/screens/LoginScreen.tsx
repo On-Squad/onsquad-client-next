@@ -6,7 +6,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { z } from 'zod';
 
-import { loginSchema } from '@/features/auth/login/model/loginSchema';
+import { loginSchema } from '../features/auth/login/model/loginSchema';
 
 import { useAuth } from '../auth/AuthProvider';
 import type { RootStackParamList } from '../navigation/types';

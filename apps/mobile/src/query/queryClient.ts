@@ -1,6 +1,6 @@
 import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query';
 
-import { isTokenExpiredError } from '@/shared/lib/auth/isTokenExpiredError';
+import { isTokenExpiredError } from '../shared/lib/auth/isTokenExpiredError';
 
 /**
  * 세션이 끊겼을 때 화면에 알리는 통로.

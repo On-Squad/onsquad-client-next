@@ -2,7 +2,7 @@ import { Image, Pressable, View } from 'react-native';
 
 import { Settings } from 'lucide-react-native';
 
-import type { CrewHomeData } from '@/entities/crew';
+import type { CrewHomeData } from '../../../../entities/crew/types/crew.types';
 
 import MOCK_CREW_IMAGE from '../../../../assets/images/mock1.png';
 import { useCrewImageHeight } from '../../../../shared/lib/useCrewImageHeight';

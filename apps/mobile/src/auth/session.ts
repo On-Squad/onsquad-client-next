@@ -1,4 +1,4 @@
-import { setAccessTokenProvider } from '@/shared/api/accessTokenProvider';
+import { setAccessTokenProvider } from '../shared/api/accessTokenProvider';
 
 /**
  * 셸이 세션을 쥔다.

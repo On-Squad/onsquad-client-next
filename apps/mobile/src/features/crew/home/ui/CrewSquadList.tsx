@@ -2,7 +2,7 @@ import { View } from 'react-native';
 
 import { Plus } from 'lucide-react-native';
 
-import type { CrewHomeData } from '@/entities/crew';
+import type { CrewHomeData } from '../../../../entities/crew/types/crew.types';
 
 import { Avatar } from '../../../../shared/ui/Avatar';
 import { Badge } from '../../../../shared/ui/Badge';

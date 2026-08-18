@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 
-import type { CrewHomeData } from '@/entities/crew';
+import type { CrewHomeData } from '../../../../entities/crew/types/crew.types';
 
 import { Article } from '../../../../shared/ui/Article';
 import { Avatar } from '../../../../shared/ui/Avatar';
