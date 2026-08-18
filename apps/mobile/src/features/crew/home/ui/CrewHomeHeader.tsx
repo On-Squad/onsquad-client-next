@@ -5,6 +5,7 @@ import { Settings } from 'lucide-react-native';
 import type { CrewHomeData } from '@/entities/crew';
 
 import MOCK_CREW_IMAGE from '../../../../assets/images/mock1.png';
+import { useCrewImageHeight } from '../../../../shared/lib/useCrewImageHeight';
 import { Text } from '../../../../shared/ui/Text';
 
 interface CrewHomeHeaderProps {
@@ -20,8 +21,8 @@ const SETTINGS_SIZE = 20;
 /**
  * 웹 `features/crew/home/ui/CrewHeader` 의 RN 미러.
  *
- * 웹의 높이는 `calc(50dvh - var(--app-header-height))` 지만 RN 에 `dvh` 가 없다.
- * 고정 `h-64` 로 둔다 — safe-area 는 네이티브 스택 헤더가 처리한다.
+ * 높이는 웹과 같은 식(`50dvh - --app-header-height`)을 `useCrewImageHeight` 가 계산한다.
+ * 고정값으로 두면 화면 크기에 따라 웹과 크게 어긋난다.
  *
  * 이미지 폴백은 웹과 **같은 파일**(`mock1.png`)을 번들해서 쓴다 — 웹이 `imageUrl || '/images/mock1.png'` 다.
  *
@@ -32,8 +33,10 @@ const SETTINGS_SIZE = 20;
  * 관리 버튼은 **모양만 두고 동작을 비운다** — 크루 관리 화면은 이번 범위가 아니다.
  */
 export function CrewHomeHeader({ crew, canManage }: CrewHomeHeaderProps) {
+  const imageHeight = useCrewImageHeight();
+
   return (
-    <View className="h-64 w-full overflow-hidden bg-white">
+    <View className="w-full overflow-hidden bg-white" style={{ height: imageHeight }}>
       <Image
         source={crew?.imageUrl ? { uri: crew.imageUrl } : MOCK_CREW_IMAGE}
         className="h-full w-full"

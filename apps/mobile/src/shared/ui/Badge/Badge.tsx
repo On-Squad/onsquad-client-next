@@ -1,11 +1,15 @@
 import type { ReactNode } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
+import { X } from 'lucide-react-native';
+
 import { cn } from '@/shared/lib/utils';
 
 interface BadgeProps {
   children: ReactNode;
   className?: string;
+  /** 글자 색만 따로 덮을 때 쓴다. RN 은 부모 View 의 색이 자식 Text 로 상속되지 않는다. */
+  labelClassName?: string;
   /** 넘기면 우측에 삭제 버튼이 붙는다. 웹에는 없다 — 크루 개설 폼의 해시태그 선택 UI 용. */
   onRemove?: () => void;
   /** 선택 목록에서 고르는 용도로 쓸 때. 웹에는 없다. */
@@ -34,14 +38,19 @@ const BADGE_BASE = 'flex-row items-center gap-s-10 rounded-md border border-tran
 
 const LABEL_BASE = 'text-xs font-bold text-primary-foreground';
 
-export function Badge({ children, className, onRemove, onPress, selected = false }: BadgeProps) {
+// 웹 CrewForm 의 <X className="text-black" size={12} /> 와 같다. lucide 는 색을 prop 으로 받는다(토큰 예외).
+const REMOVE_ICON_COLOR = '#000000';
+
+const REMOVE_ICON_SIZE = 12;
+
+export function Badge({ children, className, labelClassName, onRemove, onPress, selected = false }: BadgeProps) {
   const body = (
     <View className={cn(BADGE_BASE, selected && 'bg-primary', className)}>
-      <Text className={LABEL_BASE}>{children}</Text>
+      <Text className={cn(LABEL_BASE, labelClassName)}>{children}</Text>
 
       {onRemove ? (
         <Pressable onPress={onRemove} hitSlop={8}>
-          <Text className={LABEL_BASE}>×</Text>
+          <X size={REMOVE_ICON_SIZE} color={REMOVE_ICON_COLOR} />
         </Pressable>
       ) : null}
     </View>
