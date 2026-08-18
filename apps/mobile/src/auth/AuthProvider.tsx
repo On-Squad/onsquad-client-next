@@ -42,6 +42,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await loginRequest(params);
 
     setIsAuthenticated(true);
+    // 로그인 전에 받아둔 응답은 전부 **익명 시점의 것**이다.
+    // 같은 엔드포인트라도 인증되면 `states` 가 달라진다(예: crews/{id} 의 alreadyParticipant).
+    // 비우지 않으면 로그인해도 "속해있지 않아요" 가 뜬다 — 실제로 밟았다.
+    queryClient.clear();
   }, []);
 
   const logout = useCallback(async () => {
