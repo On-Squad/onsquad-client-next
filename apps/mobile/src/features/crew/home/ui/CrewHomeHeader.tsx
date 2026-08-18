@@ -4,6 +4,7 @@ import { Settings } from 'lucide-react-native';
 
 import type { CrewHomeData } from '@/entities/crew';
 
+import MOCK_CREW_IMAGE from '../../../../assets/images/mock1.png';
 import { Text } from '../../../../shared/ui/Text';
 
 interface CrewHomeHeaderProps {
@@ -22,7 +23,9 @@ const SETTINGS_SIZE = 20;
  * 웹의 높이는 `calc(50dvh - var(--app-header-height))` 지만 RN 에 `dvh` 가 없다.
  * 고정 `h-64` 로 둔다 — safe-area 는 네이티브 스택 헤더가 처리한다.
  *
- * 오버레이도 웹 상수(`CREW_IMAGE_OVERLAY_CLASS`)를 쓰지 않는다.
+ * 이미지 폴백은 웹과 **같은 파일**(`mock1.png`)을 번들해서 쓴다 — 웹이 `imageUrl || '/images/mock1.png'` 다.
+ *
+ * 오버레이만 웹 상수(`CREW_IMAGE_OVERLAY_CLASS`)를 쓰지 않는다.
  * 그 상수에는 `bg-gradient-to-t` 와 `backdrop-blur-sm` 이 들어 있는데
  * **NativeWind 가 둘 다 지원하지 않는다.** 단색 반투명으로 간다.
  *
@@ -31,11 +34,11 @@ const SETTINGS_SIZE = 20;
 export function CrewHomeHeader({ crew, canManage }: CrewHomeHeaderProps) {
   return (
     <View className="h-64 w-full overflow-hidden bg-white">
-      {crew?.imageUrl ? (
-        <Image source={{ uri: crew.imageUrl }} className="h-full w-full" resizeMode="cover" />
-      ) : (
-        <View className="h-full w-full bg-grayscale200" />
-      )}
+      <Image
+        source={crew?.imageUrl ? { uri: crew.imageUrl } : MOCK_CREW_IMAGE}
+        className="h-full w-full"
+        resizeMode="cover"
+      />
 
       <View className="absolute bottom-0 left-0 w-full flex-col gap-3 bg-black/40 px-5 py-2">
         <View className="flex-row items-center justify-between">

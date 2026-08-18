@@ -1,32 +1,24 @@
-import {
-  NavigationContainer,
-  getFocusedRouteNameFromRoute,
-  useNavigationContainerRef,
-} from '@react-navigation/native';
+import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { useAndroidExitConfirm } from '../hooks/useAndroidExitConfirm';
+import { GlobalHeader } from '../widgets/GlobalHeader';
 import { CrewDetailScreen } from '../screens/CrewDetailScreen';
 import { CrewHomeScreen } from '../screens/CrewHomeScreen';
 import { CrewNewScreen } from '../screens/CrewNewScreen';
 import { LoginScreen } from '../screens/LoginScreen';
 import { appHeaderOptions } from '../shared/ui/AppHeader';
 import { MainTabs } from './MainTabs';
-import type { MainTabParamList, RootStackParamList } from './types';
+import type { RootStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 /**
- * 탭 화면의 헤더 제목.
+ * 탭 화면 헤더 — 웹 `widgets/GlobalHeader` 를 그대로 옮겼다.
  *
- * 웹은 탭 화면에서 GlobalHeader(로고 · 알림 벨 · 프로필 시트)를 쓰지만
- * 인증 · 알림 카운트 · Sheet 드로어를 끌고 온다. 지금은 제목만 둔다.
+ * 로고 · 알림 벨 · 햄버거 드로어까지 웹과 같다. 4b 로 인증이 붙어 조건이 갖춰졌다.
+ * 웹은 탭이 달라도 헤더가 하나라, 여기서도 탭별 제목을 두지 않는다.
  */
-const TAB_TITLES: Record<keyof MainTabParamList, string> = {
-  Home: '온스쿼드',
-  Community: '크루 탐색',
-  CrewNewTab: '온스쿼드',
-};
 
 export function RootNavigator() {
   const navigationRef = useNavigationContainerRef<RootStackParamList>();
@@ -39,11 +31,15 @@ export function RootNavigator() {
         <Stack.Screen
           name="MainTabs"
           component={MainTabs}
-          options={({ route }) => {
-            // 초기 렌더에는 undefined 다 — 그때는 initialRouteName 인 Home 을 쓴다.
-            const focused = (getFocusedRouteNameFromRoute(route) ?? 'Home') as keyof MainTabParamList;
-
-            return appHeaderOptions({ title: TAB_TITLES[focused] });
+          options={{
+            // 헤더 전체를 웹 GlobalHeader 로 채운다 — 제목 슬롯만으로는 로고·햄버거를 담을 수 없다.
+            headerTitle: () => <GlobalHeader onLoginPress={() => navigationRef.navigate('Login')} />,
+            headerTitleAlign: 'center',
+            headerStyle: { backgroundColor: '#FFFFFF' },
+            headerShadowVisible: true,
+            // 헤더 폭을 다 쓰려면 좌우 슬롯을 비워야 한다. 탭 화면은 뒤로 갈 곳도 없다.
+            headerLeft: () => null,
+            headerRight: () => null,
           }}
         />
         <Stack.Screen
@@ -62,9 +58,9 @@ export function RootNavigator() {
         <Stack.Screen
           name="Login"
           component={LoginScreen}
-          // 로그인은 흐름을 잠시 가로막는 것이지 이동이 아니다.
-          // 아래로 내려 닫는 제스처도 네이티브가 준다.
-          options={{ ...appHeaderOptions({ title: '로그인' }), presentation: 'modal' }}
+          // 웹은 `/login` 이 **전체 페이지**다. modal 로 두면 안드로이드에서 이전 화면이
+          // 뒤에 비쳐 보인다(실측). 웹과 같게 평범한 push 로 둔다.
+          options={appHeaderOptions({ title: '로그인' })}
         />
       </Stack.Navigator>
     </NavigationContainer>

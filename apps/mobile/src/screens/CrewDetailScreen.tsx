@@ -4,6 +4,7 @@ import { Alert, Image, ScrollView, View } from 'react-native';
 
 import { crewQueries } from '@/entities/crew';
 
+import MOCK_CREW_IMAGE from '../assets/images/mock1.png';
 import { useAuth } from '../auth/AuthProvider';
 import { Badge } from '../shared/ui/Badge';
 import { Button } from '../shared/ui/Button';
@@ -53,11 +54,12 @@ export function CrewDetailScreen({ route, navigation }: Props) {
 
   return (
     <ScrollView className="flex-1 bg-white" contentContainerClassName="p-s-30">
-      {crew.imageUrl ? (
-        <Image source={{ uri: crew.imageUrl }} className="h-48 w-full rounded-xl" />
-      ) : (
-        <View className="h-48 w-full rounded-xl bg-grayscale200" />
-      )}
+      {/* 웹 CrewDetail 과 같은 폴백을 쓴다 — `imageUrl || '/images/mock1.png'` */}
+      <Image
+        source={crew.imageUrl ? { uri: crew.imageUrl } : MOCK_CREW_IMAGE}
+        className="h-48 w-full rounded-xl"
+        resizeMode="cover"
+      />
 
       <Text.xl className="mt-s-30 font-semibold">{crew.name}</Text.xl>
       <Text.xs className="mt-s-10 text-grayscale600">멤버 {crew.memberCount}명</Text.xs>

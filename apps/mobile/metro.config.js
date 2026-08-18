@@ -35,13 +35,26 @@ const resolveWebAlias = (subPath) => {
   return candidates.find((candidate) => fs.existsSync(candidate)) ?? null;
 };
 
+/**
+ * SVG 를 컴포넌트로 import 한다 (`import Logo from './logo.svg'`).
+ *
+ * 웹은 `public/icons/*.svg` 를 경로로 참조하지만 RN 은 그 경로를 볼 수 없다.
+ * 같은 파일을 번들해서 **같은 그림**을 쓰려면 이 트랜스포머가 필요하다.
+ * 회색 도형으로 대체하지 않는 것이 원칙이다.
+ */
 const config = {
   watchFolders: [monorepoRoot],
+  transformer: {
+    babelTransformerPath: require.resolve('react-native-svg-transformer'),
+  },
   resolver: {
     nodeModulesPaths: [
       path.resolve(projectRoot, 'node_modules'),
       path.resolve(monorepoRoot, 'node_modules'),
     ],
+    // svg 는 에셋이 아니라 소스로 다룬다 — 위 트랜스포머가 컴포넌트로 바꾼다.
+    assetExts: getDefaultConfig(projectRoot).resolver.assetExts.filter((ext) => ext !== 'svg'),
+    sourceExts: [...getDefaultConfig(projectRoot).resolver.sourceExts, 'svg'],
     resolveRequest: (context, moduleName, platform) => {
       if (moduleName.startsWith('@/')) {
         const filePath = resolveWebAlias(moduleName.slice(2));
