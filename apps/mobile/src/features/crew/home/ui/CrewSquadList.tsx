@@ -14,8 +14,10 @@ interface CrewSquadListProps {
   squads?: CrewHomeData['squads'];
 }
 
-// lucide 는 색을 prop 으로 받는다 — className 대상이 아니다(토큰 예외). primary500 과 같은 값이다.
-const PLUS_COLOR = '#FF7800';
+// lucide 는 색을 prop 으로 받는다 — className 대상이 아니다(토큰 예외).
+// 웹은 버튼의 `text-primary` 가 currentColor 로 아이콘에 상속된다 → `--primary` = #FF6A00.
+// `primary500`(#FF7800) 이 아니다 — 웹 토큰은 둘이 갈라져 있다.
+const PLUS_COLOR = '#FF6A00';
 
 const PLUS_SIZE = 10;
 
@@ -36,8 +38,10 @@ export function CrewSquadList({ squads }: CrewSquadListProps) {
       <View className="mb-3 flex-row items-center justify-between">
         <Text.lg className="font-bold">모집중인 스쿼드</Text.lg>
 
-        <PostButton className="border border-primary500">
-          <Text.xxs className="ml-1 font-bold">스쿼드 모집하기</Text.xxs>
+        {/* 웹은 outline variant 의 `text-primary` 가 글자·아이콘에 함께 먹는다.
+            RN 은 색이 자식 Text 로 상속되지 않아 글자색을 직접 준다. */}
+        <PostButton className="border border-primary">
+          <Text.xxs className="ml-1 font-bold text-primary">스쿼드 모집하기</Text.xxs>
           <Plus size={PLUS_SIZE} color={PLUS_COLOR} />
         </PostButton>
       </View>

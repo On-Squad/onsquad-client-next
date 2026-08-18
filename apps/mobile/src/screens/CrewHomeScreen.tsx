@@ -36,7 +36,9 @@ export function CrewHomeScreen({ route }: Props) {
   }
 
   return (
-    <ScrollView className="flex-1 bg-grayscale100">
+    // 웹 CrewLayout 의 `p-5` 중 CrewHome 의 `-mx-5 -mt-5` 가 좌·우·상만 취소한다 —
+    // **하단 20px 는 남는다.** 그 여백을 여기서 준다.
+    <ScrollView className="flex-1 bg-grayscale100" contentContainerClassName="pb-5">
       <CrewHomeHeader crew={home.crew} canManage={home.states.canManage} />
 
       <View className="mt-6">

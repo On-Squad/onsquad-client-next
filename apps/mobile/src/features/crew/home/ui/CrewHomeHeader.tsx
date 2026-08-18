@@ -54,7 +54,7 @@ export function CrewHomeHeader({ crew, canManage }: CrewHomeHeaderProps) {
           ) : null}
         </View>
 
-        <Text.xl className="font-semibold text-white">{crew?.name}</Text.xl>
+        <Text.xl className="font-semibold text-white" numberOfLines={1}>{crew?.name}</Text.xl>
       </View>
     </View>
   );
