@@ -133,7 +133,7 @@ export function CrewNewScreen({ navigation }: Props) {
 
           <View className="flex-row flex-wrap gap-s-10">
             {hashtags.map((tag) => (
-              <Badge key={tag} label={tag} onRemove={() => toggleTag(tag)} />
+              <Badge key={tag} onRemove={() => toggleTag(tag)}>{`#${tag}`}</Badge>
             ))}
           </View>
 
@@ -162,7 +162,11 @@ export function CrewNewScreen({ navigation }: Props) {
               <ScrollView>
                 <View className="flex-row flex-wrap gap-s-10">
                   {HASH_TAG.map((tag) => (
-                    <Badge key={tag} label={tag} selected={hashtags.includes(tag)} onPress={() => toggleTag(tag)} />
+                    <Badge
+                      key={tag}
+                      selected={hashtags.includes(tag)}
+                      onPress={() => toggleTag(tag)}
+                    >{`#${tag}`}</Badge>
                   ))}
                 </View>
               </ScrollView>

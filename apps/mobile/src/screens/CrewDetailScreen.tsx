@@ -42,7 +42,7 @@ export function CrewDetailScreen({ route }: Props) {
 
       <View className="mt-s-30 flex-row flex-wrap gap-s-10">
         {crew.hashtags.map((tag) => (
-          <Badge key={String(tag)} label={String(tag)} />
+          <Badge key={String(tag)}>{`#${String(tag)}`}</Badge>
         ))}
       </View>
 
