@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useTransition } from 'react';
 import { FlatList, RefreshControl, TextInput, View } from 'react-native';
 
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
@@ -35,13 +35,34 @@ const REFRESH_TINT = '#FF7800';
 /** 웹은 500ms 디바운스 후 검색어를 쿼리에 넣는다. */
 const SEARCH_DEBOUNCE_MS = 500;
 
+/** 검색 결과를 기다리는 동안 목록을 흐리게 한다. */
+const DIMMED_OPACITY = 0.4;
+
 export function CrewListContent({ navigation }: CrewListContentProps) {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
 
+  /**
+   * **검색어 변경을 transition 으로 감싼다.**
+   *
+   * `useSuspenseInfiniteQuery` 는 쿼리 키가 바뀌면 다시 suspend 한다.
+   * 그대로 두면 이 컴포넌트 전체가 Suspense 폴백으로 갈려 **hero 와 검색창까지 사라지고
+   * 입력 포커스가 풀린다**(실측).
+   *
+   * transition 안에서 바꾸면 React 가 **이전 화면을 유지한 채** 새 데이터를 기다리고,
+   * `isSearching` 으로 "지금 바뀌는 중" 을 알려준다 — 목록만 딤 처리하면 된다.
+   */
+  const [isSearching, startTransition] = useTransition();
+
   // 웹 CommunityContainer 와 같은 방식이다 — es-toolkit 의 debounce 를 useMemo 로 한 번만 만든다.
-  const debouncedSetSearch = useMemo(() => debounce((value: string) => setDebouncedSearch(value), SEARCH_DEBOUNCE_MS), []);
+  const debouncedSetSearch = useMemo(
+    () =>
+      debounce((value: string) => {
+        startTransition(() => setDebouncedSearch(value));
+      }, SEARCH_DEBOUNCE_MS),
+    [],
+  );
 
   useEffect(() => {
     debouncedSetSearch(searchText);
@@ -66,6 +87,8 @@ export function CrewListContent({ navigation }: CrewListContentProps) {
   return (
     <View className="flex-1 bg-grayscale100">
       <FlatList
+        // 검색 결과를 기다리는 동안 **목록만** 흐려진다. hero 와 검색창은 그대로 있다.
+        style={{ opacity: isSearching ? DIMMED_OPACITY : 1 }}
         data={crews}
         keyExtractor={(item) => String(item.id)}
         contentContainerClassName="pb-5"
