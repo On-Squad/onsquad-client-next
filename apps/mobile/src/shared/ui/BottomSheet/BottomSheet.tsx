@@ -1,5 +1,5 @@
 import { type ReactNode, useEffect, useRef, useState } from 'react';
-import { Animated, Modal, Pressable, View, useWindowDimensions } from 'react-native';
+import { Animated, Modal, Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
 
 import { X } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -67,8 +67,13 @@ export function BottomSheet({ title, isOpen, onClose, children }: BottomSheetPro
   return (
     <Modal visible={isMounted} animationType="none" transparent onRequestClose={onClose}>
       <View className="flex-1 justify-end">
-        {/* 막은 제자리에서 어두워진다 — 시트와 함께 움직이지 않는다 */}
-        <Animated.View className="absolute inset-0 bg-black/40" style={{ opacity: backdropOpacity }}>
+        {/* 막은 제자리에서 어두워진다 — 시트와 함께 움직이지 않는다.
+            `absolute inset-0` 대신 `StyleSheet.absoluteFill` 을 쓴다 —
+            NativeWind 의 inset 유틸은 조용히 무시될 수 있고, 그러면 막이 아예 안 그려진다. */}
+        <Animated.View
+          className="bg-black/40"
+          style={[StyleSheet.absoluteFill, { opacity: backdropOpacity }]}
+        >
           <Pressable className="flex-1" onPress={onClose} />
         </Animated.View>
 

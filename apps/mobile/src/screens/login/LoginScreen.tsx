@@ -53,8 +53,13 @@ export function LoginScreen({ navigation }: Props) {
 
   return (
     <FormProvider {...formMethod}>
-      {/* 웹 LoginForm 은 `mt-4 flex flex-col items-center gap-6` — 요소 간격이 1.5rem 이다 */}
-      <View className="mt-4 flex-1 flex-col gap-6 bg-white p-s-30">
+      {/*
+        웹 LoginForm 은 `mt-4 flex flex-col items-center gap-6` 다.
+        **`mt-4` 를 margin 으로 옮기면 안 된다** — 흰 배경이 통째로 내려가 그 틈으로
+        내비게이터 기본 배경(회색)이 비친다(실측). padding 으로 줘야 흰색이 위까지 닿는다.
+        좌우는 웹 레이아웃과 같은 20px.
+      */}
+      <View className="flex-1 flex-col gap-6 bg-white px-5 pb-5 pt-4">
         <Input<LoginFormValues> name="email" type="email" label="이메일" placeholder="이메일을 입력해주세요." />
 
         <Input<LoginFormValues>

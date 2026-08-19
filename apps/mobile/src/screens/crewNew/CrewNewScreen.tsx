@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Alert, Image, Pressable, ScrollView, Text as RNText, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { launchImageLibrary, type Asset } from 'react-native-image-picker';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,6 +11,8 @@ import { z } from 'zod';
 import { crewCheckGetFetch } from '../../entities/crew/api/crewCheckGetFetch';
 import { addCrewSchema } from '../../features/crew/new/model/addCrewSchema';
 import { HASH_TAG } from '../../shared/config/hashTag';
+
+import { ImagePlus, X } from 'lucide-react-native';
 
 import { Badge } from '../../shared/ui/Badge';
 import { BottomSheet } from '../../shared/ui/BottomSheet';
@@ -24,9 +27,19 @@ type Props = NativeStackScreenProps<RootStackParamList, 'CrewNew'>;
 
 const MAX_HASHTAGS = 5;
 
+// lucide 는 색을 prop 으로 받는다 — className 대상이 아니다(토큰 예외). 웹과 같은 값이다.
+const ADD_IMAGE_ICON_COLOR = '#909090';
+
+const ADD_IMAGE_ICON_SIZE = 16;
+
+const REMOVE_IMAGE_ICON_COLOR = '#0F172A';
+
+const REMOVE_IMAGE_ICON_SIZE = 14;
+
 type AddCrewFormValues = z.infer<typeof addCrewSchema>;
 
 export function CrewNewScreen({ navigation }: Props) {
+  const insets = useSafeAreaInsets();
   const [isTagPickerOpen, setIsTagPickerOpen] = useState(false);
   const [image, setImage] = useState<Asset | null>(null);
   const [nameChecked, setNameChecked] = useState(false);
@@ -89,14 +102,37 @@ export function CrewNewScreen({ navigation }: Props) {
 
   return (
     <FormProvider {...formMethod}>
-      <ScrollView className="flex-1 bg-white" contentContainerClassName="p-s-30">
-        <Pressable onPress={pickImage} className="h-40 w-full items-center justify-center rounded-xl bg-grayscale100">
-          {image?.uri ? (
-            <Image source={{ uri: image.uri }} className="h-40 w-full rounded-xl" />
-          ) : (
-            <RNText className="text-75 text-grayscale600">대표 이미지 선택</RNText>
-          )}
-        </Pressable>
+      {/* 하단 제스처 바에 마지막 버튼이 가리지 않게 safe-area 를 더한다(실측). */}
+      <ScrollView className="flex-1 bg-white" contentContainerStyle={{ padding: 20, paddingBottom: insets.bottom + 20 }}>
+        {/* 웹 CrewForm 과 같다 — 라벨 + h-[120px] 흰 박스에 연한 테두리, 안에 아이콘+문구.
+            이미지가 있으면 꽉 채우고 우상단에 삭제 버튼을 올린다. */}
+        <View>
+          <RNText className="mb-2 font-bold text-grayscale800">대표이미지</RNText>
+
+          <View className="relative h-[120px] w-full items-center justify-center overflow-hidden rounded-lg border border-[#f8f8f8] bg-white">
+            {image?.uri ? (
+              <>
+                <Image source={{ uri: image.uri }} className="h-full w-full" resizeMode="cover" />
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="이미지 삭제"
+                  onPress={() => {
+                    setImage(null);
+                    setValue('file', undefined);
+                  }}
+                  className="absolute right-2 top-2 h-6 w-6 items-center justify-center rounded-full bg-white/90"
+                >
+                  <X size={REMOVE_IMAGE_ICON_SIZE} color={REMOVE_IMAGE_ICON_COLOR} />
+                </Pressable>
+              </>
+            ) : (
+              <Pressable onPress={pickImage} className="flex-row items-center gap-2">
+                <ImagePlus size={ADD_IMAGE_ICON_SIZE} color={ADD_IMAGE_ICON_COLOR} />
+                <RNText className="text-grayscale500">대표이미지 등록</RNText>
+              </Pressable>
+            )}
+          </View>
+        </View>
 
         {/* 웹 CrewForm 은 필드마다 mt-6(1.5rem) 로 간격을 준다 */}
         <View className="mt-6">

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Alert as RNAlert, Image, Pressable, ScrollView, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useSuspenseQuery } from '@tanstack/react-query';
@@ -25,6 +26,7 @@ export function CrewDetailContent({ route, navigation }: CrewDetailContentProps)
   const { isAuthenticated } = useAuth();
   const [isLoginAlertOpen, setIsLoginAlertOpen] = useState(false);
   const imageHeight = useCrewImageHeight();
+  const insets = useSafeAreaInsets();
   // makeQueryOptions 로 만들어진 옵션이라 data 는 응답 봉투 전체다. 크루 필드는 data.data 안에 있다.
   const { data } = useSuspenseQuery(crewQueries.detail({ crewId }));
 
@@ -54,7 +56,7 @@ export function CrewDetailContent({ route, navigation }: CrewDetailContentProps)
   };
 
   return (
-    <ScrollView className="flex-1 bg-white">
+    <ScrollView className="flex-1 bg-white" contentContainerStyle={{ paddingBottom: insets.bottom }}>
       {/* 이미지 전체가 크루 홈 진입 버튼이다 — 웹과 같다. */}
       <Pressable onPress={handleCrewHomeMove}>
         <View className="w-full overflow-hidden" style={{ height: imageHeight }}>

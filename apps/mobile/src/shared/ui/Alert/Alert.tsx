@@ -36,7 +36,7 @@ export function Alert({ isOpen, onClose, title, children, buttonSlot }: AlertPro
 
           <View className="w-full">
             {buttonSlot ?? (
-              <Pressable className="w-full items-center bg-primary500 pb-5 pt-6" onPress={onClose}>
+              <Pressable className="h-14 w-full items-center justify-center bg-primary500" onPress={onClose}>
                 <Text.lg className="text-white">확인</Text.lg>
               </Pressable>
             )}
@@ -49,11 +49,14 @@ export function Alert({ isOpen, onClose, title, children, buttonSlot }: AlertPro
 
 /**
  * 웹 `shared/ui/Alert/style.ts` 의 BUTTON 상수 대응.
- * 두 개를 나란히 놓을 때 각각 아래 모서리를 맡는다.
+ *
+ * 웹은 `pt-6 pb-5` 지만 shadcn Button 의 base 가 **`h-10`(40px)로 높이를 고정**해
+ * 실제로는 그만큼 커지지 않는다. RN 에는 그 base 가 없어 패딩만 그대로 옮기면
+ * 버튼이 훨씬 뚱뚱해진다(실측) — 그래서 **높이를 고정하고 가운데 정렬**한다.
  */
 export const ALERT_BUTTON = {
-  ACTION: 'flex-1 items-center bg-primary500 pb-5 pt-6',
-  CANCEL: 'flex-1 items-center bg-grayscale100 pb-5 pt-6',
+  ACTION: 'h-14 flex-1 items-center justify-center bg-primary500',
+  CANCEL: 'h-14 flex-1 items-center justify-center bg-grayscale100',
 } as const;
 
 export const alertButtonText = (kind: 'action' | 'cancel') =>

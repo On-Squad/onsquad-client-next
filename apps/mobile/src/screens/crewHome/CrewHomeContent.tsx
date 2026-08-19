@@ -1,4 +1,5 @@
 import { ScrollView, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useSuspenseQuery } from '@tanstack/react-query';
@@ -24,6 +25,7 @@ export type CrewHomeContentProps = NativeStackScreenProps<RootStackParamList, 'C
  */
 export function CrewHomeContent({ route }: CrewHomeContentProps) {
   const { crewId } = route.params;
+  const insets = useSafeAreaInsets();
   // makeQueryOptions 로 만들어진 옵션이라 data 는 응답 봉투 전체다. 실제 필드는 data.data 안에 있다.
   const { data } = useSuspenseQuery(crewQueries.home({ crewId, page: 1, size: 10 }));
 
@@ -32,7 +34,7 @@ export function CrewHomeContent({ route }: CrewHomeContentProps) {
   return (
     // 웹 CrewLayout 의 `p-5` 중 CrewHome 의 `-mx-5 -mt-5` 가 좌·우·상만 취소한다 —
     // **하단 20px 는 남는다.** 그 여백을 여기서 준다.
-    <ScrollView className="flex-1 bg-grayscale100" contentContainerClassName="pb-5">
+    <ScrollView className="flex-1 bg-grayscale100" contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}>
       <CrewHomeHeader crew={home.crew} canManage={home.states.canManage} />
 
       <View className="mt-6">
