@@ -1,17 +1,23 @@
-import { useState } from 'react';
-import { FlatList, RefreshControl, View } from 'react-native';
+import { FlatList, Pressable, RefreshControl, View } from 'react-native';
 
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import type { CompositeScreenProps } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import MainBanner from '../../assets/images/main_banner.svg';
 import OnsquadLogo from '../../assets/icons/onsquad_logo.svg';
 import { crewQueries } from '../../entities/crew/api/crew.queries';
-import type { MainTabParamList, RootStackParamList } from '../../navigation/types';
+import type {
+  MainTabParamList,
+  RootStackParamList,
+} from '../../navigation/types';
 import { Text } from '../../shared/ui/Text';
-import { CrewListCard, CrewListHeader, type CrewListItem } from '../../widgets/CrewList';
+import {
+  CrewListCard,
+  CrewListHeader,
+  type CrewListItem,
+} from '../../widgets/CrewList';
 
 export type HomeContentProps = CompositeScreenProps<
   BottomTabScreenProps<MainTabParamList, 'Home'>,
@@ -43,8 +49,12 @@ function HomeBanner() {
       <MainBanner width={BANNER_WIDTH} height={BANNER_HEIGHT} />
 
       <View className="mt-6 w-full">
-        <Text.lg className="mb-1 font-semibold text-white">모임이 좋았을 뿐인데,,,</Text.lg>
-        <Text.xxl className="mb-2 font-semibold text-white">점점 부담이 되고 있다면?</Text.xxl>
+        <Text.lg className="mb-1 font-semibold text-white">
+          모임이 좋았을 뿐인데,,,
+        </Text.lg>
+        <Text.xxl className="mb-2 font-semibold text-white">
+          점점 부담이 되고 있다면?
+        </Text.xxl>
 
         <View className="flex-row items-center gap-1">
           <OnsquadLogo width={LOGO_WIDTH} height={LOGO_HEIGHT} />
@@ -55,52 +65,65 @@ function HomeBanner() {
   );
 }
 
+/**
+ * 홈 탭.
+ *
+ * **무한스크롤이 아니다.** 웹 `pages/home/ui/HomeCrewList` 는 `crewQueries.list()` 로
+ * 첫 페이지만 보여주고, 목록 아래의 "모집중인 크루 더 보러가기" 로 크루 탐색으로 넘긴다.
+ * 무한스크롤은 크루 탐색(`screens/crewList`)의 몫이다.
+ */
 export function HomeContent({ navigation }: HomeContentProps) {
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const { data, refetch, isRefetching } = useSuspenseQuery(crewQueries.list());
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useSuspenseInfiniteQuery(
-    crewQueries.infiniteList(),
-  );
-
-  const handleRefresh = async () => {
-    setIsRefreshing(true);
-
-    await refetch();
-
-    setIsRefreshing(false);
-  };
-
-  const crews = data.pages.flatMap((page) => page.data.results) as CrewListItem[];
+  const crews = (data?.results ?? []) as CrewListItem[];
 
   return (
     <View className="flex-1 bg-grayscale100">
       <FlatList
         data={crews}
-        keyExtractor={(item) => String(item.id)}
+        keyExtractor={item => String(item.id)}
         contentContainerClassName="p-5"
         refreshControl={
-          <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} tintColor={REFRESH_TINT} />
+          <RefreshControl
+            refreshing={isRefetching}
+            onRefresh={refetch}
+            tintColor={REFRESH_TINT}
+          />
         }
         ListHeaderComponent={
           <View className="mb-6">
             <HomeBanner />
 
             <View className="mt-6">
-              <CrewListHeader onAddCrewPress={() => navigation.navigate('CrewNew')} />
+              <CrewListHeader
+                onAddCrewPress={() => navigation.navigate('CrewNew')}
+              />
             </View>
           </View>
         }
-        onEndReachedThreshold={0.5}
-        onEndReached={() => {
-          if (hasNextPage && !isFetchingNextPage) {
-            void fetchNextPage();
-          }
-        }}
+        ListFooterComponent={
+          // 웹 widgets/CrewList 의 `flex justify-center pb-12` + ghost 버튼.
+          <View className="items-center pb-12 pt-2">
+            <Pressable
+              className="p-2"
+              onPress={() => navigation.navigate('Community')}
+            >
+              <Text.sm className="font-semibold text-grayscale500">
+                모집중인 크루 더 보러가기
+              </Text.sm>
+            </Pressable>
+          </View>
+        }
         renderItem={({ item }) => (
           <View className="mb-3">
             <CrewListCard
               crew={item}
-              onPress={() => navigation.navigate('CrewDetail', { crewId: item.id, crewName: item.name })}
+              onPress={() =>
+                navigation.navigate('CrewDetail', {
+                  crewId: item.id,
+                  crewName: item.name,
+                })
+              }
             />
           </View>
         )}

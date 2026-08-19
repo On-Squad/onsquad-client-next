@@ -32,10 +32,13 @@ export const crewQueries = {
     }),
 
   /**
-   * 무한스크롤 목록. 웹 community 화면이 쓰는 것과 같은 형태다.
+   * 무한스크롤 목록.
    *
-   * `initialPageParam` 이 검색어 없을 때 **2** 인 것은 웹 그대로다 —
-   * 서버가 1-indexed 이고 첫 페이지를 서버에서 미리 채워 내리기 때문이다.
+   * **`initialPageParam` 이 웹과 다른 유일한 지점이다(웹: `crewName ? 1 : 2`).**
+   * 웹 `CommunityContainer` 는 `crewQueries.list()` 로 1페이지를 따로 받아
+   * `initialData` 로 무한쿼리에 **미리 꽂아넣고**(pageParams: [1]) 2페이지부터 이어간다.
+   * RN 에는 그 seeding 이 없어서 2 로 시작하면 **1페이지가 통째로 빠지고**,
+   * 크루가 20개일 때 10개만 보인 채 다음 페이지가 없어 무한스크롤이 멎는다(실측).
    */
   infiniteList: ({ crewName = '' }: Pick<CrewListGetFetchParams, 'crewName'> = {}) =>
     infiniteQueryOptions({
@@ -49,7 +52,7 @@ export const crewQueries = {
         };
       },
       getNextPageParam: (lastPage) => lastPage.nextPage,
-      initialPageParam: crewName ? 1 : 2,
+      initialPageParam: 1,
     }),
 
   detail: ({ crewId }: CrewDetailGetFetchParams) =>
