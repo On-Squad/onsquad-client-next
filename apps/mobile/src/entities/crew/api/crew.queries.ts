@@ -1,4 +1,4 @@
-import { queryOptions } from '@tanstack/react-query';
+import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 
 import { makeQueryOptions } from '../../../shared/lib/queries/makeQueryOptions';
 import { type CrewDetailGetFetchParams, crewDetailGetFetch } from './crewDetailGetFetch';
@@ -29,6 +29,27 @@ export const crewQueries = {
 
         return res.data.data;
       },
+    }),
+
+  /**
+   * 무한스크롤 목록. 웹 community 화면이 쓰는 것과 같은 형태다.
+   *
+   * `initialPageParam` 이 검색어 없을 때 **2** 인 것은 웹 그대로다 —
+   * 서버가 1-indexed 이고 첫 페이지를 서버에서 미리 채워 내리기 때문이다.
+   */
+  infiniteList: ({ crewName = '' }: Pick<CrewListGetFetchParams, 'crewName'> = {}) =>
+    infiniteQueryOptions({
+      queryKey: [...crewQueries.lists(), 'infinite', { size: 10, crewName }],
+      queryFn: async ({ pageParam }) => {
+        const res = await crewListGetFetch({ size: 10, page: pageParam, crewName });
+
+        return {
+          data: res.data.data,
+          nextPage: res.data.data.resultsSize === 10 ? pageParam + 1 : undefined,
+        };
+      },
+      getNextPageParam: (lastPage) => lastPage.nextPage,
+      initialPageParam: crewName ? 1 : 2,
     }),
 
   detail: ({ crewId }: CrewDetailGetFetchParams) =>
