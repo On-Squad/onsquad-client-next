@@ -2,6 +2,10 @@
  * @format
  */
 
+// **가장 먼저 와야 한다.** react-native-gesture-handler 의 설치 요구사항이다 —
+// 늦게 로드되면 Android 에서 제스처가 조용히 동작하지 않는다.
+import 'react-native-gesture-handler';
+
 // Phase 1.5 임시 — NEXT_PUBLIC_* 는 Next 빌드타임에 치환되는 값이라 Metro 에는 존재하지 않는다.
 // shared/api/common.ts 가 모듈 로드 시점에 baseUrl 을 계산하므로 App 보다 먼저 넣어야 한다.
 // ESM import 는 호이스팅되어 이 대입보다 먼저 실행되므로 require 로 순서를 강제한다.

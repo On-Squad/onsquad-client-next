@@ -1,7 +1,9 @@
 import type { ReactNode } from 'react';
-import { ActivityIndicator, Pressable } from 'react-native';
+import { Pressable } from 'react-native';
 
 import { cn } from '../../lib/utils';
+
+import { Loader } from '../Loader';
 
 import { type ButtonVariantProps, buttonVariants } from './buttonVariants';
 
@@ -22,7 +24,8 @@ interface ButtonProps extends ButtonVariantProps {
  */
 const DISABLED_CLASS = 'bg-grayscale300';
 
-// ActivityIndicator 는 RN 내장이라 className 이 먹지 않는다 — 토큰 예외.
+// 웹 Button 은 <Loader2 className="animate-spin" /> 라 버튼 글자색(흰색)을 그대로 받는다.
+// lucide 는 색을 prop 으로 받으므로 여기서 넘긴다 — 토큰 예외.
 const SPINNER_COLOR = '#FFFFFF';
 
 const Button = ({
@@ -42,7 +45,7 @@ const Button = ({
       onPress={onPress}
       className={cn(buttonVariants({ variant, size }), className, disabled && DISABLED_CLASS)}
     >
-      {isLoading ? <ActivityIndicator color={SPINNER_COLOR} /> : children}
+      {isLoading ? <Loader color={SPINNER_COLOR} /> : children}
     </Pressable>
   );
 };

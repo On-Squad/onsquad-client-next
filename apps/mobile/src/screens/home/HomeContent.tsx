@@ -1,4 +1,4 @@
-import { FlatList, Pressable, RefreshControl, View } from 'react-native';
+import { FlatList, Pressable, View } from 'react-native';
 
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import type { CompositeScreenProps } from '@react-navigation/native';
@@ -12,6 +12,7 @@ import type {
   MainTabParamList,
   RootStackParamList,
 } from '../../navigation/types';
+import { PullToRefresh } from '../../shared/ui/PullToRefresh';
 import { Text } from '../../shared/ui/Text';
 import {
   CrewListCard,
@@ -33,9 +34,6 @@ const BANNER_HEIGHT = 110;
 const LOGO_WIDTH = 92;
 
 const LOGO_HEIGHT = 24;
-
-// ActivityIndicator 계열은 prop 이라 className 이 안 먹는다 — 토큰 예외.
-const REFRESH_TINT = '#FF7800';
 
 /**
  * 웹 `pages/home` 의 hero.
@@ -73,61 +71,59 @@ function HomeBanner() {
  * 무한스크롤은 크루 탐색(`screens/crewList`)의 몫이다.
  */
 export function HomeContent({ navigation }: HomeContentProps) {
-  const { data, refetch, isRefetching } = useSuspenseQuery(crewQueries.list());
+  const { data, refetch } = useSuspenseQuery(crewQueries.list());
 
   const crews = (data?.results ?? []) as CrewListItem[];
 
   return (
     <View className="flex-1 bg-grayscale100">
-      <FlatList
-        data={crews}
-        keyExtractor={item => String(item.id)}
-        contentContainerClassName="p-5"
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefetching}
-            onRefresh={refetch}
-            tintColor={REFRESH_TINT}
-          />
-        }
-        ListHeaderComponent={
-          <View className="mb-6">
-            <HomeBanner />
+      <PullToRefresh onRefresh={refetch}>
+        {scrollProps => (
+          <FlatList
+            {...scrollProps}
+            data={crews}
+            keyExtractor={item => String(item.id)}
+            contentContainerClassName="p-5"
+            ListHeaderComponent={
+              <View className="mb-6">
+                <HomeBanner />
 
-            <View className="mt-6">
-              <CrewListHeader
-                onAddCrewPress={() => navigation.navigate('CrewNew')}
-              />
-            </View>
-          </View>
-        }
-        ListFooterComponent={
-          // 웹 widgets/CrewList 의 `flex justify-center pb-12` + ghost 버튼.
-          <View className="items-center pb-12 pt-2">
-            <Pressable
-              className="p-2"
-              onPress={() => navigation.navigate('Community')}
-            >
-              <Text.sm className="font-semibold text-grayscale500">
-                모집중인 크루 더 보러가기
-              </Text.sm>
-            </Pressable>
-          </View>
-        }
-        renderItem={({ item }) => (
-          <View className="mb-3">
-            <CrewListCard
-              crew={item}
-              onPress={() =>
-                navigation.navigate('CrewDetail', {
-                  crewId: item.id,
-                  crewName: item.name,
-                })
-              }
-            />
-          </View>
+                <View className="mt-6">
+                  <CrewListHeader
+                    onAddCrewPress={() => navigation.navigate('CrewNew')}
+                  />
+                </View>
+              </View>
+            }
+            ListFooterComponent={
+              // 웹 widgets/CrewList 의 `flex justify-center pb-12` + ghost 버튼.
+              <View className="items-center pb-12 pt-2">
+                <Pressable
+                  className="p-2"
+                  onPress={() => navigation.navigate('Community')}
+                >
+                  <Text.sm className="font-semibold text-grayscale500">
+                    모집중인 크루 더 보러가기
+                  </Text.sm>
+                </Pressable>
+              </View>
+            }
+            renderItem={({ item }) => (
+              <View className="mb-3">
+                <CrewListCard
+                  crew={item}
+                  onPress={() =>
+                    navigation.navigate('CrewDetail', {
+                      crewId: item.id,
+                      crewName: item.name,
+                    })
+                  }
+                />
+              </View>
+            )}
+          />
         )}
-      />
+      </PullToRefresh>
     </View>
   );
 }

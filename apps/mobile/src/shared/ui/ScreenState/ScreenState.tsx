@@ -1,17 +1,18 @@
-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
+
+import { Spinner } from '../Spinner';
 
 /**
  * 화면 전체를 채우는 로딩·에러 상태.
  *
- * `ActivityIndicator` 의 color 만 hex 리터럴인 이유는 RN 내장 컴포넌트라 className 이 먹지 않아서다.
- * 이런 예외가 몇 개나 나오는지도 스파이크의 측정 대상이다 — 토큰 재사용률의 실질을 보여준다.
+ * 로딩은 웹 RootLayout 의 suspenseFallback 과 같은 것을 쓴다 — `shared/ui/Spinner`.
+ * **OS 기본 `ActivityIndicator` 를 쓰지 않는다.** 웹과 모양이 전혀 다르다.
  */
-const PRIMARY_500 = '#FF7800';
 
 export function ScreenLoading() {
   return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <ActivityIndicator size="large" color={PRIMARY_500} />
+    <View className="flex-1 bg-white">
+      <Spinner />
     </View>
   );
 }
