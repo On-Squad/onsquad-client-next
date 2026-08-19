@@ -87,8 +87,6 @@ export function CrewListContent({ navigation }: CrewListContentProps) {
   return (
     <View className="flex-1 bg-grayscale100">
       <FlatList
-        // 검색 결과를 기다리는 동안 **목록만** 흐려진다. hero 와 검색창은 그대로 있다.
-        style={{ opacity: isSearching ? DIMMED_OPACITY : 1 }}
         data={crews}
         keyExtractor={(item) => String(item.id)}
         contentContainerClassName="pb-5"
@@ -105,15 +103,21 @@ export function CrewListContent({ navigation }: CrewListContentProps) {
 
               <View className="w-full px-5 pb-4">
                 <View className="relative">
+                  {/*
+                    **높이를 고정한다.** RN `TextInput` 은 padding 만 주면 글자가 들어오는 순간
+                    글꼴 메트릭으로 높이를 다시 계산해 인풋이 찌그러진다(실측).
+                    웹 shadcn `input` 도 `h-10` 으로 고정하고 있고,
+                    RN 쪽 `shared/ui/Input` 은 `h-12` 를 쓴다 — 그것과 맞춘다.
+                  */}
                   <TextInput
-                    className="w-full rounded-md border border-grayscale200 bg-white px-3 py-2.5 pr-10 text-sm"
+                    className="h-12 w-full rounded-md border border-grayscale200 bg-white px-3 pr-10 text-sm text-grayscale900"
                     placeholder="크루를 검색해보세요."
                     placeholderTextColor={PLACEHOLDER_COLOR}
                     value={searchText}
                     onChangeText={setSearchText}
                     returnKeyType="search"
                   />
-                  <View className="absolute right-3 top-3">
+                  <View className="absolute right-3 top-4">
                     <Search size={SEARCH_ICON_SIZE} color={SEARCH_ICON_COLOR} />
                   </View>
                 </View>
@@ -126,7 +130,7 @@ export function CrewListContent({ navigation }: CrewListContentProps) {
           </>
         }
         ListEmptyComponent={
-          <View className="items-center gap-3 py-16">
+          <View className="items-center gap-3 py-16" style={{ opacity: isSearching ? DIMMED_OPACITY : 1 }}>
             <Text.sm className="text-grayscale500">검색 결과가 없습니다.</Text.sm>
             <Text.sm className="text-grayscale500">다른 검색어로 시도해보세요.</Text.sm>
           </View>
@@ -138,7 +142,9 @@ export function CrewListContent({ navigation }: CrewListContentProps) {
           }
         }}
         renderItem={({ item }) => (
-          <View className="mb-3 px-5">
+          // 딤은 **아이템에만** 준다. FlatList 에 주면 ListHeaderComponent 인
+          // hero·검색창까지 함께 흐려진다(실측).
+          <View className="mb-3 px-5" style={{ opacity: isSearching ? DIMMED_OPACITY : 1 }}>
             <CrewListCard
               crew={item}
               onPress={() => navigation.navigate('CrewDetail', { crewId: item.id, crewName: item.name })}

@@ -11,7 +11,10 @@ import { CrewListContent, type CrewListContentProps } from './CrewListContent';
  */
 export function CrewListScreen(props: CrewListContentProps) {
   return (
-    <ErrorHandlingWrapper fallbackComponent={ErrorFallback} suspenseFallback={<ScreenLoading />}>
+    <ErrorHandlingWrapper
+      fallbackComponent={ErrorFallback}
+      suspenseFallback={<ScreenLoading />}
+    >
       <CrewListContent {...props} />
     </ErrorHandlingWrapper>
   );
