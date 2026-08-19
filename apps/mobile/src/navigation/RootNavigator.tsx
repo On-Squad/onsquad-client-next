@@ -3,10 +3,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { useAndroidExitConfirm } from '../hooks/useAndroidExitConfirm';
 import { GlobalHeader } from '../widgets/GlobalHeader';
-import { CrewDetailScreen } from '../screens/CrewDetailScreen';
-import { CrewHomeScreen } from '../screens/CrewHomeScreen';
-import { CrewNewScreen } from '../screens/CrewNewScreen';
-import { LoginScreen } from '../screens/LoginScreen';
+import { CrewDetailScreen } from '../screens/crewDetail';
+import { CrewHomeScreen } from '../screens/crewHome';
+import { CrewNewScreen } from '../screens/crewNew';
+import { LoginScreen } from '../screens/login';
 import { appHeaderOptions } from '../shared/ui/AppHeader';
 import { MainTabs } from './MainTabs';
 import type { RootStackParamList } from './types';

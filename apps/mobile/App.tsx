@@ -15,6 +15,9 @@ import { AuthProvider } from './src/auth/AuthProvider';
 import { initShellSession } from './src/auth/session';
 import { RootNavigator } from './src/navigation/RootNavigator';
 import { queryClient } from './src/query/queryClient';
+import { ScreenLoading } from './src/shared/ui/ScreenState';
+import { ErrorHandlingWrapper } from './src/widgets/ErrorBoundary';
+import { ErrorFallback } from './src/widgets/ErrorFallback';
 
 // 셸이 세션을 쥔다. 요청이 나가기 전에 등록돼야 하므로 모듈 로드 시점에 부른다.
 initShellSession();
@@ -29,7 +32,14 @@ function App() {
       <QueryClientProvider client={queryClient}>
         {/* AuthProvider 가 queryClient.clear() 를 부르므로 QueryClientProvider 안쪽이어야 한다. */}
         <AuthProvider>
-          <RootNavigator />
+          {/*
+            **루트 경계** — 화면별 경계를 빠져나온 에러를 여기서 받는다.
+            화면 안에서 처리되는 것은 각 screens/{도메인}/ 의 경계가 맡고,
+            내비게이터·프로바이더 등 그 바깥에서 터진 것만 여기까지 온다.
+          */}
+          <ErrorHandlingWrapper fallbackComponent={ErrorFallback} suspenseFallback={<ScreenLoading />}>
+            <RootNavigator />
+          </ErrorHandlingWrapper>
         </AuthProvider>
       </QueryClientProvider>
     </SafeAreaProvider>

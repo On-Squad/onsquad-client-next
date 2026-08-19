@@ -1,39 +1,33 @@
 import { ScrollView, View } from 'react-native';
 
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { crewQueries } from '../entities/crew/api/crew.queries';
+import { crewQueries } from '../../entities/crew/api/crew.queries';
 
-import { CrewHomeHeader } from '../features/crew/home/ui/CrewHomeHeader';
-import { CrewInfoPager } from '../features/crew/home/ui/CrewInfoPager';
-import { CrewMemberRanking } from '../features/crew/home/ui/CrewMemberRanking';
-import { CrewSquadList } from '../features/crew/home/ui/CrewSquadList';
-import type { RootStackParamList } from '../navigation/types';
-import { ScreenError, ScreenLoading } from '../shared/ui/ScreenState';
+import { CrewHomeHeader } from '../../features/crew/home/ui/CrewHomeHeader';
+import { CrewInfoPager } from '../../features/crew/home/ui/CrewInfoPager';
+import { CrewMemberRanking } from '../../features/crew/home/ui/CrewMemberRanking';
+import { CrewSquadList } from '../../features/crew/home/ui/CrewSquadList';
+import type { RootStackParamList } from '../../navigation/types';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'CrewHome'>;
+export type CrewHomeContentProps = NativeStackScreenProps<RootStackParamList, 'CrewHome'>;
 
 /**
  * 웹 `features/crew/home/ui/CrewHome` + `pages/crews/home` 에 대응한다.
  *
  * 데이터는 `crewQueries.home` **하나**로 전부 온다 — 헤더·공지·정보·랭킹·스쿼드가 같은 응답이다.
  * 그래서 RN 쪽에 새로 만든 API 함수도, 새 쿼리 키도 없다.
+ *
+ * **로딩·에러를 여기서 분기하지 않는다.** `useSuspenseQuery` 가 대기를 Suspense 로,
+ * 실패를 ErrorBoundary 로 넘긴다. 경계는 `CrewHomeScreen` 이 친다.
  */
-export function CrewHomeScreen({ route }: Props) {
+export function CrewHomeContent({ route }: CrewHomeContentProps) {
   const { crewId } = route.params;
   // makeQueryOptions 로 만들어진 옵션이라 data 는 응답 봉투 전체다. 실제 필드는 data.data 안에 있다.
-  const { data, isPending, isError, refetch } = useQuery(crewQueries.home({ crewId, page: 1, size: 10 }));
+  const { data } = useSuspenseQuery(crewQueries.home({ crewId, page: 1, size: 10 }));
 
-  if (isPending) {
-    return <ScreenLoading />;
-  }
-
-  const home = data?.data;
-
-  if (isError || !home) {
-    return <ScreenError message="크루 홈을 불러오지 못했어요." onRetry={() => void refetch()} />;
-  }
+  const home = data.data;
 
   return (
     // 웹 CrewLayout 의 `p-5` 중 CrewHome 의 `-mx-5 -mt-5` 가 좌·우·상만 취소한다 —

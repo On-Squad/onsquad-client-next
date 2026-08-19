@@ -6,13 +6,13 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { z } from 'zod';
 
-import { loginSchema } from '../features/auth/login/model/loginSchema';
+import { loginSchema } from '../../features/auth/login/model/loginSchema';
 
-import { useAuth } from '../auth/AuthProvider';
-import type { RootStackParamList } from '../navigation/types';
-import { Button } from '../shared/ui/Button';
-import { Input } from '../shared/ui/Input';
-import { Text } from '../shared/ui/Text';
+import { useAuth } from '../../auth/AuthProvider';
+import type { RootStackParamList } from '../../navigation/types';
+import { Button } from '../../shared/ui/Button';
+import { Input } from '../../shared/ui/Input';
+import { Text } from '../../shared/ui/Text';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -53,7 +53,8 @@ export function LoginScreen({ navigation }: Props) {
 
   return (
     <FormProvider {...formMethod}>
-      <View className="flex-1 bg-white p-s-30">
+      {/* 웹 LoginForm 은 `mt-4 flex flex-col items-center gap-6` — 요소 간격이 1.5rem 이다 */}
+      <View className="mt-4 flex-1 flex-col gap-6 bg-white p-s-30">
         <Input<LoginFormValues> name="email" type="email" label="이메일" placeholder="이메일을 입력해주세요." />
 
         <Input<LoginFormValues>
@@ -63,7 +64,7 @@ export function LoginScreen({ navigation }: Props) {
           placeholder="비밀번호를 입력해주세요."
         />
 
-        <Button className="mt-s-30" isLoading={isSubmitting} onPress={onSubmit}>
+        <Button className="w-full" isLoading={isSubmitting} onPress={onSubmit}>
           <Text.base className="font-semibold text-white">로그인</Text.base>
         </Button>
       </View>

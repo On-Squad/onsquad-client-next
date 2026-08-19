@@ -1,4 +1,4 @@
-import { type UseQueryOptions, queryOptions } from '@tanstack/react-query';
+import { queryOptions } from '@tanstack/react-query';
 
 import type { ApiResponse } from '../../api/common';
 import type { ErrorCode, ResponseModel } from '../../api/model';
@@ -19,16 +19,23 @@ export class QueryError extends Error {
   }
 }
 
-export const makeQueryOptions = <
-  TQueryKey extends readonly unknown[],
-  TQueryFnData extends ResponseModel,
-  TError = Error,
-  TData = TQueryFnData,
->(
+/**
+ * 응답 봉투를 벗겨 `error` 가 있으면 던지는 쿼리 옵션.
+ *
+ * **반환 타입을 명시하지 않는다.** 웹은 `UseQueryOptions` 로 못박았는데
+ * 그러면 `useSuspenseQuery` 에 넘길 수 없다(타입이 더 좁다).
+ * `queryOptions()` 의 추론에 맡기면 `useQuery` · `useSuspenseQuery` 양쪽에 쓸 수 있다.
+ *
+ * **`throwOnError: false` 를 두지 않는 것도 웹과 다르다.**
+ * 웹은 위젯 하나의 실패가 화면 전체를 막지 않게 하려고 껐지만,
+ * RN 은 화면마다 `ErrorHandlingWrapper` 를 둬서 **그 화면 안에서만** 폴백을 그린다.
+ * 여기서 끄면 에러가 경계까지 올라가지 못해 폴백이 영원히 안 나온다.
+ */
+export const makeQueryOptions = <TQueryKey extends readonly unknown[], TQueryFnData extends ResponseModel>(
   queryKey: TQueryKey,
   queryFn: () => Promise<ApiResponse<TQueryFnData>>,
-): UseQueryOptions<TQueryFnData, TError, TData, TQueryKey> => {
-  return queryOptions<TQueryFnData, TError, TData, TQueryKey>({
+) =>
+  queryOptions({
     queryKey,
     queryFn: async () => {
       const res = await queryFn();
@@ -39,7 +46,4 @@ export const makeQueryOptions = <
 
       return res.data;
     },
-    // 만료를 포함한 로그아웃 처리는 queryClient 의 QueryCache.onError 에서 중앙화한다.
-    throwOnError: false,
   });
-};

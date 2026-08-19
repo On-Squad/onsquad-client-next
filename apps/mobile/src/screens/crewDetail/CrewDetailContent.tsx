@@ -1,40 +1,34 @@
-import { Alert, Image, Pressable, ScrollView, View } from 'react-native';
+import { useState } from 'react';
+import { Alert as RNAlert, Image, Pressable, ScrollView, View } from 'react-native';
 
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { crewQueries } from '../entities/crew/api/crew.queries';
+import { crewQueries } from '../../entities/crew/api/crew.queries';
 
-import MOCK_CREW_IMAGE from '../assets/images/mock1.png';
-import { useAuth } from '../auth/AuthProvider';
-import type { RootStackParamList } from '../navigation/types';
-import { useCrewImageHeight } from '../shared/lib/useCrewImageHeight';
-import { Avatar } from '../shared/ui/Avatar';
-import { Badge } from '../shared/ui/Badge';
-import { ScreenError, ScreenLoading } from '../shared/ui/ScreenState';
-import { Text } from '../shared/ui/Text';
+import MOCK_CREW_IMAGE from '../../assets/images/mock1.png';
+import { useAuth } from '../../auth/AuthProvider';
+import type { RootStackParamList } from '../../navigation/types';
+import { useCrewImageHeight } from '../../shared/lib/useCrewImageHeight';
+import { Avatar } from '../../shared/ui/Avatar';
+import { Badge } from '../../shared/ui/Badge';
+import { LoginAlert } from '../../shared/ui/LoginAlert';
+import { Text } from '../../shared/ui/Text';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'CrewDetail'>;
+export type CrewDetailContentProps = NativeStackScreenProps<RootStackParamList, 'CrewDetail'>;
 
 /** 웹 CrewDetail 의 `h-[5dvh]` — 오버레이 상단 줄 높이. */
 const OVERLAY_ROW_RATIO = 0.05;
 
-export function CrewDetailScreen({ route, navigation }: Props) {
+export function CrewDetailContent({ route, navigation }: CrewDetailContentProps) {
   const { crewId } = route.params;
   const { isAuthenticated } = useAuth();
+  const [isLoginAlertOpen, setIsLoginAlertOpen] = useState(false);
   const imageHeight = useCrewImageHeight();
   // makeQueryOptions 로 만들어진 옵션이라 data 는 응답 봉투 전체다. 크루 필드는 data.data 안에 있다.
-  const { data, isPending, isError, refetch } = useQuery(crewQueries.detail({ crewId }));
+  const { data } = useSuspenseQuery(crewQueries.detail({ crewId }));
 
-  if (isPending) {
-    return <ScreenLoading />;
-  }
-
-  const crew = data?.data;
-
-  if (isError || !crew) {
-    return <ScreenError message="크루 정보를 불러오지 못했어요." onRetry={() => void refetch()} />;
-  }
+  const crew = data.data;
 
   /**
    * 웹 CrewDetail 의 handleCrewHomeMove 를 옮긴 것이다.
@@ -50,12 +44,13 @@ export function CrewDetailScreen({ route, navigation }: Props) {
     }
 
     if (!isAuthenticated) {
-      navigation.navigate('Login');
+      // 웹은 곧장 이동하지 않고 LoginAlert 를 먼저 띄운다.
+      setIsLoginAlertOpen(true);
 
       return;
     }
 
-    Alert.alert('현재 크루에 속해있지 않아요.');
+    RNAlert.alert('현재 크루에 속해있지 않아요.');
   };
 
   return (
@@ -111,6 +106,15 @@ export function CrewDetailScreen({ route, navigation }: Props) {
           ))}
         </View>
       </View>
+
+      <LoginAlert
+        isOpen={isLoginAlertOpen}
+        onClose={() => setIsLoginAlertOpen(false)}
+        onLoginPress={() => {
+          setIsLoginAlertOpen(false);
+          navigation.navigate('Login');
+        }}
+      />
     </ScrollView>
   );
 }
