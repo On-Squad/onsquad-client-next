@@ -23,17 +23,23 @@ const clearSession = async (): Promise<void> => {
 };
 
 /**
- * 로그인. 실패하면 던진다 — 화면이 문구를 보여준다.
+ * 로그인. 실패하면 던진다 — 화면이 그 문구를 토스트로 보여준다.
  *
- * 백엔드는 모든 응답을 HTTP 200 으로 내리므로 `ApiClient` 가 body 를 보고 던진다.
- * 여기서 성공/실패를 다시 판정하지 않는다.
+ * **로그인 실패도 HTTP 200 으로 온다.** 그래서 `ApiClient` 의 `!response.ok` 분기에
+ * 걸리지 않고, 봉투만 `{ success: false, error }` 이고 `data` 가 없다.
+ * 여기서 승격시키지 않으면 바로 아래 구조분해가 TypeError 를 내고
+ * 그 영문 메시지가 그대로 사용자에게 보인다(실측).
  */
 export const login = async ({ email, password }: { email: string; password: string }): Promise<void> => {
   const response = await userLoginPostFetch({ email, password });
 
-  const { accessToken, refreshToken } = response.data.data;
+  const { data, error } = response.data;
 
-  await applyTokens(accessToken, refreshToken);
+  if (error || !data) {
+    throw new Error(error?.message ?? '로그인에 실패했어요.');
+  }
+
+  await applyTokens(data.accessToken, data.refreshToken);
 };
 
 export const logout = async (): Promise<void> => {

@@ -16,6 +16,7 @@ import { initShellSession } from './src/auth/session';
 import { RootNavigator } from './src/navigation/RootNavigator';
 import { queryClient } from './src/query/queryClient';
 import { ScreenLoading } from './src/shared/ui/ScreenState';
+import { Toaster } from './src/shared/ui/Toast';
 import { ErrorHandlingWrapper } from './src/widgets/ErrorBoundary';
 import { ErrorFallback } from './src/widgets/ErrorFallback';
 
@@ -40,6 +41,12 @@ function App() {
           <ErrorHandlingWrapper fallbackComponent={ErrorFallback} suspenseFallback={<ScreenLoading />}>
             <RootNavigator />
           </ErrorHandlingWrapper>
+
+          {/*
+            경계 **밖**이자 트리의 마지막이다 — 에러 폴백이 떠 있을 때도 토스트는 살아 있어야 하고,
+            마지막에 그려져야 내비게이터·모달 위에 올라온다(웹 `z-50` 대응).
+          */}
+          <Toaster />
         </AuthProvider>
       </QueryClientProvider>
     </SafeAreaProvider>

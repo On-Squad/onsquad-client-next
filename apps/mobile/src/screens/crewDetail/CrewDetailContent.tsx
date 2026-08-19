@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert as RNAlert, Image, Pressable, ScrollView, View } from 'react-native';
+import { Image, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -11,6 +11,7 @@ import MOCK_CREW_IMAGE from '../../assets/images/mock1.png';
 import { useAuth } from '../../auth/AuthProvider';
 import type { RootStackParamList } from '../../navigation/types';
 import { useCrewImageHeight } from '../../shared/lib/useCrewImageHeight';
+import { Alert } from '../../shared/ui/Alert';
 import { Avatar } from '../../shared/ui/Avatar';
 import { Badge } from '../../shared/ui/Badge';
 import { LoginAlert } from '../../shared/ui/LoginAlert';
@@ -25,6 +26,7 @@ export function CrewDetailContent({ route, navigation }: CrewDetailContentProps)
   const { crewId } = route.params;
   const { isAuthenticated } = useAuth();
   const [isLoginAlertOpen, setIsLoginAlertOpen] = useState(false);
+  const [isNotParticipantAlertOpen, setIsNotParticipantAlertOpen] = useState(false);
   const imageHeight = useCrewImageHeight();
   const insets = useSafeAreaInsets();
   // makeQueryOptions 로 만들어진 옵션이라 data 는 응답 봉투 전체다. 크루 필드는 data.data 안에 있다.
@@ -52,7 +54,8 @@ export function CrewDetailContent({ route, navigation }: CrewDetailContentProps)
       return;
     }
 
-    RNAlert.alert('현재 크루에 속해있지 않아요.');
+    // 웹도 토스트가 아니라 Alert 다 — 문구까지 같게 맞춘다.
+    setIsNotParticipantAlertOpen(true);
   };
 
   return (
@@ -117,6 +120,12 @@ export function CrewDetailContent({ route, navigation }: CrewDetailContentProps)
           navigation.navigate('Login');
         }}
       />
+
+      <Alert isOpen={isNotParticipantAlertOpen} onClose={() => setIsNotParticipantAlertOpen(false)}>
+        <Text.base className="text-center text-grayscale700">
+          현재 크루에 속해있지 않아요. 참가 신청을 눌러 먼저 크루에 가입해주세요!
+        </Text.base>
+      </Alert>
     </ScrollView>
   );
 }

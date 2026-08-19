@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, View } from 'react-native';
+import { View } from 'react-native';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -13,6 +13,7 @@ import type { RootStackParamList } from '../../navigation/types';
 import { Button } from '../../shared/ui/Button';
 import { Input } from '../../shared/ui/Input';
 import { Text } from '../../shared/ui/Text';
+import { toast } from '../../shared/ui/Toast';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -45,7 +46,7 @@ export function LoginScreen({ navigation }: Props) {
       navigation.goBack();
     } catch (error) {
       // 백엔드가 주는 문구를 그대로 보여준다. 웹도 서버 메시지를 토스트에 띄운다.
-      Alert.alert((error as Error)?.message ?? '로그인에 실패했어요.');
+      toast((error as Error)?.message ?? '로그인에 실패했어요.');
     } finally {
       setIsSubmitting(false);
     }

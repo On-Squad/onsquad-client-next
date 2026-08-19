@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Alert, Image, Pressable, ScrollView, Text as RNText, View } from 'react-native';
+import { Image, Pressable, ScrollView, Text as RNText, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { launchImageLibrary, type Asset } from 'react-native-image-picker';
 
@@ -21,6 +21,7 @@ import { Button } from '../../shared/ui/Button';
 import { Input } from '../../shared/ui/Input';
 import { Text } from '../../shared/ui/Text';
 import { Textarea } from '../../shared/ui/Textarea';
+import { toast } from '../../shared/ui/Toast';
 import type { RootStackParamList } from '../../navigation/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CrewNew'>;
@@ -66,11 +67,13 @@ export function CrewNewScreen({ navigation }: Props) {
 
     try {
       const res = await crewCheckGetFetch({ crewName: name });
+      // 봉투의 success 가 아니라 body 의 duplicate 가 답이다 — 웹 CrewForm 과 같다.
+      const { duplicate } = res.data.data;
 
-      setNameChecked(true);
-      Alert.alert(res.data.success ? '사용할 수 있는 이름이에요.' : '이미 사용 중인 이름이에요.');
+      setNameChecked(!duplicate);
+      toast(duplicate ? `${name}은(는) 이미 사용 중이에요.` : '멋진 크루 이름이네요!');
     } catch {
-      Alert.alert('확인에 실패했어요. 잠시 후 다시 시도해 주세요.');
+      toast('확인에 실패했어요. 잠시 후 다시 시도해 주세요.');
     }
   };
 
@@ -96,7 +99,7 @@ export function CrewNewScreen({ navigation }: Props) {
 
   const onSubmit = handleSubmit((values) => {
     // Task 4 에서 실제 제출 경로를 확인한다. 지금은 검증 통과 여부만 본다.
-    Alert.alert('검증 통과', `${values.name} / 해시태그 ${values.hashtags.length}개`);
+    toast(`검증 통과 — ${values.name} / 해시태그 ${values.hashtags.length}개`);
     navigation.goBack();
   });
 
@@ -216,7 +219,7 @@ export function CrewNewScreen({ navigation }: Props) {
               setIsTagPickerOpen(false);
             }}
             onCancel={() => setIsTagPickerOpen(false)}
-            onExceed={() => Alert.alert(`최대 ${MAX_HASHTAGS}개까지 등록가능해요.`)}
+            onExceed={() => toast(`최대 ${MAX_HASHTAGS}개까지 등록가능해요.`)}
           />
         </BottomSheet>
       </ScrollView>
