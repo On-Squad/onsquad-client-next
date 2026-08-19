@@ -21,48 +21,48 @@ interface CrewCardProps {
   onPress?: () => void;
 }
 
-/** 웹 `h-[15rem]` = 240dp. */
-const IMAGE_HEIGHT = 240;
+/** 좌측 썸네일 한 변. */
+const THUMBNAIL_SIZE = 88;
 
 /**
- * 웹 `shared/ui/Card/CrewCard` 의 RN 미러.
+ * 크루 카드 — **가로형**.
  *
- * 세로형 카드다 — 위에 대표 이미지, 그 아래 제목 오버레이, 그 밑에 크루장·소개·태그 줄.
- * (Phase 1.5 스파이크의 가로형 소형 카드를 웹 구조로 다시 썼다.)
+ * 좌측에 작은 대표 이미지, 우측에 제목·크루장·소개·해시태그를 세로로 쌓는다.
  *
- * 제목 오버레이의 그라디언트·`backdrop-blur` 는 NativeWind 가 지원하지 않아 단색으로 간다.
- * 이미지가 없으면 웹과 **같은 파일**(`mock1.png`)로 대체한다.
+ * **웹과 의도적으로 다르다(사용자 결정).** 웹 `shared/ui/Card/CrewCard` 는
+ * 대표 이미지가 15rem 인 세로형이라 카드 한 장이 화면을 거의 채운다 —
+ * 목록에서 한 번에 두세 개밖에 안 보여 가독성이 떨어진다는 판단이다.
+ *
+ * **담는 정보는 웹과 같다** — 제목 · 크루장 · 소개 · 해시태그를 하나도 빼지 않는다.
+ * 이 차이는 spec §7 에 기록한다.
  */
 export function CrewCard({ title, crewImage, userImage, description, ownerName, tagSlot, onPress }: CrewCardProps) {
   return (
-    <Pressable className="w-full overflow-hidden rounded-2xl bg-white" onPress={onPress}>
-      <View className="w-full overflow-hidden rounded-t-lg" style={{ height: IMAGE_HEIGHT }}>
-        <Image
-          source={crewImage ? { uri: crewImage } : MOCK_CREW_IMAGE}
-          className="h-full w-full"
-          resizeMode="cover"
-        />
+    <Pressable className="w-full flex-row gap-3 overflow-hidden rounded-2xl bg-white p-3" onPress={onPress}>
+      <Image
+        source={crewImage ? { uri: crewImage } : MOCK_CREW_IMAGE}
+        className="rounded-lg"
+        style={{ width: THUMBNAIL_SIZE, height: THUMBNAIL_SIZE }}
+        resizeMode="cover"
+      />
 
-        <View className="absolute bottom-0 left-0 w-full bg-black/40 p-2">
-          <Text.xl className="font-bold text-white" numberOfLines={1}>
-            {title}
-          </Text.xl>
-        </View>
-      </View>
+      <View className="flex-1 flex-col gap-1">
+        <Text.base className="font-bold text-black" numberOfLines={1}>
+          {title}
+        </Text.base>
 
-      <View className="flex-col gap-2 p-2">
-        <View className="flex-row items-center gap-2">
-          <Avatar className="h-5 w-5" imageUrl={userImage} />
-          <Text.sm className="font-semibold text-black">{ownerName}</Text.sm>
+        <View className="flex-row items-center gap-1">
+          <Avatar className="h-4 w-4" imageUrl={userImage} />
+          <Text.xs className="font-semibold text-black">{ownerName}</Text.xs>
         </View>
 
-        <Text.sm className="font-medium text-black" numberOfLines={1}>
+        <Text.xs className="font-medium text-grayscale600" numberOfLines={1}>
           {description}
-        </Text.sm>
-      </View>
+        </Text.xs>
 
-      {/* 웹은 가로 스크롤이지만 RN 목록 안의 가로 스크롤은 세로 제스처와 충돌한다 — 줄바꿈으로 둔다 */}
-      <View className="flex-row flex-wrap gap-1 px-2 pb-1.5">{tagSlot}</View>
+        {/* 해시태그는 웹과 같은 것을 그대로 담는다. 폭이 좁으므로 줄바꿈한다. */}
+        <View className="mt-1 flex-row flex-wrap gap-1">{tagSlot}</View>
+      </View>
     </Pressable>
   );
 }
