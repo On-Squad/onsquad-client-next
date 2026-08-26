@@ -6,6 +6,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { crewQueries } from '../../entities/crew/api/crew.queries';
+import { isCrewOwner } from '../../entities/crew/lib/isCrewOwner';
 
 import MOCK_CREW_IMAGE from '../../assets/images/mock1.png';
 import { useAuth } from '../../auth/AuthProvider';
@@ -24,7 +25,7 @@ const OVERLAY_ROW_RATIO = 0.05;
 
 export function CrewDetailContent({ route, navigation }: CrewDetailContentProps) {
   const { crewId } = route.params;
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, me } = useAuth();
   const [isLoginAlertOpen, setIsLoginAlertOpen] = useState(false);
   const [isNotParticipantAlertOpen, setIsNotParticipantAlertOpen] = useState(false);
   const imageHeight = useCrewImageHeight();
@@ -33,6 +34,13 @@ export function CrewDetailContent({ route, navigation }: CrewDetailContentProps)
   const { data } = useSuspenseQuery(crewQueries.detail({ crewId }));
 
   const crew = data.data;
+
+  /**
+   * 웹은 `alreadyParticipant && owner.nickname === user.nickname` 으로 판정한다.
+   * 서버가 크루 상세에서 오너 플래그를 주지 않기 때문인데, 닉네임 비교는 오판이 난다.
+   * `owner.id` 로 바꾼 근거는 `entities/crew/lib/isCrewOwner` 주석에 있다.
+   */
+  const isOwner = crew.states.alreadyParticipant && isCrewOwner({ ownerId: crew.owner.id, myId: me?.id });
 
   /**
    * 웹 CrewDetail 의 handleCrewHomeMove 를 옮긴 것이다.
@@ -74,11 +82,18 @@ export function CrewDetailContent({ route, navigation }: CrewDetailContentProps)
             <View className="flex-row items-center justify-between" style={{ height: imageHeight * OVERLAY_ROW_RATIO }}>
               <Text.base className="font-medium text-white">크루 스페이스</Text.base>
 
-              {crew.states.alreadyParticipant ? (
-                <Badge className="bg-primary300">
-                  <Text.xs className="font-bold text-black">참여중인 크루</Text.xs>
-                </Badge>
-              ) : null}
+              <View className="flex-row items-center gap-2">
+                {crew.states.alreadyParticipant ? (
+                  <Badge className="bg-primary300">
+                    <Text.xs className="font-bold text-black">참여중인 크루</Text.xs>
+                  </Badge>
+                ) : null}
+                {isOwner ? (
+                  <Badge className="bg-primary400">
+                    <Text.xs className="font-bold text-black">크루장</Text.xs>
+                  </Badge>
+                ) : null}
+              </View>
             </View>
 
             <Text.xl className="font-semibold text-white" numberOfLines={1}>{crew.name}</Text.xl>
