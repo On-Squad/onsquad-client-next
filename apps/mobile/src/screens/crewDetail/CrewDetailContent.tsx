@@ -13,8 +13,9 @@ import { useAuth } from '../../auth/AuthProvider';
 import type { RootStackParamList } from '../../navigation/types';
 import { useCancelRequestMutation } from '../../features/crew/detail/model/useCancelRequestMutation';
 import { useCrewRequestMutation } from '../../features/crew/detail/model/useCrewRequestMutation';
+import { useLeaveCrewMutation } from '../../features/crew/detail/model/useLeaveCrewMutation';
 import { useCrewImageHeight } from '../../shared/lib/useCrewImageHeight';
-import { Alert } from '../../shared/ui/Alert';
+import { ALERT_BUTTON, Alert } from '../../shared/ui/Alert';
 import { Avatar } from '../../shared/ui/Avatar';
 import { Badge } from '../../shared/ui/Badge';
 import { Button } from '../../shared/ui/Button';
@@ -32,6 +33,7 @@ export function CrewDetailContent({ route, navigation }: CrewDetailContentProps)
   const { isAuthenticated, me } = useAuth();
   const [isLoginAlertOpen, setIsLoginAlertOpen] = useState(false);
   const [isNotParticipantAlertOpen, setIsNotParticipantAlertOpen] = useState(false);
+  const [isLeaveAlertOpen, setIsLeaveAlertOpen] = useState(false);
   const imageHeight = useCrewImageHeight();
   const insets = useSafeAreaInsets();
   // makeQueryOptions 로 만들어진 옵션이라 data 는 응답 봉투 전체다. 크루 필드는 data.data 안에 있다.
@@ -52,10 +54,21 @@ export function CrewDetailContent({ route, navigation }: CrewDetailContentProps)
   const { mutateAsync: requestCrew, isPending: isRequesting } = useCrewRequestMutation({ crewId });
   const { mutateAsync: cancelRequest, isPending: isCancelling } = useCancelRequestMutation({ crewId });
 
+  const { mutateAsync: leaveCrew, isPending: isLeaving } = useLeaveCrewMutation({ crewId });
+
   const handleCrewRequest = async () => {
     await requestCrew(crewId);
 
     toast('가입 신청이 완료되었어요');
+  };
+
+  const handleLeave = async () => {
+    setIsLeaveAlertOpen(false);
+
+    await leaveCrew(undefined);
+
+    // 웹도 성공 시에만 뒤로 간다 — 실패하면 화면에 남아 사유 토스트를 보게 된다.
+    navigation.goBack();
   };
 
   /**
@@ -167,6 +180,39 @@ export function CrewDetailContent({ route, navigation }: CrewDetailContentProps)
           </View>
         ) : null}
       </View>
+
+      {/* 웹과 같은 조건 — 참여중이면서 크루장이 아닐 때만 보인다. */}
+      {crew.states.alreadyParticipant && !isOwner ? (
+        <View className="items-center pb-10">
+          <Pressable
+            disabled={isLeaving}
+            onPress={() => setIsLeaveAlertOpen(true)}
+            className="border-b border-grayscale500"
+          >
+            <Text.sm className="text-grayscale500">크루 나가기</Text.sm>
+          </Pressable>
+        </View>
+      ) : null}
+
+      <Alert
+        isOpen={isLeaveAlertOpen}
+        onClose={() => setIsLeaveAlertOpen(false)}
+        title="크루를 나갈까요?"
+        buttonSlot={
+          <View className="flex-row">
+            <Pressable className={ALERT_BUTTON.CANCEL} onPress={() => setIsLeaveAlertOpen(false)}>
+              <Text.lg className="text-grayscale600">취소</Text.lg>
+            </Pressable>
+            <Pressable className={ALERT_BUTTON.ACTION} onPress={handleLeave}>
+              <Text.lg className="text-white">나가기</Text.lg>
+            </Pressable>
+          </View>
+        }
+      >
+        <Text.base className="text-center text-grayscale700">
+          크루를 나가면 다시 가입 신청이 필요합니다.
+        </Text.base>
+      </Alert>
 
       <LoginAlert
         isOpen={isLoginAlertOpen}
