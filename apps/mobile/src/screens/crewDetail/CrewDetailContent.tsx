@@ -11,12 +11,16 @@ import { isCrewOwner } from '../../entities/crew/lib/isCrewOwner';
 import MOCK_CREW_IMAGE from '../../assets/images/mock1.png';
 import { useAuth } from '../../auth/AuthProvider';
 import type { RootStackParamList } from '../../navigation/types';
+import { useCancelRequestMutation } from '../../features/crew/detail/model/useCancelRequestMutation';
+import { useCrewRequestMutation } from '../../features/crew/detail/model/useCrewRequestMutation';
 import { useCrewImageHeight } from '../../shared/lib/useCrewImageHeight';
 import { Alert } from '../../shared/ui/Alert';
 import { Avatar } from '../../shared/ui/Avatar';
 import { Badge } from '../../shared/ui/Badge';
+import { Button } from '../../shared/ui/Button';
 import { LoginAlert } from '../../shared/ui/LoginAlert';
 import { Text } from '../../shared/ui/Text';
+import { toast } from '../../shared/ui/Toast';
 
 export type CrewDetailContentProps = NativeStackScreenProps<RootStackParamList, 'CrewDetail'>;
 
@@ -41,6 +45,18 @@ export function CrewDetailContent({ route, navigation }: CrewDetailContentProps)
    * `owner.id` 로 바꾼 근거는 `entities/crew/lib/isCrewOwner` 주석에 있다.
    */
   const isOwner = crew.states.alreadyParticipant && isCrewOwner({ ownerId: crew.owner.id, myId: me?.id });
+
+  // 비로그인이면 서버가 states 를 비워 보낸다(실측) — 웹처럼 false 로 받는다.
+  const alreadyRequest = crew.states.alreadyRequest ?? false;
+
+  const { mutateAsync: requestCrew, isPending: isRequesting } = useCrewRequestMutation({ crewId });
+  const { mutateAsync: cancelRequest, isPending: isCancelling } = useCancelRequestMutation({ crewId });
+
+  const handleCrewRequest = async () => {
+    await requestCrew(crewId);
+
+    toast('가입 신청이 완료되었어요');
+  };
 
   /**
    * 웹 CrewDetail 의 handleCrewHomeMove 를 옮긴 것이다.
@@ -125,6 +141,31 @@ export function CrewDetailContent({ route, navigation }: CrewDetailContentProps)
             <Badge key={String(tag)}>{String(tag)}</Badge>
           ))}
         </View>
+
+        {/*
+          웹 CrewDetail 의 buttonArea 와 같은 조건이다 —
+          비로그인·이미 참여중·크루장에게는 이 영역 자체가 없다.
+        */}
+        {isAuthenticated && !crew.states.alreadyParticipant && !isOwner ? (
+          <View className="flex-col items-center gap-4 pb-12 pt-6">
+            <Button
+              className="w-full"
+              isDisabled={alreadyRequest}
+              isLoading={isRequesting}
+              onPress={handleCrewRequest}
+            >
+              <Text.base className="font-bold text-white">
+                {alreadyRequest ? '가입 신청 완료' : '가입 신청하기'}
+              </Text.base>
+            </Button>
+
+            {alreadyRequest ? (
+              <Pressable disabled={isCancelling} onPress={() => cancelRequest(crewId)}>
+                <Text.sm className="text-grayscale500">취소</Text.sm>
+              </Pressable>
+            ) : null}
+          </View>
+        ) : null}
       </View>
 
       <LoginAlert
