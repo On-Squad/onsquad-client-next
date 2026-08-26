@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { FlatList, Pressable, View } from 'react-native';
 
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
@@ -75,6 +76,24 @@ export function HomeContent({ navigation }: HomeContentProps) {
 
   const crews = (data?.results ?? []) as CrewListItem[];
 
+  // 매 렌더 새 함수를 만들면 FlatList 가 아이템을 전부 다시 그린다.
+  const renderItem = useCallback(
+    ({ item }: { item: CrewListItem }) => (
+      <View className="mb-3">
+        <CrewListCard
+          crew={item}
+          onPress={() =>
+            navigation.navigate('CrewDetail', {
+              crewId: item.id,
+              crewName: item.name,
+            })
+          }
+        />
+      </View>
+    ),
+    [navigation],
+  );
+
   return (
     <View className="flex-1 bg-grayscale100">
       <PullToRefresh onRefresh={refetch}>
@@ -108,19 +127,7 @@ export function HomeContent({ navigation }: HomeContentProps) {
                 </Pressable>
               </View>
             }
-            renderItem={({ item }) => (
-              <View className="mb-3">
-                <CrewListCard
-                  crew={item}
-                  onPress={() =>
-                    navigation.navigate('CrewDetail', {
-                      crewId: item.id,
-                      crewName: item.name,
-                    })
-                  }
-                />
-              </View>
-            )}
+            renderItem={renderItem}
           />
         )}
       </PullToRefresh>

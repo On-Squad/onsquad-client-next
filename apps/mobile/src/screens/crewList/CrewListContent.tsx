@@ -1,4 +1,10 @@
-import { useEffect, useMemo, useState, useTransition } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from 'react';
 import { FlatList, TextInput, View } from 'react-native';
 
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
@@ -75,7 +81,36 @@ export function CrewListContent({ navigation }: CrewListContentProps) {
       crewQueries.infiniteList({ crewName: debouncedSearch }),
     );
 
-  const crews = data.pages.flatMap(page => page.data.results) as CrewListItem[];
+  // 매 렌더 새 배열을 만들면 FlatList 가 목록 전체를 다시 그린다.
+  const crews = useMemo(
+    () => data.pages.flatMap(page => page.data.results) as CrewListItem[],
+    [data.pages],
+  );
+
+  // 검색 대기 중에만 흐려진다. 객체를 새로 만들면 모든 아이템이 리렌더된다.
+  const dimStyle = useMemo(
+    () => ({ opacity: isSearching ? DIMMED_OPACITY : 1 }),
+    [isSearching],
+  );
+
+  const renderItem = useCallback(
+    ({ item }: { item: CrewListItem }) => (
+      // 딤은 **아이템에만** 준다. FlatList 에 주면 ListHeaderComponent 인
+      // hero·검색창까지 함께 흐려진다(실측).
+      <View className="mb-3 px-5" style={dimStyle}>
+        <CrewListCard
+          crew={item}
+          onPress={() =>
+            navigation.navigate('CrewDetail', {
+              crewId: item.id,
+              crewName: item.name,
+            })
+          }
+        />
+      </View>
+    ),
+    [dimStyle, navigation],
+  );
 
   return (
     <View className="flex-1 bg-grayscale100">
@@ -133,10 +168,7 @@ export function CrewListContent({ navigation }: CrewListContentProps) {
               </>
             }
             ListEmptyComponent={
-              <View
-                className="items-center gap-3 py-16"
-                style={{ opacity: isSearching ? DIMMED_OPACITY : 1 }}
-              >
+              <View className="items-center gap-3 py-16" style={dimStyle}>
                 <Text.sm className="text-grayscale500">
                   검색 결과가 없습니다.
                 </Text.sm>
@@ -159,24 +191,7 @@ export function CrewListContent({ navigation }: CrewListContentProps) {
                 void fetchNextPage();
               }
             }}
-            renderItem={({ item }) => (
-              // 딤은 **아이템에만** 준다. FlatList 에 주면 ListHeaderComponent 인
-              // hero·검색창까지 함께 흐려진다(실측).
-              <View
-                className="mb-3 px-5"
-                style={{ opacity: isSearching ? DIMMED_OPACITY : 1 }}
-              >
-                <CrewListCard
-                  crew={item}
-                  onPress={() =>
-                    navigation.navigate('CrewDetail', {
-                      crewId: item.id,
-                      crewName: item.name,
-                    })
-                  }
-                />
-              </View>
-            )}
+            renderItem={renderItem}
           />
         )}
       </PullToRefresh>
