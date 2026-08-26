@@ -28,6 +28,10 @@ export default defineConfig({
           environment: 'jsdom',
           include: ['__tests__/integration/**/*.test.ts'],
           setupFiles: ['./__tests__/setup/vitest.setup.ts'],
+          // `shared/api/common.ts` 가 모듈 로드 시점에 baseUrl 을 계산한다.
+          // 앱은 index.js 가 넣어주지만 테스트는 그 경로를 거치지 않는다 —
+          // 비워두면 `undefined/api/...` 로 나가 MSW 가 못 알아본다.
+          env: { NEXT_PUBLIC_API_BASE_URL: 'http://localhost:8080' },
           // ApiClient 가 절대 URL 을 쓰므로 base URL 자체는 중요하지 않지만,
           // about:blank 에서는 fetch 가 막힌다.
           environmentOptions: { jsdom: { url: 'http://localhost' } },

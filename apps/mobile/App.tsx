@@ -14,15 +14,22 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import './global.css';
 import { AuthProvider } from './src/auth/AuthProvider';
 import { initShellSession } from './src/auth/session';
+import { setMutationErrorPresenter } from './src/shared/lib/queries/mutationErrorPresenter';
 import { RootNavigator } from './src/navigation/RootNavigator';
 import { queryClient } from './src/query/queryClient';
 import { ScreenLoading } from './src/shared/ui/ScreenState';
-import { Toaster } from './src/shared/ui/Toast';
+import { Toaster, toast } from './src/shared/ui/Toast';
 import { ErrorHandlingWrapper } from './src/widgets/ErrorBoundary';
 import { ErrorFallback } from './src/widgets/ErrorFallback';
 
 // 셸이 세션을 쥔다. 요청이 나가기 전에 등록돼야 하므로 모듈 로드 시점에 부른다.
 initShellSession();
+
+// 변경 요청이 실패했을 때 **무엇을 보여줄지는 셸이 정한다.**
+// 데이터 레이어(useApiMutation)는 "실패했다"는 사실만 넘긴다 — 그 덕분에
+// 웹의 훅을 그대로 옮겨와도 radix 토스트가 따라오지 않는다.
+// 첫 mutation 이 조용히 실패하지 않도록 모듈 로드 시점에 등록한다.
+setMutationErrorPresenter(error => toast(error.message));
 
 function App() {
   useEffect(() => {
