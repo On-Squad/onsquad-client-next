@@ -10,6 +10,8 @@ import { Text } from '../Text';
 interface NavButtonProps {
   children: ReactNode;
   className?: string;
+  /** 웹은 shadcn Button 이라 원래 받는 prop 이다. 미러링 누락이라 뒤늦게 채운다. */
+  disabled?: boolean;
   onPress?: () => void;
 }
 
@@ -25,9 +27,9 @@ const CHEVRON_SIZE = 20;
  * 래퍼(`w-full border-0 p-3`)가 이걸 덮지 않아 웹에서는 회색 시트 위의 흰 알약으로 보인다.
  * 없으면 배경과 같은 색이라 버튼으로 안 보인다.
  */
-export function NavButton({ children, className, onPress }: NavButtonProps) {
+export function NavButton({ children, className, disabled, onPress }: NavButtonProps) {
   return (
-    <Pressable onPress={onPress} className={cn('w-full rounded-md bg-white p-3', className)}>
+    <Pressable disabled={disabled} onPress={onPress} className={cn('w-full rounded-md bg-white p-3', className)}>
       <View className="w-full flex-row items-center justify-between">
         <View className="flex-row items-center gap-2">{children}</View>
         <ChevronRight size={CHEVRON_SIZE} color={CHEVRON_COLOR} strokeWidth={2} />

@@ -5,6 +5,8 @@ import { useAndroidExitConfirm } from '../hooks/useAndroidExitConfirm';
 import { GlobalHeader } from '../widgets/GlobalHeader';
 import { CrewDetailScreen } from '../screens/crewDetail';
 import { CrewHomeScreen } from '../screens/crewHome';
+import { CrewManageScreen } from '../screens/crewManage';
+import { CrewParticipantsScreen } from '../screens/crewParticipants';
 import { CrewNewScreen } from '../screens/crewNew';
 import { LoginScreen } from '../screens/login';
 import { appHeaderOptions } from '../shared/ui/AppHeader';
@@ -53,6 +55,16 @@ export function RootNavigator() {
           component={CrewHomeScreen}
           // 상세에서 넘긴 이름을 헤더에 쓴다 — 홈 응답을 기다리지 않고 즉시 보인다.
           options={({ route }) => appHeaderOptions({ title: route.params.crewName })}
+        />
+        <Stack.Screen
+          name="CrewManage"
+          component={CrewManageScreen}
+          options={appHeaderOptions({ title: '크루 관리' })}
+        />
+        <Stack.Screen
+          name="CrewParticipants"
+          component={CrewParticipantsScreen}
+          options={appHeaderOptions({ title: '참가 신청' })}
         />
         <Stack.Screen name="CrewNew" component={CrewNewScreen} options={appHeaderOptions({ title: '크루 개설' })} />
         <Stack.Screen

@@ -11,6 +11,8 @@ import { Text } from '../../../../shared/ui/Text';
 interface CrewHomeHeaderProps {
   crew?: CrewHomeData['crew'];
   canManage?: boolean;
+  /** 관리 진입. `canManage` 가 true 일 때만 버튼이 보인다. */
+  onManagePress?: () => void;
 }
 
 // lucide 는 색을 prop 으로 받는다 — className 대상이 아니다(토큰 예외).
@@ -30,9 +32,10 @@ const SETTINGS_SIZE = 20;
  * 그 상수에는 `bg-gradient-to-t` 와 `backdrop-blur-sm` 이 들어 있는데
  * **NativeWind 가 둘 다 지원하지 않는다.** 단색 반투명으로 간다.
  *
- * 관리 버튼은 **모양만 두고 동작을 비운다** — 크루 관리 화면은 이번 범위가 아니다.
+ * 관리 버튼은 **이동 경로를 상위가 넘긴다**(`onManagePress`). 헤더가 navigation 을 직접
+ * 알면 크루 홈 밖에서 재사용할 수 없다 — 웹도 `canManage` 를 prop 으로 받는 결이다.
  */
-export function CrewHomeHeader({ crew, canManage }: CrewHomeHeaderProps) {
+export function CrewHomeHeader({ crew, canManage, onManagePress }: CrewHomeHeaderProps) {
   const imageHeight = useCrewImageHeight();
 
   return (
@@ -48,7 +51,7 @@ export function CrewHomeHeader({ crew, canManage }: CrewHomeHeaderProps) {
           <Text.base className="font-medium text-white">크루 스페이스</Text.base>
 
           {canManage ? (
-            <Pressable className="px-2" hitSlop={8}>
+            <Pressable className="px-2" hitSlop={8} onPress={onManagePress}>
               <Settings size={SETTINGS_SIZE} color={SETTINGS_COLOR} />
             </Pressable>
           ) : null}

@@ -4,6 +4,8 @@ import { makeQueryOptions } from '../../../shared/lib/queries/makeQueryOptions';
 import { type CrewDetailGetFetchParams, crewDetailGetFetch } from './crewDetailGetFetch';
 import { type CrewHomeInfoGetFetchParams, crewHomeInfoGetFetch } from './crewHomeInfoGetFetch';
 import { type CrewListGetFetchParams, crewListGetFetch } from './crewListGetFetch';
+import { type CrewManageGetFetchParams, crewManageGetFetch } from './crewManageGetFetch';
+import { type CrewParticipantsGetFetchParams, crewParticipantsGetFetch } from './crewParticipantsGetFetch';
 
 /**
  * 크루 쿼리 팩토리.
@@ -57,6 +59,14 @@ export const crewQueries = {
 
   detail: ({ crewId }: CrewDetailGetFetchParams) =>
     makeQueryOptions([...crewQueries.root(), 'detail', crewId], () => crewDetailGetFetch({ crewId })),
+
+  manage: ({ crewId }: CrewManageGetFetchParams) =>
+    makeQueryOptions([...crewQueries.lists(), 'manage', crewId], () => crewManageGetFetch({ crewId })),
+
+  participants: ({ crewId, size = 5, page = 0 }: CrewParticipantsGetFetchParams) =>
+    makeQueryOptions([...crewQueries.lists(), 'participants', crewId, size, page], () =>
+      crewParticipantsGetFetch({ crewId, size, page }),
+    ),
 
   home: ({ crewId, page, size }: CrewHomeInfoGetFetchParams) =>
     makeQueryOptions([...crewQueries.root(), 'home', crewId, page, size], () =>
