@@ -70,7 +70,11 @@ describe('참가 신청 수락과 거절', () => {
     result.current.mutate(1001);
 
     await waitFor(() => expect(decisions).toHaveLength(1));
-    expect(decisions[0]).toEqual({ method: 'PATCH', crewId: '42', requestId: '1001' });
+    // toEqual 로 객체를 통째로 비교하면 실패 메시지가 `…(1)` 로 잘려
+    // **어느 값이 틀렸는지 안 보인다**(실측). 값별로 쪼갠다.
+    expect(decisions[0].method).toBe('PATCH');
+    expect(decisions[0].crewId).toBe('42');
+    expect(decisions[0].requestId).toBe('1001');
   });
 
   it('거절하면 지목한 신청자 한 명만 거절된다', async () => {
@@ -83,7 +87,9 @@ describe('참가 신청 수락과 거절', () => {
     result.current.mutate(2002);
 
     await waitFor(() => expect(decisions).toHaveLength(1));
-    expect(decisions[0]).toEqual({ method: 'DELETE', crewId: '42', requestId: '2002' });
+    expect(decisions[0].method).toBe('DELETE');
+    expect(decisions[0].crewId).toBe('42');
+    expect(decisions[0].requestId).toBe('2002');
   });
 
   it('수락이 접수되면 보고 있던 신청자 목록이 다시 조회되어 그 사람이 빠진다', async () => {
