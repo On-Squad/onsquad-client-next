@@ -103,9 +103,15 @@ export function GlobalMenuSheet({ isOpen, onClose, onLoginPress }: GlobalMenuShe
         style={{ marginTop: insets.top + APP_HEADER_HEIGHT }}
         onPress={onClose}
       >
+        {/*
+          **여기서 safe-area 를 다시 더하지 않는다.** 위 `marginTop` 이 이미 더했다.
+          두 번 더하면 노치만큼 안쪽이 밀리는데, 안드로이드는 상태바(약 24dp)라 티가 안 나고
+          아이폰은 노치(약 59pt)라 위쪽에 빈 칸으로 보인다(실측).
+          웹은 `top-[var(--app-header-height)]` 한 번으로 끝난다.
+        */}
         <Animated.View
           className="h-full rounded-tl-2xl bg-grayscale100"
-          style={{ width: sheetWidth, paddingTop: insets.top, transform: [{ translateX }] }}
+          style={{ width: sheetWidth, transform: [{ translateX }] }}
         >
           {/* 패널 안쪽 탭이 바깥(닫기)으로 새지 않게 막는다 */}
           <Pressable className="flex-1" onPress={(event) => event.stopPropagation()}>
