@@ -1,0 +1,1 @@
+export { AnnounceDetailScreen } from './AnnounceDetailScreen';

@@ -24,6 +24,10 @@ import {
 export const SUPPORTED_METHODS: readonly BridgeMethod[] = [
   'shell.ready',
   'shell.setBackGesture',
+  'shell.push',
+  'shell.replace',
+  'auth.getToken',
+  'media.pickImage',
 ];
 
 /** 메서드별 처리기. 값을 돌려주면 성공 응답, 던지면 실패 응답이 나간다. */

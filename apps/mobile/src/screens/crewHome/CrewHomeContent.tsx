@@ -42,7 +42,11 @@ export function CrewHomeContent({ route, navigation }: CrewHomeContentProps) {
       />
 
       <View className="mt-6">
-        <CrewInfoPager announces={home.announces} crew={home.crew} />
+        <CrewInfoPager
+          announces={home.announces}
+          crew={home.crew}
+          onMoreAnnouncePress={() => navigation.navigate('AnnounceList', { crewId, crewName })}
+        />
 
         <View className="mx-5 mt-6 flex-col items-center gap-6">
           <CrewMemberRanking members={home.rankers} />

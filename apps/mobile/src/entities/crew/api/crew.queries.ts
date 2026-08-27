@@ -1,6 +1,7 @@
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 
 import { makeQueryOptions } from '../../../shared/lib/queries/makeQueryOptions';
+import { type CrewAnnounceListGetFetchParams, crewAnnounceListGetFetch } from './crewAnnounceListGetFetch';
 import { type CrewDetailGetFetchParams, crewDetailGetFetch } from './crewDetailGetFetch';
 import { type CrewHomeInfoGetFetchParams, crewHomeInfoGetFetch } from './crewHomeInfoGetFetch';
 import { type CrewListGetFetchParams, crewListGetFetch } from './crewListGetFetch';
@@ -72,4 +73,7 @@ export const crewQueries = {
     makeQueryOptions([...crewQueries.root(), 'home', crewId, page, size], () =>
       crewHomeInfoGetFetch({ crewId, page, size }),
     ),
+
+  announceList: ({ crewId }: CrewAnnounceListGetFetchParams) =>
+    makeQueryOptions([...crewQueries.root(), 'announce', crewId], () => crewAnnounceListGetFetch({ crewId })),
 };

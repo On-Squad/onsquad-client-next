@@ -8,6 +8,8 @@ import { CrewInfoPanel } from './CrewInfoPanel';
 interface CrewInfoPagerProps {
   announces?: CrewHomeData['announces'];
   crew?: CrewHomeData['crew'];
+  /** "더보기" 눌렀을 때 공지 목록 화면으로 이동한다. */
+  onMoreAnnouncePress?: () => void;
 }
 
 type PanelKey = 'announce' | 'info';
@@ -31,7 +33,7 @@ const PANEL_GAP = 16;
  * 우리 패널은 좌우 여백을 뺀 `width - 40` 이라 매 장마다 어긋난다(에뮬레이터 실측 —
  * 두 번째 패널이 오른쪽으로 밀려 끝이 잘렸다). 대신 아이템 폭에 맞춰 `snapToInterval` 을 준다.
  */
-export function CrewInfoPager({ announces, crew }: CrewInfoPagerProps) {
+export function CrewInfoPager({ announces, crew, onMoreAnnouncePress }: CrewInfoPagerProps) {
   const { width } = useWindowDimensions();
   // 화면 폭에서 좌우 여백을 뺀 계산값이라 Tailwind 클래스로 표현할 수 없다.
   const panelWidth = width - SIDE_PADDING * 2;
@@ -49,7 +51,11 @@ export function CrewInfoPager({ announces, crew }: CrewInfoPagerProps) {
       contentContainerStyle={{ paddingHorizontal: SIDE_PADDING, gap: PANEL_GAP }}
       renderItem={({ item }) => (
         <View style={{ width: panelWidth }}>
-          {item === 'announce' ? <CrewAnnouncePanel announces={announces} /> : <CrewInfoPanel crew={crew} />}
+          {item === 'announce' ? (
+            <CrewAnnouncePanel announces={announces} onMorePress={onMoreAnnouncePress} />
+          ) : (
+            <CrewInfoPanel crew={crew} />
+          )}
         </View>
       )}
     />

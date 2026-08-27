@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 
 import dayjs from 'dayjs';
 import { Star } from 'lucide-react-native';
@@ -14,6 +14,8 @@ import { Text } from '../../../../shared/ui/Text';
 
 interface CrewAnnouncePanelProps {
   announces?: CrewHomeData['announces'];
+  /** "더보기" 를 눌렀을 때 공지 목록 화면으로 이동한다. */
+  onMorePress?: () => void;
 }
 
 // lucide 는 색을 prop 으로 받는다 — className 대상이 아니다(토큰 예외).
@@ -25,10 +27,9 @@ const PIN_SIZE = 16;
 /**
  * 웹 `features/crew/home/ui/CrewAnnounceList` 의 RN 미러.
  *
- * "더보기" 는 **모양만 두고 동작을 비운다.** 이동 대상(`/crews/{id}/announce`)이
- * 4d 웹뷰 잔류 대상이라 아직 갈 곳이 없다. 지웠다가 다시 그리면 웹과 대조할 기준이 사라진다.
+ * "더보기" 는 onMorePress 가 주어지면 RN 공지 목록 화면으로 이동한다.
  */
-export function CrewAnnouncePanel({ announces }: CrewAnnouncePanelProps) {
+export function CrewAnnouncePanel({ announces, onMorePress }: CrewAnnouncePanelProps) {
   return (
     <Article
       className="h-[360px] w-full p-3"
@@ -36,7 +37,9 @@ export function CrewAnnouncePanel({ announces }: CrewAnnouncePanelProps) {
         <>
           <View className="flex-row items-center justify-between">
             <Text.lg className="font-bold">공지사항</Text.lg>
-            <Text.xs className="text-grayscale500">더보기</Text.xs>
+            <TouchableOpacity onPress={onMorePress} disabled={!onMorePress}>
+              <Text.xs className="text-grayscale500">더보기</Text.xs>
+            </TouchableOpacity>
           </View>
 
           <View className="mt-8 flex-col">

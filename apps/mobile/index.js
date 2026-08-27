@@ -11,6 +11,7 @@ import 'react-native-gesture-handler';
 // ESM import 는 호이스팅되어 이 대입보다 먼저 실행되므로 require 로 순서를 강제한다.
 // 정식 해법(빌드 설정 또는 별도 config)은 Phase 4 에서 정한다.
 process.env.NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8080';
+process.env.NEXT_PUBLIC_WEB_ORIGIN = process.env.NEXT_PUBLIC_WEB_ORIGIN ?? 'http://localhost:3000';
 
 const { AppRegistry } = require('react-native');
 

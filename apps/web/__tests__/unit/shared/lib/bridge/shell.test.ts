@@ -10,7 +10,7 @@ vi.mock('@onsquad/bridge/web', () => ({
 
 import { call, can } from '@onsquad/bridge/web';
 
-import { setBackGesture, shellReady } from '@/shared/lib/bridge/shell';
+import { setBackGesture, shellPush, shellReplace, shellReady } from '@/shared/lib/bridge/shell';
 
 afterEach(() => {
   delete window.ReactNativeWebView;
@@ -73,5 +73,33 @@ describe('setBackGesture', () => {
 
     expect(call).toHaveBeenCalledWith('shell.setBackGesture', { enabled: true });
     expect(postMessage).not.toHaveBeenCalled();
+  });
+});
+
+describe('shellPush', () => {
+  it('공지 상세 경로를 shell.push 브릿지 요청으로 전달한다', () => {
+    shellPush('/crews/1/announce/5');
+
+    expect(call).toHaveBeenCalledWith('shell.push', { path: '/crews/1/announce/5' });
+  });
+
+  it('공지 작성 경로를 shell.push 브릿지 요청으로 전달한다', () => {
+    shellPush('/crews/1/announce/write');
+
+    expect(call).toHaveBeenCalledWith('shell.push', { path: '/crews/1/announce/write' });
+  });
+});
+
+describe('shellReplace', () => {
+  it('공지 상세 경로를 shell.replace 브릿지 요청으로 전달한다', () => {
+    shellReplace('/crews/1/announce/5');
+
+    expect(call).toHaveBeenCalledWith('shell.replace', { path: '/crews/1/announce/5' });
+  });
+
+  it('공지 목록 경로를 shell.replace 브릿지 요청으로 전달한다 — 작성 완료 후 목록으로 돌아갈 때 쓴다', () => {
+    shellReplace('/crews/1/announce');
+
+    expect(call).toHaveBeenCalledWith('shell.replace', { path: '/crews/1/announce' });
   });
 });

@@ -10,5 +10,7 @@ declare const process: {
   env: {
     /** 백엔드 주소. `index.js` 가 없으면 `http://localhost:8080` 으로 채운다. */
     NEXT_PUBLIC_API_BASE_URL?: string;
+    /** 웹뷰가 로드할 웹 주소. 개발: `http://localhost:3000`, 배포: 실제 도메인. */
+    NEXT_PUBLIC_WEB_ORIGIN?: string;
   };
 };

@@ -46,3 +46,19 @@ export const setBackGesture = (enabled: boolean) => {
 
   postLegacy(enabled ? LEGACY.backOn : LEGACY.backOff);
 };
+
+/**
+ * 네이티브 스택에 새 화면을 쌓는다.
+ * can('shell.push') 를 확인한 뒤 호출한다 — 브릿지 없는 환경에서는 아무것도 하지 않는다.
+ */
+export const shellPush = (path: string): void => {
+  void call('shell.push', { path }).catch(reportAndIgnore);
+};
+
+/**
+ * 현재 화면을 스택에 쌓지 않고 교체한다 — 글쓰기 후 상세로 replace 할 때 쓴다.
+ * can('shell.replace') 를 확인한 뒤 호출한다 — 브릿지 없는 환경에서는 아무것도 하지 않는다.
+ */
+export const shellReplace = (path: string): void => {
+  void call('shell.replace', { path }).catch(reportAndIgnore);
+};

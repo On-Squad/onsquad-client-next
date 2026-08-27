@@ -26,6 +26,7 @@ import { MutationErrorProvider } from '../providers/mutation-error-provider';
 import { ObservabilityProvider } from '../providers/observability-provider';
 import { TimeoutNotifierProvider } from '../providers/timeout-notifier-provider';
 import UserProvider from '../providers/user-provider';
+import { WebViewAuth } from '../providers/webview-auth';
 import { WebViewBridge } from '../providers/webview-bridge';
 
 export const metadata: Metadata = {
@@ -56,6 +57,7 @@ export default async function RootLayout({
         <body className={cn('bg-background antialiased')}>
           <ObservabilityProvider />
           <WebViewBridge />
+          <WebViewAuth />
           <NavDirectionTracker />
           <OverlayProvider>
             <SessionProvider>

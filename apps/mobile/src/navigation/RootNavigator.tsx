@@ -3,6 +3,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { useAndroidExitConfirm } from '../hooks/useAndroidExitConfirm';
 import { GlobalHeader } from '../widgets/GlobalHeader';
+import { AnnounceDetailScreen } from '../screens/announceDetail';
+import { AnnounceListScreen } from '../screens/announceList';
 import { CrewDetailScreen } from '../screens/crewDetail';
 import { CrewHomeScreen } from '../screens/crewHome';
 import { CrewManageScreen } from '../screens/crewManage';
@@ -67,6 +69,19 @@ export function RootNavigator() {
           options={appHeaderOptions({ title: '참가 신청' })}
         />
         <Stack.Screen name="CrewNew" component={CrewNewScreen} options={appHeaderOptions({ title: '크루 개설' })} />
+        <Stack.Screen
+          name="AnnounceList"
+          component={AnnounceListScreen}
+          options={appHeaderOptions({ title: '공지사항' })}
+        />
+        <Stack.Screen
+          name="AnnounceDetail"
+          component={AnnounceDetailScreen}
+          // RN 헤더 제목은 화면 성격을 쓴다 — 상세 "공지사항", 작성 "공지 작성", 수정 "공지 수정".
+          // 웹 CrewDetailAppbar 는 크루명을 쓰지만 RN 헤더는 전환 즉시 그려져야 해서
+          // 웹뷰가 크루명을 알려줄 때까지 기다릴 수 없다. route.params.title 로 전환 즉시 확정한다.
+          options={({ route }) => appHeaderOptions({ title: route.params.title })}
+        />
         <Stack.Screen
           name="Login"
           component={LoginScreen}

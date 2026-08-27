@@ -26,6 +26,8 @@ export const setShellRefreshToken = (token: string | undefined) => {
 
 export const getShellRefreshToken = () => refreshToken;
 
+export const getShellAccessToken = () => accessToken;
+
 export const clearShellSession = () => {
   accessToken = undefined;
   refreshToken = undefined;

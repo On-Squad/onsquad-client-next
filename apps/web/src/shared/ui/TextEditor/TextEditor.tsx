@@ -12,6 +12,7 @@ import dynamic from 'next/dynamic';
 import remarkGfm from 'remark-gfm';
 
 import { CREW_PATH } from '@/shared/config/paths';
+import { can, pickImage } from '@/shared/lib/bridge';
 import { useUser } from '@/shared/lib/hooks';
 import { supabase } from '@/shared/lib/supabse/createClient';
 
@@ -78,6 +79,12 @@ const TextEditor = ({ value = '', onChange, placeholder }: TextEditorProps) => {
     const imageUrl = urlData.publicUrl;
 
     insertText(`\n![이미지](${imageUrl})\n`);
+  };
+
+  // 웹뷰(앱) 환경에서 브릿지를 통해 이미지 URI 를 받아 본문에 삽입한다.
+  const handleBridgeImagePick = async () => {
+    const uris = await pickImage(1);
+    uris.forEach((uri) => insertText(`\n![이미지](${uri})\n`));
   };
 
   useEffect(() => {
@@ -154,10 +161,25 @@ const TextEditor = ({ value = '', onChange, placeholder }: TextEditorProps) => {
                 H4
               </button>
               <div className="mx-2 h-6 w-px bg-gray-300" />
-              <label className="cursor-pointer rounded p-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900">
-                <ImageIcon size={20} />
-                <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-              </label>
+              {/* 웹뷰에서는 브릿지 피커, 브라우저에서는 파일 인풋 — can() 폴백 */}
+              {can('media.pickImage') ? (
+                <button
+                  type="button"
+                  aria-label="이미지 추가"
+                  onClick={handleBridgeImagePick}
+                  className="cursor-pointer rounded p-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  <ImageIcon size={20} />
+                </button>
+              ) : (
+                <label
+                  aria-label="이미지 추가"
+                  className="cursor-pointer rounded p-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  <ImageIcon size={20} />
+                  <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                </label>
+              )}
             </div>
 
             <CodeMirror

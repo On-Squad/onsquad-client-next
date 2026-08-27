@@ -29,6 +29,8 @@ export interface BridgeMap {
   'shell.close': { req: void; res: void };
   /** 네이티브 스택에 화면을 쌓아달라. */
   'shell.push': { req: { path: string }; res: void };
+  /** 현재 화면을 스택에 쌓지 않고 교체한다 — 글쓰기 후 상세로 replace 할 때 쓴다. */
+  'shell.replace': { req: { path: string }; res: void };
   /** iOS 엣지 스와이프 뒤로가기 허용 여부. (구 `NATIVE_BACK:on|off`) */
   'shell.setBackGesture': { req: { enabled: boolean }; res: void };
 
