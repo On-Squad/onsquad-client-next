@@ -20,6 +20,7 @@ import { queryClient } from './src/query/queryClient';
 import { ScreenLoading } from './src/shared/ui/ScreenState';
 import { Toaster, toast } from './src/shared/ui/Toast';
 import { ErrorHandlingWrapper } from './src/widgets/ErrorBoundary';
+import { GlobalMenuProvider } from './src/widgets/GlobalHeader';
 import { ErrorFallback } from './src/widgets/ErrorFallback';
 
 // 셸이 세션을 쥔다. 요청이 나가기 전에 등록돼야 하므로 모듈 로드 시점에 부른다.
@@ -52,7 +53,10 @@ function App() {
               fallbackComponent={ErrorFallback}
               suspenseFallback={<ScreenLoading />}
             >
-              <RootNavigator />
+              {/* 헤더(여는 버튼)와 화면(그려지는 시트) 양쪽을 덮어야 한다. */}
+              <GlobalMenuProvider>
+                <RootNavigator />
+              </GlobalMenuProvider>
             </ErrorHandlingWrapper>
 
             {/*

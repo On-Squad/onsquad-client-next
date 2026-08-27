@@ -13,6 +13,7 @@ import { useAuth } from '../auth/AuthProvider';
 import { CrewListScreen } from '../screens/crewList';
 import { HomeScreen } from '../screens/home';
 import { LoginAlert } from '../shared/ui/LoginAlert';
+import { GlobalMenuSheet, useGlobalMenu } from '../widgets/GlobalHeader';
 import { CrewNewTabButton } from './CrewNewTabButton';
 import type { MainTabParamList, RootStackParamList } from './types';
 
@@ -58,6 +59,8 @@ export function MainTabs() {
   // listeners 콜백이 이 **값**을 닫는다 — 렌더 중 컴포넌트를 정의하는 것과는 다르다.
   const { isAuthenticated } = useAuth();
   const [isLoginAlertOpen, setIsLoginAlertOpen] = useState(false);
+  // 드로어는 헤더가 아니라 **여기서** 그린다 — 화면 콘텐츠에만 헤더 높이가 내려오기 때문이다.
+  const globalMenu = useGlobalMenu();
   // 탭 안에서 루트 스택으로 가려면 부모 내비게이터를 잡아야 한다.
   const rootNavigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -116,6 +119,15 @@ export function MainTabs() {
           }}
         />
       </Tab.Navigator>
+
+      <GlobalMenuSheet
+        isOpen={globalMenu.isOpen}
+        onClose={globalMenu.close}
+        onLoginPress={() => {
+          globalMenu.close();
+          rootNavigation.navigate('Login');
+        }}
+      />
 
       <LoginAlert
         isOpen={isLoginAlertOpen}

@@ -35,7 +35,7 @@ export function RootNavigator() {
           component={MainTabs}
           options={{
             // 헤더 전체를 웹 GlobalHeader 로 채운다 — 제목 슬롯만으로는 로고·햄버거를 담을 수 없다.
-            headerTitle: () => <GlobalHeader onLoginPress={() => navigationRef.navigate('Login')} />,
+            headerTitle: () => <GlobalHeader />,
             headerTitleAlign: 'center',
             headerStyle: { backgroundColor: '#FFFFFF' },
             headerShadowVisible: true,

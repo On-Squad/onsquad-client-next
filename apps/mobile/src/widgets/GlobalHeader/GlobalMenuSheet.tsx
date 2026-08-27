@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
-import { Animated, Modal, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { Animated, Modal, Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
+import { HeaderHeightContext } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import KakaoLogo from '../../assets/icons/kakaologo.svg';
@@ -25,8 +26,16 @@ const OPEN_DURATION_MS = 300;
 
 const CLOSE_DURATION_MS = 200;
 
-/** 웹 `--app-header-height` 는 `3.5rem + safe-area` 다. safe-area 는 insets 로 따로 더한다. */
-const APP_HEADER_HEIGHT = 56;
+/**
+ * 헤더 높이를 네비게이션에서 못 받았을 때만 쓰는 값.
+ *
+ * **상수로 맞출 수 없다.** RN 헤더는 우리가 그리는 게 아니라 네이티브 스택의 헤더 슬롯이라
+ * 높이를 플랫폼이 정하고, safe-area 와의 합도 기기마다 다르다.
+ * iPhone 16 Pro 실측: 헤더 하단 100.3pt, insets.top 62pt → 헤더는 38.3pt 로
+ * iOS 표준값 44 와도 안 맞는다. 그래서 실제 높이는 `HeaderHeightContext` 에서 받고,
+ * 이 값은 컨텍스트가 없을 때의 안전망이다.
+ */
+const FALLBACK_HEADER_HEIGHT = Platform.select({ ios: 44, default: 56 });
 
 /** 웹 GlobalHeader 의 `width={20} height={20}` 과 같다. */
 const KAKAO_LOGO_SIZE = 20;
@@ -53,6 +62,10 @@ export function GlobalMenuSheet({ isOpen, onClose, onLoginPress }: GlobalMenuShe
   // 되는 어긋남이 생겼다(실측). 신원의 원본은 하나여야 한다.
   const { isAuthenticated, me, logout } = useAuth();
   const insets = useSafeAreaInsets();
+
+  // 네이티브 스택이 실제로 그린 헤더 높이(safe-area 포함). 컨텍스트가 없으면 안전망으로 떨어진다.
+  const headerHeight = useContext(HeaderHeightContext);
+  const panelTop = headerHeight ?? insets.top + FALLBACK_HEADER_HEIGHT;
 
   const { width } = useWindowDimensions();
   const sheetWidth = width * SHEET_WIDTH_RATIO;
@@ -98,20 +111,16 @@ export function GlobalMenuSheet({ isOpen, onClose, onLoginPress }: GlobalMenuShe
         `top-[var(--app-header-height)]` 로 같은 것을 한다 —
         시트가 앱 헤더를 덮으면 로고와 햄버거가 가려진다.
       */}
-      <Pressable
-        className="flex-1 flex-row justify-end bg-black/40"
-        style={{ marginTop: insets.top + APP_HEADER_HEIGHT }}
-        onPress={onClose}
-      >
+      <Pressable className="flex-1 flex-row justify-end bg-black/20" onPress={onClose}>
         {/*
-          **여기서 safe-area 를 다시 더하지 않는다.** 위 `marginTop` 이 이미 더했다.
-          두 번 더하면 노치만큼 안쪽이 밀리는데, 안드로이드는 상태바(약 24dp)라 티가 안 나고
-          아이폰은 노치(약 59pt)라 위쪽에 빈 칸으로 보인다(실측).
-          웹은 `top-[var(--app-header-height)]` 한 번으로 끝난다.
+          **딤은 헤더까지 덮고, 패널만 헤더 아래에서 시작한다.**
+          웹 `SheetOverlay` 가 `absolute inset-0` 로 화면 전체를 덮으면서
+          `SheetContent` 만 `top-[var(--app-header-height)]` 를 갖는 것과 같다.
+          딤에 여백을 주면 헤더만 밝게 남아 떠 보인다.
         */}
         <Animated.View
-          className="h-full rounded-tl-2xl bg-grayscale100"
-          style={{ width: sheetWidth, transform: [{ translateX }] }}
+          className="rounded-tl-2xl bg-grayscale100"
+          style={{ width: sheetWidth, marginTop: panelTop, transform: [{ translateX }] }}
         >
           {/* 패널 안쪽 탭이 바깥(닫기)으로 새지 않게 막는다 */}
           <Pressable className="flex-1" onPress={(event) => event.stopPropagation()}>
