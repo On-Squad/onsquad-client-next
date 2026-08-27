@@ -1,14 +1,17 @@
+import { useCallback } from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 
 import dayjs from 'dayjs';
 import { PencilLine, Star } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useFocusEffect } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 
 import { crewQueries } from '../../entities/crew/api/crew.queries';
 import { announceWriteUrl } from '../../entities/crew/lib/announceWebUrl';
+import { refreshAnnounces } from './refreshAnnounces';
 
 import { Article } from '../../shared/ui/Article';
 import { Avatar } from '../../shared/ui/Avatar';
@@ -33,6 +36,17 @@ export type AnnounceListContentProps = NativeStackScreenProps<RootStackParamList
 export function AnnounceListContent({ route, navigation }: AnnounceListContentProps) {
   const { crewId, crewName } = route.params;
   const insets = useSafeAreaInsets();
+
+  const queryClient = useQueryClient();
+
+  // **화면이 다시 보일 때마다 목록을 새로 받는다.**
+  // 상단고정·글쓰기는 웹뷰 안에서 일어나고 그쪽 캐시 무효화는 여기까지 오지 않는다.
+  // 처음 진입할 때도 한 번 도는데, 그건 이미 받아둔 값을 덮어쓰는 정도라 화면이 깜빡이지 않는다.
+  useFocusEffect(
+    useCallback(() => {
+      void refreshAnnounces({ queryClient, crewId });
+    }, [queryClient, crewId]),
+  );
 
   const { data } = useSuspenseQuery(crewQueries.announceList({ crewId }));
   const canWrite = data.data.states.canWrite;
