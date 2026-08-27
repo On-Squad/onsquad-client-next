@@ -4,6 +4,9 @@ import { Modal, Pressable, View } from 'react-native';
 import { cn } from '../../lib/utils';
 import { Text } from '../Text';
 
+/** 웹 `-mx-[0.075rem]` = 0.075rem. 모서리 깎임에서 새는 흰 실금을 덮는다. */
+const HAIRLINE_COVER = 1.2;
+
 interface AlertProps {
   isOpen: boolean;
   onClose: () => void;
@@ -34,7 +37,13 @@ export function Alert({ isOpen, onClose, title, children, buttonSlot }: AlertPro
 
           <View className="items-center px-4 pb-4 pt-4">{children}</View>
 
-          <View className="w-full">
+          {/*
+            **음수 마진으로 카드 밖까지 0.5px 내민다.**
+            `overflow-hidden` + `rounded-md` 로 모서리를 깎으면 버튼 아래·옆에
+            흰 카드 배경이 실금으로 비친다(실측). 웹도 같은 이유로
+            `-mx-[0.075rem] -mb-[0.075rem]` 을 쓴다 — 그걸 옮겨온다.
+          */}
+          <View style={{ marginHorizontal: -HAIRLINE_COVER, marginBottom: -HAIRLINE_COVER }}>
             {buttonSlot ?? (
               <Pressable className="h-14 w-full items-center justify-center bg-primary500" onPress={onClose}>
                 <Text.lg className="text-white">확인</Text.lg>

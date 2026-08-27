@@ -13,6 +13,7 @@ import { installSessionRefresh, login as loginRequest, logout as logoutRequest, 
 export interface Me {
   id: number;
   nickname: string;
+  email: string;
   profileImage: string;
 }
 
@@ -48,9 +49,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const loadMe = useCallback(async () => {
     try {
       const res = await userInfoGetFetch();
-      const { id, nickname, profileImage } = res.data.data;
+      const { id, nickname, email, profileImage } = res.data.data;
 
-      setMe({ id, nickname, profileImage });
+      setMe({ id, nickname, email, profileImage });
     } catch {
       setMe(null);
     }

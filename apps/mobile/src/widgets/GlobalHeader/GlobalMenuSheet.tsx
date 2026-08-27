@@ -10,7 +10,6 @@ import { NavButton, NavButtonLabel } from '../../shared/ui/NavButton';
 import { Separator } from '../../shared/ui/Separator';
 import { Text } from '../../shared/ui/Text';
 import { ProfileSummary } from './ProfileSummary';
-import { useCurrentUser } from './useCurrentUser';
 
 interface GlobalMenuSheetProps {
   isOpen: boolean;
@@ -25,6 +24,9 @@ const SHEET_WIDTH_RATIO = 0.8;
 const OPEN_DURATION_MS = 300;
 
 const CLOSE_DURATION_MS = 200;
+
+/** 웹 `--app-header-height` 는 `3.5rem + safe-area` 다. safe-area 는 insets 로 따로 더한다. */
+const APP_HEADER_HEIGHT = 56;
 
 /** 웹 GlobalHeader 의 `width={20} height={20}` 과 같다. */
 const KAKAO_LOGO_SIZE = 20;
@@ -46,8 +48,10 @@ const KAKAO_LOGO_SIZE = 20;
  * 프로필 편집·비밀번호 변경·내 활동 3종은 아직 이관 전이다.
  */
 export function GlobalMenuSheet({ isOpen, onClose, onLoginPress }: GlobalMenuSheetProps) {
-  const { isAuthenticated, logout } = useAuth();
-  const user = useCurrentUser(isAuthenticated);
+  // **셸이 쥔 신원을 그대로 쓴다.** 예전엔 여기서 /members/me 를 따로 불렀는데,
+  // 그 조회가 실패하면 헤더의 벨은 로그인 상태인데 드로어만 "로그인 후 이용해주세요" 가
+  // 되는 어긋남이 생겼다(실측). 신원의 원본은 하나여야 한다.
+  const { isAuthenticated, me, logout } = useAuth();
   const insets = useSafeAreaInsets();
 
   const { width } = useWindowDimensions();
@@ -89,7 +93,16 @@ export function GlobalMenuSheet({ isOpen, onClose, onLoginPress }: GlobalMenuShe
   return (
     <Modal visible={isMounted} animationType="none" transparent onRequestClose={onClose}>
       {/* 바깥을 누르면 닫힌다 — 웹 Sheet 의 overlay 와 같은 동작 */}
-      <Pressable className="flex-1 flex-row justify-end bg-black/40" onPress={onClose}>
+      {/*
+        **헤더 아래부터 시작한다.** 웹 sheet 의 right variant 가
+        `top-[var(--app-header-height)]` 로 같은 것을 한다 —
+        시트가 앱 헤더를 덮으면 로고와 햄버거가 가려진다.
+      */}
+      <Pressable
+        className="flex-1 flex-row justify-end bg-black/40"
+        style={{ marginTop: insets.top + APP_HEADER_HEIGHT }}
+        onPress={onClose}
+      >
         <Animated.View
           className="h-full rounded-tl-2xl bg-grayscale100"
           style={{ width: sheetWidth, paddingTop: insets.top, transform: [{ translateX }] }}
@@ -98,7 +111,7 @@ export function GlobalMenuSheet({ isOpen, onClose, onLoginPress }: GlobalMenuShe
           <Pressable className="flex-1" onPress={(event) => event.stopPropagation()}>
           <ScrollView contentContainerClassName="p-s-40 pb-s-65">
             <View className="mt-5">
-              <ProfileSummary nickname={user?.nickname} profileImage={user?.profileImage} />
+              <ProfileSummary nickname={me?.nickname} profileImage={me?.profileImage} />
             </View>
 
             {!isAuthenticated ? (
@@ -140,7 +153,7 @@ export function GlobalMenuSheet({ isOpen, onClose, onLoginPress }: GlobalMenuShe
                 <View className="flex-col">
                   <Text.sm className="mb-3 w-full text-grayscale600">계정정보</Text.sm>
                   <View className="px-3 py-2">
-                    <Text.base className="text-grayscale700">{user?.email}</Text.base>
+                    <Text.base className="text-grayscale700">{me?.email}</Text.base>
                   </View>
                   <NavButton>
                     <NavButtonLabel>비밀번호 변경</NavButtonLabel>

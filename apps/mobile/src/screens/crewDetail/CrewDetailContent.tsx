@@ -51,24 +51,26 @@ export function CrewDetailContent({ route, navigation }: CrewDetailContentProps)
   // 비로그인이면 서버가 states 를 비워 보낸다(실측) — 웹처럼 false 로 받는다.
   const alreadyRequest = crew.states.alreadyRequest ?? false;
 
-  const { mutateAsync: requestCrew, isPending: isRequesting } = useCrewRequestMutation({ crewId });
-  const { mutateAsync: cancelRequest, isPending: isCancelling } = useCancelRequestMutation({ crewId });
+  const { mutate: requestCrew, isPending: isRequesting } = useCrewRequestMutation({ crewId });
+  const { mutate: cancelRequest, isPending: isCancelling } = useCancelRequestMutation({ crewId });
 
-  const { mutateAsync: leaveCrew, isPending: isLeaving } = useLeaveCrewMutation({ crewId });
+  const { mutate: leaveCrew, isPending: isLeaving } = useLeaveCrewMutation({ crewId });
 
-  const handleCrewRequest = async () => {
-    await requestCrew(crewId);
-
-    toast('가입 신청이 완료되었어요');
+  /**
+   * **`mutateAsync` + `await` 를 쓰지 않는다.**
+   * 실패하면 그 promise 가 reject 되는데 여기서 잡지 않아 unhandled rejection 이 된다.
+   * 게다가 `await` 다음 줄이 통째로 안 돌아, 성공했는지 실패했는지가 흐름에 안 드러난다.
+   * `onSuccess` 는 성공했을 때만 부른다 — 실패 알림은 presenter 가 이미 맡고 있다.
+   */
+  const handleCrewRequest = () => {
+    requestCrew(crewId, { onSuccess: () => toast('가입 신청이 완료되었어요') });
   };
 
-  const handleLeave = async () => {
+  const handleLeave = () => {
     setIsLeaveAlertOpen(false);
 
-    await leaveCrew(undefined);
-
     // 웹도 성공 시에만 뒤로 간다 — 실패하면 화면에 남아 사유 토스트를 보게 된다.
-    navigation.goBack();
+    leaveCrew(undefined, { onSuccess: () => navigation.goBack() });
   };
 
   /**
