@@ -1,9 +1,10 @@
 import { useEffect, useRef } from 'react';
-import { BackHandler, Platform, ToastAndroid } from 'react-native';
+import { BackHandler, Platform } from 'react-native';
 
 import type { NavigationContainerRefWithCurrent } from '@react-navigation/native';
 
 import type { RootStackParamList } from '../navigation/types';
+import { toast } from '../shared/ui/Toast';
 
 /** 두 번째 뒤로가기를 "종료 의사"로 인정하는 시간. */
 const EXIT_WINDOW_MS = 2000;
@@ -42,7 +43,7 @@ export const useAndroidExitConfirm = (navigationRef: NavigationContainerRefWithC
       }
 
       lastPressedAtRef.current = now;
-      ToastAndroid.show('한 번 더 누르면 종료됩니다.', ToastAndroid.SHORT);
+      toast('한 번 더 누르면 종료됩니다.');
 
       return true;
     };
