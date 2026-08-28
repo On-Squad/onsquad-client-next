@@ -21,7 +21,7 @@ vi.mock('react-native-keychain', () => ({
 
 import { installSessionRefresh } from '../../../src/auth/authService';
 import { clearShellSession, setShellAccessToken, setShellRefreshToken } from '../../../src/auth/session';
-import { grantShellAccessToken, resetShellTokenGrant } from '../../../src/auth/shellTokenGrant';
+import { createShellTokenGrant, grantShellAccessToken, resetShellTokenGrant } from '../../../src/auth/shellTokenGrant';
 import { registerSessionRefresh } from '../../../src/shared/lib/auth/sessionRefresh';
 import { server } from '../../setup/msw/server';
 
@@ -167,5 +167,57 @@ describe('웹뷰가 토큰 만료를 겪을 때', () => {
 
     expect(onNextScreen.res?.accessToken).toBe(RENEWED_ACCESS_TOKEN);
     expect(reissueCount).toBe(1);
+  });
+});
+
+describe('웹뷰 화면이 여러 개 열릴 때', () => {
+  it('두 번째 화면도 재로그인 없이 공지를 본다', async () => {
+    // 갱신이 돌면 실패로 본다 — 정상 토큰인데 만료로 오판했다는 뜻이다.
+    let reissueCalled = false;
+    server.use(
+      http.post(`${BASE}/auth/reissue`, () => {
+        reissueCalled = true;
+
+        return HttpResponse.json({ status: 200, success: true, data: null });
+      }),
+    );
+
+    setShellAccessToken('live-access-token');
+    setShellRefreshToken(REFRESH_TOKEN);
+
+    // 화면마다 자기 발급 기록을 갖는다 — 상세 화면과 수정 화면이 각각 한 번씩 묻는다.
+    const detailScreenGrant = createShellTokenGrant();
+    const editScreenGrant = createShellTokenGrant();
+
+    const first = await detailScreenGrant();
+    const second = await editScreenGrant();
+
+    expect(first.accessToken).toBe('live-access-token');
+    expect(second.accessToken).toBe('live-access-token');
+    expect(reissueCalled).toBe(false);
+  });
+
+  it('한 화면이 같은 토큰을 다시 물으면 그 화면만 갱신을 받는다', async () => {
+    server.use(
+      http.post(`${BASE}/auth/reissue`, () =>
+        HttpResponse.json({
+          status: 200,
+          success: true,
+          data: { accessToken: RENEWED_ACCESS_TOKEN, refreshToken: REFRESH_TOKEN },
+        }),
+      ),
+    );
+
+    setShellAccessToken(EXPIRED_ACCESS_TOKEN);
+    setShellRefreshToken(REFRESH_TOKEN);
+    installSessionRefresh(() => {});
+
+    const screenGrant = createShellTokenGrant();
+
+    const granted = await screenGrant();
+    const afterExpiry = await screenGrant();
+
+    expect(granted.accessToken).toBe(EXPIRED_ACCESS_TOKEN);
+    expect(afterExpiry.accessToken).toBe(RENEWED_ACCESS_TOKEN);
   });
 });

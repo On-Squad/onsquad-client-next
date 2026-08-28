@@ -22,7 +22,14 @@ import { getShellAccessToken } from './session';
  * (`installSessionRefresh` 가 이미 세션을 정리하고 `onSessionLost` 를 부른 뒤다)
  */
 
-/** 웹뷰에 마지막으로 건넨 액세스 토큰. */
+/**
+ * 웹뷰에 마지막으로 건넨 액세스 토큰 — **화면(웹뷰) 하나당 하나**다.
+ *
+ * 전역으로 하나만 두면 화면이 여러 개 열릴 때 오판한다: 화면마다 새 WebView 가 뜨고
+ * 각자 초기 1회 `auth.getToken` 을 부르는데, 두 번째 화면의 **정상** 요청이
+ * "같은 토큰을 또 물었다 = 만료" 로 읽혀 갱신이 돈다.
+ * 실제로 공지 목록→상세로 들어간 두 번째 웹뷰가 그 경로를 타 401 을 맞았다(실측).
+ */
 let lastGrantedToken: string | undefined;
 
 /**
@@ -41,6 +48,38 @@ export interface ShellTokenGrant {
   expiresAt: number;
 }
 
+/**
+ * 화면 하나가 쓸 발급기를 만든다. 기록이 이 안에 갇히므로 다른 화면과 섞이지 않는다.
+ * "같은 토큰을 또 물었다"는 **그 화면 안에서만** 만료 신호로 읽힌다 — 그게 실제 의미다.
+ */
+export const createShellTokenGrant = () => {
+  let lastGranted: string | undefined;
+
+  return async (): Promise<ShellTokenGrant> => {
+    const current = getShellAccessToken();
+
+    if (current !== undefined && current !== lastGranted) {
+      lastGranted = current;
+
+      return { accessToken: current, expiresAt: Date.now() + TOKEN_LIFETIME_MS };
+    }
+
+    const refreshed = await refreshSession();
+    const renewed = getShellAccessToken();
+
+    if (!refreshed || renewed === undefined) {
+      lastGranted = undefined;
+
+      throw new NativeBridgeError(BRIDGE_ERROR_CODES.INTERNAL, '세션이 만료되어 다시 로그인해야 해요.');
+    }
+
+    lastGranted = renewed;
+
+    return { accessToken: renewed, expiresAt: Date.now() + TOKEN_LIFETIME_MS };
+  };
+};
+
+/** @deprecated 화면 단위 기록을 쓰는 {@link createShellTokenGrant} 를 쓴다. */
 export const grantShellAccessToken = async (): Promise<ShellTokenGrant> => {
   const current = getShellAccessToken();
 

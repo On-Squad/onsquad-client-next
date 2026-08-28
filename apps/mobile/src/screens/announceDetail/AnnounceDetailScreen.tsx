@@ -1,11 +1,11 @@
-import { useEffect, useRef, type ComponentRef } from 'react';
+import { useMemo, useRef, type ComponentRef } from 'react';
 import { View } from 'react-native';
 
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { WebView } from 'react-native-webview';
 
 import { announceDetailUrl } from '../../entities/crew/lib/announceWebUrl';
-import { grantShellAccessToken, resetShellTokenGrant } from '../../auth/shellTokenGrant';
+import { createShellTokenGrant } from '../../auth/shellTokenGrant';
 import { useAndroidHardwareBack } from '../../hooks/useAndroidHardwareBack';
 import { useAppInfoScript } from '../../hooks/useAppInfoScript';
 import { useBackGesture } from '../../hooks/useBackGesture';
@@ -44,7 +44,9 @@ export function AnnounceDetailScreen({ route, navigation }: AnnounceDetailScreen
   // 화면을 떠나면 토큰 발급 기록을 지운다.
   // 다음 웹뷰는 자기 첫 요청을 "처음 묻는 것"으로 시작해야 한다 —
   // 남의 기록을 물려받으면 멀쩡한 토큰을 만료로 오해해 갱신을 한 번 더 태운다.
-  useEffect(() => resetShellTokenGrant, []);
+  // **발급 기록은 이 화면 안에 갇힌다.** 화면마다 새 웹뷰가 뜨고 각자 한 번씩 토큰을 묻는데,
+  // 기록이 전역이면 두 번째 화면의 정상 요청이 "만료 재요청"으로 오판돼 갱신이 돈다(실측).
+  const grantToken = useMemo(() => createShellTokenGrant(), []);
 
   /** 매핑된 동작을 실제 스택에 반영한다. 매핑이 없으면(null) 아무 화면도 쌓지 않는다. */
   const applyIntent = (intent: AnnounceShellIntent | null): boolean => {
@@ -79,7 +81,7 @@ export function AnnounceDetailScreen({ route, navigation }: AnnounceDetailScreen
     onShellPush: (path) => applyIntent(resolveAnnouncePushIntent(path, { crewName })),
     onShellReplace: (path) => applyIntent(resolveAnnounceReplaceIntent(path, { crewName })),
     // 만료된 토큰을 다시 물어오면 셸이 갱신해 새 토큰을 건넨다 — grantShellAccessToken 참고.
-    onAuthGetToken: grantShellAccessToken,
+    onAuthGetToken: grantToken,
     // 고정 더미 URI — 실제 네이티브 피커·미디어 권한 없음(pickImageStub 참고).
     onMediaPickImage: pickImageStub,
   });
