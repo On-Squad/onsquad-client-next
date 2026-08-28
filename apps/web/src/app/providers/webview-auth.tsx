@@ -71,13 +71,11 @@ export function WebViewAuth() {
       }
     });
 
-    return () => {
-      // 화면 이탈 시 원복 — 다른 화면이 영향받지 않도록.
-      document.documentElement.style.removeProperty('--app-header-height');
-      setBrowserRuntime(null);
-      setAccessTokenProvider(() => undefined);
-      registerSessionRefresh(null);
-    };
+    // **정리(cleanup)를 두지 않는다.**
+    // 등록은 모듈 평가 시점에 한 번만 일어나므로, 언마운트 때 지우면 다시 등록될 길이 없다.
+    // 실제로 하이드레이션 불일치로 트리가 한 번 버려졌을 때 이 정리가 돌아
+    // 웹뷰 인증이 통째로 사라졌다(실측 — 공지 상세가 401 을 맞던 원인).
+    // 이 provider 는 앱과 수명을 같이하므로 되돌릴 필요도 없다.
   }, []);
 
   return null;
