@@ -1,32 +1,34 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 
-// accessTokenProvider.ts 의 등록 함수는 모듈 스코프 상태라 케이스 순서가 결과에 영향을 준다.
-// 매 케이스마다 모듈을 새로 로드해 상태를 초기화한다.
-beforeEach(() => {
-  vi.resetModules();
+import { getProvidedAccessToken, setAccessTokenProvider } from '@/shared/api/accessTokenProvider';
+
+afterEach(() => {
+  setAccessTokenProvider(() => undefined);
 });
 
-describe('getProvidedAccessToken', () => {
-  it('셸이 등록한 토큰이 그대로 조회된다', async () => {
-    const { setAccessTokenProvider, getProvidedAccessToken } = await import('@/shared/api/accessTokenProvider');
-    setAccessTokenProvider(() => 'shell-issued-token');
-
-    expect(getProvidedAccessToken()).toBe('shell-issued-token');
-  });
-
-  it('아무도 토큰을 등록하지 않았으면 토큰 없이 요청한다', async () => {
-    const { getProvidedAccessToken } = await import('@/shared/api/accessTokenProvider');
-
-    expect(getProvidedAccessToken()).toBeUndefined();
-  });
-
-  it('토큰을 꺼내다 예외가 나도 요청 자체는 막히지 않는다', async () => {
-    const { setAccessTokenProvider, getProvidedAccessToken } = await import('@/shared/api/accessTokenProvider');
-    setAccessTokenProvider(() => {
-      throw new Error('provider 내부 오류');
+describe('요청에 실을 토큰을 꺼낼 때', () => {
+  it('토큰을 아직 받아오는 중이어도 다 받은 뒤의 값을 준다', async () => {
+    let grant: (token: string) => void = () => {};
+    const pending = new Promise<string>((resolve) => {
+      grant = resolve;
     });
 
-    expect(() => getProvidedAccessToken()).not.toThrow();
-    expect(getProvidedAccessToken()).toBeUndefined();
+    // 웹뷰가 브릿지로 토큰을 요청해 둔 상태 — 아직 응답이 오지 않았다.
+    setAccessTokenProvider(() => pending);
+
+    const reading = getProvidedAccessToken();
+    grant('shell-token');
+
+    await expect(reading).resolves.toBe('shell-token');
+  });
+
+  it('토큰을 못 받아오면 토큰 없이 요청하게 둔다', async () => {
+    setAccessTokenProvider(() => Promise.reject(new Error('브릿지 응답 없음')));
+
+    await expect(getProvidedAccessToken()).resolves.toBeUndefined();
+  });
+
+  it('등록된 provider 가 없으면 토큰 없이 요청하게 둔다', async () => {
+    await expect(getProvidedAccessToken()).resolves.toBeUndefined();
   });
 });

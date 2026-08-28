@@ -8,7 +8,7 @@
  * `runtime.ts` · `timeoutNotifier.ts` 와 같은 자리에 두는 이유:
  * 셋 다 "common.ts 가 요청을 만들 때 필요한데 플랫폼마다 다른 것" 이다.
  */
-export type AccessTokenProvider = () => string | undefined;
+export type AccessTokenProvider = () => string | undefined | Promise<string | undefined>;
 
 /** 등록 전에는 토큰 없이 요청한다 — 공개 API 는 그대로 동작해야 한다. */
 let provide: AccessTokenProvider = () => undefined;
@@ -17,9 +17,16 @@ export const setAccessTokenProvider = (provider: AccessTokenProvider) => {
   provide = provider;
 };
 
-export const getProvidedAccessToken = (): string | undefined => {
+/**
+ * **Promise 를 돌려주는 provider 를 허용한다.**
+ * 웹뷰는 토큰을 브릿지로 받아오므로 등록 시점에는 값이 아직 없다.
+ * 동기로만 읽으면 화면의 첫 요청이 토큰 없이 나가 401 을 맞는다 —
+ * 공지 상세가 "작성된 내용이 없습니다"로 보이던 원인이 이것이었다(실측).
+ * 등록만 먼저 해두고 여기서 기다리면 그 틈이 사라진다.
+ */
+export const getProvidedAccessToken = async (): Promise<string | undefined> => {
   try {
-    return provide();
+    return await provide();
   } catch {
     // 토큰을 못 꺼냈다고 요청 자체가 막히면 안 된다. 서버가 401 로 답하게 둔다.
     return undefined;

@@ -49,10 +49,10 @@ class ApiClient {
    *
    * 명시적 인자가 항상 우선이다. 브라우저는 둘 다 비어 있는 것이 정상이다.
    */
-  private getAuthHeaders(accessToken?: string): Record<string, string> {
+  private async getAuthHeaders(accessToken?: string): Promise<Record<string, string>> {
     if (!this.options.withAuth) return {};
 
-    const token = accessToken ?? getProvidedAccessToken();
+    const token = accessToken ?? (await getProvidedAccessToken());
 
     return token ? { Authorization: `Bearer ${token}` } : {};
   }
@@ -63,7 +63,7 @@ class ApiClient {
     allowRetry = true,
   ): Promise<ApiResponse<T>> {
     const { accessToken, ...fetchInit } = options;
-    const authHeaders = this.getAuthHeaders(accessToken);
+    const authHeaders = await this.getAuthHeaders(accessToken);
 
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
