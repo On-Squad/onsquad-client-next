@@ -24,6 +24,7 @@ import {
 export const SUPPORTED_METHODS: readonly BridgeMethod[] = [
   'shell.ready',
   'shell.setBackGesture',
+  'shell.contentReady',
   'shell.push',
   'shell.replace',
   'auth.getToken',

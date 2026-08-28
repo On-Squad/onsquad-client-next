@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
 import { languages } from '@codemirror/language-data';
@@ -27,11 +27,24 @@ interface TextEditorProps {
 
 type EditorTab = 'write' | 'preview';
 
+/**
+ * 브릿지 지원 여부는 `window` 에 의존하므로 서버에서는 알 수 없다.
+ * 렌더 중에 `can()` 을 바로 부르면 서버는 파일 인풋을, 웹뷰는 브릿지 버튼을 그려
+ * **하이드레이션 불일치**가 난다(공지 작성·수정 화면에서 실측).
+ * 서버 스냅샷을 false 로 둬 첫 렌더를 서버와 맞추고, 하이드레이션 직후 반영한다.
+ */
+const subscribeNever = () => () => {};
+
+const canPickImageOnServer = () => false;
+
+const canPickImage = () => can('media.pickImage');
+
 const TextEditor = ({ value = '', onChange, placeholder }: TextEditorProps) => {
   const user = useUser();
 
   const [content, setContent] = useState<string>(value);
   const [activeTab, setActiveTab] = useState<EditorTab>('write');
+  const canUseBridgePicker = useSyncExternalStore(subscribeNever, canPickImage, canPickImageOnServer);
   const [editorHeight, setEditorHeight] = useState<number>(300);
 
   const editorContainerRef = useRef<HTMLDivElement>(null);
@@ -162,7 +175,7 @@ const TextEditor = ({ value = '', onChange, placeholder }: TextEditorProps) => {
               </button>
               <div className="mx-2 h-6 w-px bg-gray-300" />
               {/* 웹뷰에서는 브릿지 피커, 브라우저에서는 파일 인풋 — can() 폴백 */}
-              {can('media.pickImage') ? (
+              {canUseBridgePicker ? (
                 <button
                   type="button"
                   aria-label="이미지 추가"

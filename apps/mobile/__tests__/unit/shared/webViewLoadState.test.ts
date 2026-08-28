@@ -13,8 +13,22 @@ describe('웹뷰 스켈레톤', () => {
     expect(WEBVIEW_LOADING_INITIAL).toBe(true);
   });
 
-  it('웹이 준비되면 스켈레톤이 사라진다', () => {
-    const isLoading = webViewLoadingReducer(true, 'end');
+  it('문서만 로드된 시점에는 스켈레톤이 그대로 있다', () => {
+    // onLoad 는 HTML 이 내려왔다는 뜻일 뿐이다. 이때 스켈레톤을 내리면
+    // 데이터 없는 껍데기가 먼저 보였다가 내용이 튀어 들어온다(실측).
+    const isLoading = webViewLoadingReducer(true, 'documentLoaded');
+
+    expect(isLoading).toBe(true);
+  });
+
+  it('웹이 내용까지 그렸다고 알리면 스켈레톤이 사라진다', () => {
+    const isLoading = webViewLoadingReducer(true, 'contentReady');
+
+    expect(isLoading).toBe(false);
+  });
+
+  it('웹이 알려주지 못해도 안전망이 돌면 스켈레톤이 사라진다', () => {
+    const isLoading = webViewLoadingReducer(true, 'timeout');
 
     expect(isLoading).toBe(false);
   });

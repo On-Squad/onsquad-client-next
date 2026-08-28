@@ -3,9 +3,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery } from '@tanstack/react-query';
 import { CircleCheck, CircleX } from 'lucide-react';
+import { useEffect } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { crewQueries } from '@/entities/crew';
+
+import { shellContentReady } from '@/shared/lib/bridge';
 
 import { TOAST } from '@/shared/config/toast';
 import { useToast } from '@/shared/lib';
@@ -37,6 +40,14 @@ export const WriteForm = ({ crewId, announceId, mode }: WriteFormProps) => {
   });
 
   const data = announceDetailRes?.data;
+
+  // 셸 스켈레톤을 내릴 시점. 작성은 받아올 게 없어 폼이 뜨는 즉시,
+  // 수정은 기존 내용을 채운 뒤여야 빈 폼이 먼저 보이지 않는다.
+  const isContentReady = mode === 'add' || data !== undefined;
+
+  useEffect(() => {
+    if (isContentReady) shellContentReady();
+  }, [isContentReady]);
 
   const method = useForm({
     resolver: zodResolver(announceSchema),

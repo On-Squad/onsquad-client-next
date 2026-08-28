@@ -35,7 +35,7 @@ export type AnnounceDetailScreenProps = NativeStackScreenProps<RootStackParamLis
 export function AnnounceDetailScreen({ route, navigation }: AnnounceDetailScreenProps) {
   const { crewId, crewName, announceId, url: urlOverride } = route.params;
 
-  const { showSkeleton, onLoadStart, onLoad } = useWebViewLoading();
+  const { showSkeleton, onLoadStart, onLoad, onContentReady } = useWebViewLoading();
   const webRef = useRef<ComponentRef<typeof WebView> | null>(null);
   const appInfoScript = useAppInfoScript();
   const { backGestureEnabled, setBackGestureEnabled, handleMessage: handleLegacyMessage } = useBackGesture();
@@ -82,6 +82,7 @@ export function AnnounceDetailScreen({ route, navigation }: AnnounceDetailScreen
     onShellReplace: (path) => applyIntent(resolveAnnounceReplaceIntent(path, { crewName })),
     // 만료된 토큰을 다시 물어오면 셸이 갱신해 새 토큰을 건넨다 — grantShellAccessToken 참고.
     onAuthGetToken: grantToken,
+    onContentReady,
     // 고정 더미 URI — 실제 네이티브 피커·미디어 권한 없음(pickImageStub 참고).
     onMediaPickImage: pickImageStub,
   });

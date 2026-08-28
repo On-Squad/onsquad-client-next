@@ -25,6 +25,8 @@ interface UseBridgeMessagesParams {
    * 만료된 토큰을 다시 물어오면 갱신이 필요해 비동기다. 던지면 브릿지가 실패 응답을 보낸다.
    */
   onAuthGetToken: () => Promise<{ accessToken: string; expiresAt: number }>;
+  /** shell.contentReady — 웹이 그릴 내용을 다 받았다. 셸이 스켈레톤을 내린다. */
+  onContentReady: () => void;
   /** media.pickImage — 고정 더미 URI 를 돌려준다(실제 피커·권한 없음). */
   onMediaPickImage: (max: number) => { uris: string[] };
 }
@@ -44,6 +46,7 @@ export const useBridgeMessages = ({
   onShellPush,
   onShellReplace,
   onAuthGetToken,
+  onContentReady,
   onMediaPickImage,
 }: UseBridgeMessagesParams) =>
   useCallback(
@@ -72,6 +75,7 @@ export const useBridgeMessages = ({
             throw new Error(`알 수 없는 경로: ${path}`);
           }
         },
+        'shell.contentReady': () => onContentReady(),
         'auth.getToken': () => onAuthGetToken(),
         'media.pickImage': (req) => {
           const { max } = req as BridgeRequest<'media.pickImage'>;
@@ -87,5 +91,5 @@ export const useBridgeMessages = ({
       }
     },
     // eslint 규칙: 함수 ref 는 안정적이어서 deps 에 넣을 필요 없지만 콜백이 달라질 수 있다.
-    [webRef, onReady, onBackGestureChange, onLegacyMessage, onShellPush, onShellReplace, onAuthGetToken, onMediaPickImage],
+    [webRef, onReady, onBackGestureChange, onLegacyMessage, onShellPush, onShellReplace, onAuthGetToken, onContentReady, onMediaPickImage],
   );

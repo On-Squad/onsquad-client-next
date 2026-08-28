@@ -62,3 +62,17 @@ export const shellPush = (path: string): void => {
 export const shellReplace = (path: string): void => {
   void call('shell.replace', { path }).catch(reportAndIgnore);
 };
+
+/**
+ * 그릴 내용을 다 받았다 — 셸이 스켈레톤을 내린다.
+ *
+ * `shellReady()` 와 나눠 쓴다. 그건 "웹 JS 가 떴다"라 데이터보다 훨씬 이르고,
+ * 그 시점에 스켈레톤을 내리면 빈 껍데기가 보였다가 내용이 튀어 들어온다.
+ * 구버전 앱은 이 메서드를 모르므로 `can()` 으로 막고 조용히 넘어간다 —
+ * 그쪽은 예전처럼 문서 로드 시점에 스켈레톤을 내린다.
+ */
+export const shellContentReady = () => {
+  if (!can('shell.contentReady')) return;
+
+  void call('shell.contentReady', undefined).catch(reportAndIgnore);
+};
