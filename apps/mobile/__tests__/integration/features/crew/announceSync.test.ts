@@ -90,20 +90,21 @@ describe('공지 목록으로 돌아왔을 때', () => {
     await waitFor(() => expect(result.current.data?.data.announces[0].title).toBe('오늘 모임 공지'));
   });
 
-  it('다른 크루의 공지 목록은 다시 받지 않는다', async () => {
-    serveAnnounces();
+  it('다른 크루의 공지 목록은 그 크루의 변경에 흔들리지 않는다', async () => {
+    // 상위 키로 넓게 무효화하면 지금 보고 있지도 않은 크루까지 다시 받는다.
+    const server_ = serveAnnounces();
     const queryClient = createQueryClient();
 
     const { result } = renderHook(() => useQuery(crewQueries.announceList({ crewId: 2 })), {
       wrapper: createWrapper(queryClient),
     });
 
-    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    await waitFor(() => expect(result.current.data?.data.announces[0].title).toBe('첫 공지'));
 
-    const fetchedAt = result.current.dataUpdatedAt;
-
+    // 1번 크루에서 일어난 변경이다 — 2번 크루 화면은 그대로여야 한다.
+    server_.webviewAddsAnnounce('다른 크루 공지');
     await refreshAnnounces({ queryClient, crewId: 1 });
 
-    expect(result.current.dataUpdatedAt).toBe(fetchedAt);
+    expect(result.current.data?.data.announces[0].title).toBe('첫 공지');
   });
 });
