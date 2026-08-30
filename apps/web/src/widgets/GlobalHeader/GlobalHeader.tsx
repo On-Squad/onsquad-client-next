@@ -5,6 +5,7 @@ import { signOut } from 'next-auth/react';
 import Image from 'next/image';
 
 import { userSocialLoginGetFetch } from '@/entities/auth/api/userSocialLoginGetFetch';
+import { formatUnreadBadge, useUnreadBadgeCount } from '@/entities/notification';
 import { USER_TYPE } from '@/shared/config';
 import { PATH } from '@/shared/config/paths';
 import { useMyActivityCounts } from '@/entities/member';
@@ -22,6 +23,8 @@ const GlobalHeader = () => {
   const user = useUser();
 
   const { crewCount, applicationCount, historyCount } = useMyActivityCounts(!!user);
+  const unreadCount = useUnreadBadgeCount(!!user);
+  const badgeText = formatUnreadBadge(unreadCount);
 
   const { handlePageMove } = usePageMove();
 
@@ -49,8 +52,13 @@ const GlobalHeader = () => {
       <div className="relative mr-4 flex items-center gap-2">
         {/* 알림: 로그인 상태에서만 노출, 햄버거 메뉴 좌측. */}
         {user && (
-          <SlideLink href={PATH.notifications} aria-label="알림" scroll={false}>
+          <SlideLink href={PATH.notifications} aria-label="알림" scroll={false} className="relative">
             <Bell color="#636363" strokeWidth={1.5} className="cursor-pointer" />
+            {badgeText && (
+              <span className="absolute -right-1.5 -top-1.5 flex min-w-[16px] items-center justify-center rounded-full bg-red-500 px-[3px] py-[1px] text-[10px] leading-none text-white">
+                {badgeText}
+              </span>
+            )}
           </SlideLink>
         )}
         <Sheet>

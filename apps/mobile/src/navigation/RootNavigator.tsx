@@ -11,6 +11,7 @@ import { CrewManageScreen } from '../screens/crewManage';
 import { CrewParticipantsScreen } from '../screens/crewParticipants';
 import { CrewNewScreen } from '../screens/crewNew';
 import { LoginScreen } from '../screens/login';
+import { NotificationScreen } from '../screens/notification';
 import { appHeaderOptions } from '../shared/ui/AppHeader';
 import { MainTabs } from './MainTabs';
 import type { RootStackParamList } from './types';
@@ -81,6 +82,11 @@ export function RootNavigator() {
           // 웹 CrewDetailAppbar 는 크루명을 쓰지만 RN 헤더는 전환 즉시 그려져야 해서
           // 웹뷰가 크루명을 알려줄 때까지 기다릴 수 없다. route.params.title 로 전환 즉시 확정한다.
           options={({ route }) => appHeaderOptions({ title: route.params.title })}
+        />
+        <Stack.Screen
+          name="Notification"
+          component={NotificationScreen}
+          options={appHeaderOptions({ title: '알림' })}
         />
         <Stack.Screen
           name="Login"

@@ -43,6 +43,8 @@ export type RootStackParamList = {
     /** 명시하면 crewId + announceId 구성 대신 이 주소를 로드한다. */
     url?: string;
   };
+  /** 알림 목록. 헤더 벨에서 진입한다. */
+  Notification: undefined;
   /** 인증이 필요한 지점에서 모달로 뜬다. 앱 전체를 막는 게이트가 아니다. */
   Login: undefined;
 };

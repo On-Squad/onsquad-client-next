@@ -1,9 +1,8 @@
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 
-import { QueryError } from '@/shared/lib/queries/useApiQuery';
-
-import type { NotificationListGetFetchResponseProps } from './notificationListGetFetch';
+import { QueryError } from '../../../shared/lib/queries/makeQueryOptions';
 import { notificationListGetFetch } from './notificationListGetFetch';
+import type { NotificationListGetFetchResponse } from './notificationListGetFetch';
 
 const PAGE_SIZE = 10;
 const BADGE_SIZE = 20;
@@ -12,11 +11,14 @@ const BADGE_SIZE = 20;
  * 응답 봉투를 벗긴다.
  *
  * **백엔드는 인증 실패도 HTTP 200 으로 내려준다.** 그래서 실패한 응답에는 `data` 가
- * 아예 없고, 벗기지 않고 `res.data.data.resultsSize` 를 읽으면 TypeError 가 난다.
- * 던진 에러는 에러 경계가 받는다 — 다른 쿼리들이 `makeQueryOptions` 로 하는 일과 같지만,
- * 그 헬퍼는 `queryOptions` 전용이라 무한쿼리에는 쓸 수 없어 여기서 직접 한다.
+ * 아예 없고, 벗기지 않고 `res.data.data.resultsSize` 를 읽으면 TypeError 가 난다 —
+ * 화면에는 오류 폴백이 아니라 빨간 화면이 뜬다(에뮬레이터 실측).
+ *
+ * 던진 에러는 `ErrorHandlingWrapper` 의 경계가 받아 폴백을 그린다.
+ * 다른 쿼리들이 `makeQueryOptions` 로 하는 일과 같지만, 그 헬퍼는 `queryOptions`
+ * 전용이라 무한쿼리에는 쓸 수 없어 여기서 직접 한다.
  */
-const unwrap = (res: { data: NotificationListGetFetchResponseProps }) => {
+const unwrap = (res: { data: NotificationListGetFetchResponse }) => {
   if (res.data.error) {
     throw new QueryError(res.data.error.code, res.data.error.message);
   }

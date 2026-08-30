@@ -6,22 +6,29 @@ import { ZapBadge } from '@/shared/ui/ZapBadge';
 
 interface NotificationCardProps {
   item: NotificationListItem;
+  onNavigate?: () => void;
   onRead?: () => void;
   isReading?: boolean;
 }
 
-const NotificationCard = ({ item, onRead, isReading }: NotificationCardProps) => {
-  // 알림 대상(크루/스쿼드명) 과 서버가 포맷한 문구를 표시한다.
+const NotificationCard = ({ item, onNavigate, onRead, isReading }: NotificationCardProps) => {
   const target = item.payload?.crewName ?? item.payload?.squadTitle ?? '';
   const message = item.payload?.message ?? '';
+
+  const handleClick = () => {
+    onNavigate?.();
+    if (!item.read && !isReading) {
+      onRead?.();
+    }
+  };
 
   return (
     <div className="flex w-full items-center gap-s-20 rounded-xl bg-white p-s-30">
       {!item.read && <ZapBadge aria-label="안읽음" className="shrink-0" />}
       <button
         type="button"
-        onClick={onRead}
-        disabled={item.read || isReading}
+        onClick={handleClick}
+        disabled={item.read && !item.payload?.crewId}
         className="flex flex-1 flex-col gap-s-10 text-left disabled:cursor-default"
       >
         {target && <p className="text-200 font-medium leading-130 tracking-[-0.28px] text-grayscale600">{target}</p>}

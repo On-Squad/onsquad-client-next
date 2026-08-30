@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useInView } from 'react-intersection-observer';
 
 import {
@@ -34,6 +35,7 @@ const groupByDate = (list: NotificationListItem[]) => {
 };
 
 const NotificationList = () => {
+  const router = useRouter();
   const { ref, inView } = useInView();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useInfiniteQuery({
@@ -92,6 +94,11 @@ const NotificationList = () => {
               <NotificationCard
                 key={item.id}
                 item={item}
+                onNavigate={
+                  item.payload?.crewId !== undefined
+                    ? () => router.push(`/crews/${item.payload!.crewId}`)
+                    : undefined
+                }
                 onRead={() => readNotification.mutate(item.id)}
                 isReading={readNotification.isPending}
               />

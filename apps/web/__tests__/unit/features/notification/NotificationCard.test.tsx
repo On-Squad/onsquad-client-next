@@ -40,7 +40,7 @@ describe('NotificationCard', () => {
     expect((readBtn as HTMLButtonElement).disabled).toBe(false);
   });
 
-  it('read가 true이면 컨테이너에 bg-white 클래스가 적용되고 버튼이 disabled이다', () => {
+  it('read가 true이고 crewId가 없으면 버튼이 disabled이다', () => {
     render(
       <NotificationCard
         item={makeItem({
@@ -57,11 +57,15 @@ describe('NotificationCard', () => {
     expect((readBtn as HTMLButtonElement).disabled).toBe(true);
   });
 
-  it('isReading이 true이고 read가 false이면 버튼이 disabled이다', () => {
-    render(<NotificationCard item={makeItem({ read: false })} isReading={true} />);
+  it('read가 true이고 crewId가 있으면 버튼이 enabled이다 — 이동은 가능하다', () => {
+    render(
+      <NotificationCard
+        item={makeItem({ read: true })}
+      />,
+    );
 
     const readBtn = screen.getByRole('button', { name: /크루 합류가 수락되었습니다/ });
-    expect((readBtn as HTMLButtonElement).disabled).toBe(true);
+    expect((readBtn as HTMLButtonElement).disabled).toBe(false);
   });
 
   it('payload.crewName이 있으면 crewName이 표시된다', () => {
@@ -107,14 +111,37 @@ describe('NotificationCard', () => {
     expect(screen.getByText('새로운 댓글이 달렸습니다.')).toBeDefined();
   });
 
-  it('read가 false일 때 버튼 클릭 시 onRead 콜백이 호출된다', () => {
+  it('안읽은 알림 클릭 시 onNavigate와 onRead가 모두 호출된다', () => {
+    const onNavigate = vi.fn();
     const onRead = vi.fn();
-    render(<NotificationCard item={makeItem({ read: false })} onRead={onRead} />);
+    render(<NotificationCard item={makeItem({ read: false })} onNavigate={onNavigate} onRead={onRead} />);
 
-    const readBtn = screen.getByRole('button', { name: /크루 합류가 수락되었습니다/ });
-    fireEvent.click(readBtn);
+    fireEvent.click(screen.getByRole('button', { name: /크루 합류가 수락되었습니다/ }));
 
-    expect(onRead).toHaveBeenCalled();
+    expect(onNavigate).toHaveBeenCalledOnce();
+    expect(onRead).toHaveBeenCalledOnce();
+  });
+
+  it('이미 읽은 알림 클릭 시 onNavigate는 호출되고 onRead는 호출되지 않는다', () => {
+    const onNavigate = vi.fn();
+    const onRead = vi.fn();
+    render(<NotificationCard item={makeItem({ read: true })} onNavigate={onNavigate} onRead={onRead} />);
+
+    fireEvent.click(screen.getByRole('button', { name: /크루 합류가 수락되었습니다/ }));
+
+    expect(onNavigate).toHaveBeenCalledOnce();
+    expect(onRead).not.toHaveBeenCalled();
+  });
+
+  it('isReading이 true이면 클릭 시 onNavigate는 호출되고 onRead는 호출되지 않는다', () => {
+    const onNavigate = vi.fn();
+    const onRead = vi.fn();
+    render(<NotificationCard item={makeItem({ read: false })} onNavigate={onNavigate} onRead={onRead} isReading={true} />);
+
+    fireEvent.click(screen.getByRole('button', { name: /크루 합류가 수락되었습니다/ }));
+
+    expect(onNavigate).toHaveBeenCalledOnce();
+    expect(onRead).not.toHaveBeenCalled();
   });
 
   it('알림 옵션 버튼이 렌더링된다', () => {
