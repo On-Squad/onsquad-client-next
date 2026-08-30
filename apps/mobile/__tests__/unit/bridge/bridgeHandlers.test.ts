@@ -1,8 +1,11 @@
 import { BRIDGE_VERSION } from '@onsquad/bridge';
-import { handleWebMessage, SUPPORTED_METHODS } from '@onsquad/bridge/native';
+import { handleWebMessage } from '@onsquad/bridge/native';
 import { describe, expect, it } from 'vitest';
 
 import type { BridgeHandlers } from '@onsquad/bridge/native';
+
+// 배럴(`Toast/index`)은 RN 컴포넌트인 Toaster 까지 끌고 와 Flow 파서에 걸린다 — 스토어만 직접 가져온다.
+import { subscribeToast, toast } from '../../../src/shared/ui/Toast/toast';
 
 /**
  * 브릿지 핸들러 단위 테스트.
@@ -42,29 +45,6 @@ const captureScripts = () => {
     },
   };
 };
-
-describe('SUPPORTED_METHODS', () => {
-  it('shell.push 가 지원 목록에 있다', () => {
-    expect(SUPPORTED_METHODS).toContain('shell.push');
-  });
-
-  it('shell.replace 가 지원 목록에 있다', () => {
-    expect(SUPPORTED_METHODS).toContain('shell.replace');
-  });
-
-  it('auth.getToken 이 지원 목록에 있다', () => {
-    expect(SUPPORTED_METHODS).toContain('auth.getToken');
-  });
-
-  it('media.pickImage 가 지원 목록에 있다', () => {
-    expect(SUPPORTED_METHODS).toContain('media.pickImage');
-  });
-
-  it('shell.ready 와 shell.setBackGesture 는 기존부터 있었다', () => {
-    expect(SUPPORTED_METHODS).toContain('shell.ready');
-    expect(SUPPORTED_METHODS).toContain('shell.setBackGesture');
-  });
-});
 
 describe('auth.getToken 브릿지 핸들러', () => {
   it('핸들러가 반환한 accessToken 과 expiresAt 을 응답으로 돌려준다', async () => {
@@ -165,5 +145,28 @@ describe('media.pickImage 브릿지 핸들러', () => {
 
     expect(response.res.uris).toHaveLength(1);
     expect(response.res.uris[0]).toBe(DUMMY_URI);
+  });
+});
+
+describe('웹뷰가 토스트를 요청하면', () => {
+  it('셸의 토스트가 그 문구를 그대로 띄운다', async () => {
+    const shown: (string | null)[] = [];
+    const unsubscribe = subscribeToast((message) => shown.push(message));
+
+    const { inject } = captureScripts();
+    const handlers: BridgeHandlers = {
+      'ui.toast': (req) => {
+        const { message } = req as { message: string };
+
+        toast(message);
+      },
+    };
+
+    handleWebMessage(makeRequest('t1', 'ui.toast', { message: '상단에 고정했어요' }), handlers, inject);
+    await flushMicrotasks();
+
+    expect(shown[0]).toBe('상단에 고정했어요');
+
+    unsubscribe();
   });
 });

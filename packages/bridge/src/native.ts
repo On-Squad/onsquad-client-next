@@ -25,6 +25,7 @@ export const SUPPORTED_METHODS: readonly BridgeMethod[] = [
   'shell.ready',
   'shell.setBackGesture',
   'shell.contentReady',
+  'ui.toast',
   'shell.push',
   'shell.replace',
   'auth.getToken',

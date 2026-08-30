@@ -27,6 +27,8 @@ interface UseBridgeMessagesParams {
   onAuthGetToken: () => Promise<{ accessToken: string; expiresAt: number }>;
   /** shell.contentReady — 웹이 그릴 내용을 다 받았다. 셸이 스켈레톤을 내린다. */
   onContentReady: () => void;
+  /** ui.toast — 웹 대신 셸이 토스트를 띄운다. 웹뷰 화면만 생김새가 달라지지 않게 한다. */
+  onToast: (message: string) => void;
   /** media.pickImage — 고정 더미 URI 를 돌려준다(실제 피커·권한 없음). */
   onMediaPickImage: (max: number) => { uris: string[] };
 }
@@ -47,6 +49,7 @@ export const useBridgeMessages = ({
   onShellReplace,
   onAuthGetToken,
   onContentReady,
+  onToast,
   onMediaPickImage,
 }: UseBridgeMessagesParams) =>
   useCallback(
@@ -76,6 +79,11 @@ export const useBridgeMessages = ({
           }
         },
         'shell.contentReady': () => onContentReady(),
+        'ui.toast': (req) => {
+          const { message } = req as BridgeRequest<'ui.toast'>;
+
+          onToast(message);
+        },
         'auth.getToken': () => onAuthGetToken(),
         'media.pickImage': (req) => {
           const { max } = req as BridgeRequest<'media.pickImage'>;
@@ -91,5 +99,5 @@ export const useBridgeMessages = ({
       }
     },
     // eslint 규칙: 함수 ref 는 안정적이어서 deps 에 넣을 필요 없지만 콜백이 달라질 수 있다.
-    [webRef, onReady, onBackGestureChange, onLegacyMessage, onShellPush, onShellReplace, onAuthGetToken, onContentReady, onMediaPickImage],
+    [webRef, onReady, onBackGestureChange, onLegacyMessage, onShellPush, onShellReplace, onAuthGetToken, onContentReady, onToast, onMediaPickImage],
   );

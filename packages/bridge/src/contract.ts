@@ -41,6 +41,15 @@ export interface BridgeMap {
   /** iOS 엣지 스와이프 뒤로가기 허용 여부. (구 `NATIVE_BACK:on|off`) */
   'shell.setBackGesture': { req: { enabled: boolean }; res: void };
 
+  /**
+   * 토스트를 셸이 대신 띄운다.
+   *
+   * 웹과 앱이 각자 토스트를 그리면 같은 앱 안에서 생김새가 갈린다 —
+   * 웹뷰 화면에서만 다른 모양이 뜨는 걸 사용자가 바로 알아챈다(실측).
+   * **아이콘은 넘기지 않는다.** 셸 토스트는 스스로 사라져서 닫기 버튼이 필요 없다.
+   */
+  'ui.toast': { req: { message: string }; res: void };
+
   // ── 권한 · 디바이스 (Phase 2) ──────────────────────────────
   'media.pickImage': { req: { max: number }; res: { uris: string[] } };
   'media.takePhoto': { req: void; res: { uri: string } };

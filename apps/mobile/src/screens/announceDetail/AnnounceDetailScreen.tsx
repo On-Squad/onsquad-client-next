@@ -16,6 +16,7 @@ import {
   type AnnounceShellIntent,
 } from '../../navigation/announceShellRoute';
 import { useWebViewLoading } from '../../hooks/useWebViewLoading';
+import { toast } from '../../shared/ui/Toast';
 import { pickImageStub } from '../../shared/lib/pickImageStub';
 import type { RootStackParamList } from '../../navigation/types';
 
@@ -83,6 +84,7 @@ export function AnnounceDetailScreen({ route, navigation }: AnnounceDetailScreen
     // 만료된 토큰을 다시 물어오면 셸이 갱신해 새 토큰을 건넨다 — grantShellAccessToken 참고.
     onAuthGetToken: grantToken,
     onContentReady,
+    onToast: toast,
     // 고정 더미 URI — 실제 네이티브 피커·미디어 권한 없음(pickImageStub 참고).
     onMediaPickImage: pickImageStub,
   });

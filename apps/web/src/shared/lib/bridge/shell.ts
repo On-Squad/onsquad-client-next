@@ -76,3 +76,14 @@ export const shellContentReady = () => {
 
   void call('shell.contentReady', undefined).catch(reportAndIgnore);
 };
+
+/**
+ * 토스트를 셸에 맡긴다.
+ *
+ * 웹과 앱이 각자 그리면 같은 앱 안에서 토스트 생김새가 갈린다 —
+ * 웹뷰 화면에서만 다른 모양이 뜨는 걸 사용자가 바로 알아챈다(실측).
+ * 구버전 앱은 이 메서드를 모르므로 `can()` 이 false 가 되고, 호출부가 웹 토스트로 떨어진다.
+ */
+export const shellToast = (message: string) => {
+  void call('ui.toast', { message }).catch(reportAndIgnore);
+};
