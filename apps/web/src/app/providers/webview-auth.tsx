@@ -33,8 +33,9 @@ import { registerSessionRefresh } from '@/shared/lib/auth/sessionRefresh';
  * `common.ts` 가 그것을 기다리므로, 첫 요청도 토큰이 실린 채로 나간다.
  * 브라우저에서는 `isWebView()` 가 false 라 이 블록이 통째로 건너뛰어진다.
  */
-const grantedToken = (() => {
-  if (typeof window === 'undefined' || !isWebView() || !can('auth.getToken')) return null;
+// 모듈이 평가되는 순간 한 번 실행된다. 반환값을 쓰는 곳은 없다 — 등록 자체가 목적이다.
+(() => {
+  if (typeof window === 'undefined' || !isWebView() || !can('auth.getToken')) return;
 
   setBrowserRuntime(false);
 
@@ -44,7 +45,21 @@ const grantedToken = (() => {
 
   setAccessTokenProvider(() => pending);
 
-  return pending;
+  // **갱신 함수도 여기서 등록한다.** effect 안에서만 등록하면 화면의 첫 쿼리보다 늦어,
+  // 그 요청이 토큰 없이 나가 T004 를 맞아도 되돌릴 방법이 없다(실측).
+  // 토큰을 다시 물으면 셸이 만료로 보고 갱신해 새 토큰을 준다.
+  registerSessionRefresh(async () => {
+    try {
+      const { accessToken } = await call('auth.getToken', undefined);
+
+      setAccessTokenProvider(() => accessToken);
+
+      return true;
+    } catch {
+      // 갱신 실패 → common.ts 가 재시도하지 않고 만료 응답을 흘려보냄 → QueryCache 에서 로그아웃.
+      return false;
+    }
+  });
 })();
 
 export function WebViewAuth() {
@@ -54,22 +69,8 @@ export function WebViewAuth() {
     // 웹뷰에서 RN 네이티브 헤더가 앱바를 대신하므로 --app-header-height 오프셋을 0 으로 덮는다.
     document.documentElement.style.setProperty('--app-header-height', '0px');
 
-    // 초기 토큰 주입은 모듈 평가 시점에 이미 걸어뒀다(위 grantedToken).
-    if (!grantedToken) return;
-
-    // 401 을 받으면 RN 에서 새 토큰을 받아 원요청을 재시도한다.
-    // next-auth session.update 는 쿠키 세션 기반이라 웹뷰에서 동작하지 않는다.
-    // session-provider 의 SessionRefreshBridge 는 isWebView() 게이트로 등록을 건너뛴다.
-    registerSessionRefresh(async () => {
-      try {
-        const { accessToken } = await call('auth.getToken', undefined);
-        setAccessTokenProvider(() => accessToken);
-        return true;
-      } catch {
-        // 갱신 실패 → common.ts 가 재시도하지 않고 만료 응답을 흘려보냄 → QueryCache 에서 로그아웃.
-        return false;
-      }
-    });
+    // 토큰 주입과 갱신 등록은 모듈 평가 시점에 이미 끝났다(위 grantedToken).
+    // 여기서는 웹뷰에서만 필요한 레이아웃 보정만 한다.
 
     // **정리(cleanup)를 두지 않는다.**
     // 등록은 모듈 평가 시점에 한 번만 일어나므로, 언마운트 때 지우면 다시 등록될 길이 없다.

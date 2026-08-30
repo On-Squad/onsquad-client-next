@@ -80,7 +80,17 @@ export const installSessionRefresh = (onSessionLost: () => void): void => {
     try {
       const response = await tokenRefreshGetFetch({ refreshToken });
 
-      await applyTokens(response.data.data.accessToken, response.data.data.refreshToken);
+      // **재발급 실패도 HTTP 200 으로 온다.** 봉투만 `{ success: false, error }` 이고
+      // `data` 가 없다 — `login` 과 같은 모양이다. 확인하지 않으면 바로 아래 접근이
+      // TypeError 를 내고, 그게 우연히 catch 에 걸려 로그아웃되는 구조가 된다.
+      // 실패한 봉투의 `data` 는 신뢰하지 않는다(있어도 쓰지 않는다).
+      const { data, error } = response.data;
+
+      if (error || !data) {
+        throw new Error(error?.message ?? '세션을 갱신하지 못했어요.');
+      }
+
+      await applyTokens(data.accessToken, data.refreshToken);
 
       return true;
     } catch {

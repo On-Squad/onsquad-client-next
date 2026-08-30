@@ -8,9 +8,19 @@ import { notifyRequestTimeout } from './timeoutNotifier';
 // 공통 요청 타임아웃 15초 (백엔드 무응답 시 무한 대기 방지)
 const REQUEST_TIMEOUT_MS = 15_000;
 
-/** 백엔드가 모든 응답을 HTTP 200 으로 내려주므로 만료는 body error.code(T003) 로도 판별한다. */
+/**
+ * 백엔드가 모든 응답을 HTTP 200 으로 내려주므로 만료는 body error.code 로 판별한다.
+ *
+ * **T004(토큰이 필요한 API)도 갱신 대상이다.** 만료(T003)와 원인은 다르지만
+ * 처방은 같다 — 토큰을 받아 다시 보낸다. 웹뷰의 첫 요청은 브릿지로 받아올 토큰이
+ * 도착하기 전에 나갈 수 있고, 그때 서버는 T003 이 아니라 T004 로 답한다.
+ * 이걸 빼두면 갱신 경로를 아예 안 타서 화면이 빈 채로 남는다(실측).
+ *
+ * 갱신에 실패하면 `refreshSession()` 이 false 를 주고, 재시도는 `allowRetry=false`
+ * 로 한 번만 하므로 토큰을 못 얻는 환경에서 무한 반복하지 않는다.
+ */
 const isTokenExpired = (status: number, meta?: ResponseModel): boolean =>
-  status === 401 || meta?.error?.code === ErrorCode.T003;
+  status === 401 || meta?.error?.code === ErrorCode.T003 || meta?.error?.code === ErrorCode.T004;
 
 /**
  * 응답 래퍼. axios 의 `{ data }` 형태를 유지해 기존 호출부(res.data.data)와 호환한다.

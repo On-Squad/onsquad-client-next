@@ -6,9 +6,18 @@ import { ErrorCode, type ResponseModel } from './model';
 // 공통 요청 타임아웃 15초 (백엔드 무응답 시 무한 대기 방지)
 const REQUEST_TIMEOUT_MS = 15_000;
 
-/** 백엔드가 모든 응답을 HTTP 200 으로 내려주므로 만료는 body error.code(T003) 로도 판별한다. */
+/**
+ * 백엔드가 **인증 실패도 HTTP 200** 으로 내려주므로 만료는 body error.code 로 판별한다.
+ * `response.ok` 는 항상 참이라 여기서 걸러내지 못하면 봉투가 화면까지 흘러간다(실측).
+ *
+ * **T004(토큰이 필요한 API)도 갱신 대상이다.** 만료(T003)와 원인은 다르지만
+ * 토큰이 붙지 못한 요청이 갱신 완료 전에 나갈 수 있고, 그때 서버는 T004 로 답한다.
+ * 웹 `apps/web/src/shared/api/common.ts` 와 같은 판정을 쓴다.
+ *
+ * **T002(서명 불일치)는 넣지 않는다.** 갱신해도 풀리지 않아 재시도가 낭비된다.
+ */
 const isTokenExpired = (status: number, meta?: ResponseModel): boolean =>
-  status === 401 || meta?.error?.code === ErrorCode.T003;
+  status === 401 || meta?.error?.code === ErrorCode.T003 || meta?.error?.code === ErrorCode.T004;
 
 /**
  * 응답 래퍼. 웹과 같은 `{ data, headers }` 형태를 유지한다 —

@@ -125,3 +125,107 @@ describe('웹뷰에서 토큰 만료 시 auth.getToken 으로 갱신 후 재시�
     expect(response.data.error?.code).toBe('T003');
   });
 });
+
+describe('토큰 없이 나간 요청을 서버가 되돌려보낼 때', () => {
+  it('웹뷰가 토큰을 받아 공지를 다시 불러온다', async () => {
+    // 웹뷰의 첫 요청은 브릿지 토큰이 도착하기 전에 나갈 수 있다. 그때 백엔드는
+    // 만료(T003)가 아니라 "토큰이 필요하다"(T004)로 답한다 — 그것도 갱신 대상이다.
+    vi.stubEnv('NEXT_PUBLIC_API_BASE_URL', TEST_API_BASE_URL);
+    vi.resetModules();
+
+    const { apiFetch } = await import('@/shared/api/common');
+    const { setBrowserRuntime } = await import('@/shared/api/runtime');
+    const { registerSessionRefresh } = await import('@/shared/lib/auth/sessionRefresh');
+    const { setAccessTokenProvider } = await import('@/shared/api/accessTokenProvider');
+
+    setBrowserRuntime(false);
+    setAccessTokenProvider(() => undefined);
+
+    let attempts = 0;
+    let receivedAuthHeader: string | null = null;
+
+    server.use(
+      http.get<never, never, AnnounceResponseBody>(`${TEST_API_BASE_URL}/api/crews/1/announces/5`, ({ request }) => {
+        attempts += 1;
+        receivedAuthHeader = request.headers.get('Authorization');
+
+        if (attempts === 1) {
+          return HttpResponse.json({
+            status: 401,
+            success: false,
+            error: { code: 'T004', message: '토큰이 필요한 API 입니다.' },
+          });
+        }
+
+        return HttpResponse.json({
+          status: 200,
+          success: true,
+          data: { title: '공지사항수정', content: '수정했어요' },
+        });
+      }),
+    );
+
+    const grantedToken = 'granted-access-token';
+
+    registerSessionRefresh(async () => {
+      setAccessTokenProvider(() => grantedToken);
+
+      return true;
+    });
+
+    const response = await apiFetch.get<AnnounceResponseBody>('/crews/1/announces/5');
+
+    expect(attempts).toBe(2);
+    expect(receivedAuthHeader).toBe(`Bearer ${grantedToken}`);
+    expect(response.data.data?.title).toBe('공지사항수정');
+  });
+});
+
+describe('셸에서 토큰을 받아오는 중일 때', () => {
+  it('토큰이 도착한 뒤에 요청이 나가 공지를 한 번에 불러온다', async () => {
+    // 웹뷰는 토큰을 브릿지로 받아오므로 화면이 뜨는 순간에는 아직 값이 없다.
+    // 값이 없다고 그냥 보내면 서버가 되돌려보내고 화면이 한 박자 늦게 뜬다.
+    vi.stubEnv('NEXT_PUBLIC_API_BASE_URL', TEST_API_BASE_URL);
+    vi.resetModules();
+
+    const { apiFetch } = await import('@/shared/api/common');
+    const { setBrowserRuntime } = await import('@/shared/api/runtime');
+    const { setAccessTokenProvider } = await import('@/shared/api/accessTokenProvider');
+
+    setBrowserRuntime(false);
+
+    let grant: (token: string) => void = () => {};
+    const pending = new Promise<string>((resolve) => {
+      grant = resolve;
+    });
+
+    // WebViewAuth 가 하는 것과 같다 — 값이 아니라 "곧 올 토큰"을 등록한다.
+    setAccessTokenProvider(() => pending);
+
+    let attempts = 0;
+    let receivedAuthHeader: string | null = null;
+
+    server.use(
+      http.get<never, never, AnnounceResponseBody>(`${TEST_API_BASE_URL}/api/crews/1/announces/5`, ({ request }) => {
+        attempts += 1;
+        receivedAuthHeader = request.headers.get('Authorization');
+
+        return HttpResponse.json({
+          status: 200,
+          success: true,
+          data: { title: '공지사항수정', content: '수정했어요' },
+        });
+      }),
+    );
+
+    const requested = apiFetch.get<AnnounceResponseBody>('/crews/1/announces/5');
+
+    grant('shell-granted-token');
+
+    const response = await requested;
+
+    expect(attempts).toBe(1);
+    expect(receivedAuthHeader).toBe('Bearer shell-granted-token');
+    expect(response.data.data?.title).toBe('공지사항수정');
+  });
+});

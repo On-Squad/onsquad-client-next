@@ -30,6 +30,13 @@ export enum ErrorCode {
    * @description 토큰 만료.
    */
   T003 = 'T003',
+
+  /**
+   * status - 200 (body error)
+   * @code T004
+   * @description 토큰이 필요한 API 에 토큰 없이 도달함.
+   */
+  T004 = 'T004',
 }
 
 export type HashTag =
