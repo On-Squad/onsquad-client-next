@@ -5,6 +5,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { crewQueries } from '../../entities/crew/api/crew.queries';
+import { resolveManageRow } from '../../navigation/crewMembersRoute';
 import type { RootStackParamList } from '../../navigation/types';
 import { CountLabel } from '../../shared/ui/CountLabel';
 import { NavButton, NavButtonLabel } from '../../shared/ui/NavButton';
@@ -47,7 +48,10 @@ export function CrewManageContent({ route, navigation }: CrewManageContentProps)
       ) : null}
 
       <NavButton
-        onPress={() => navigation.navigate('CrewParticipants', { crewId, crewName })}
+        onPress={() => {
+          const target = resolveManageRow('participants', { crewId, crewName });
+          if (target) navigation.navigate(target.screen, target.params);
+        }}
       >
         <NavButtonLabel>참가 신청</NavButtonLabel>
         <CountLabel count={manage.requestCnt} />
@@ -60,12 +64,15 @@ export function CrewManageContent({ route, navigation }: CrewManageContentProps)
         </NavButton>
       </View>
 
-      <View style={{ opacity: DISABLED_OPACITY }}>
-        <NavButton disabled>
-          <NavButtonLabel>크루원</NavButtonLabel>
-          <CountLabel count={manage.memberCnt} />
-        </NavButton>
-      </View>
+      <NavButton
+        onPress={() => {
+          const target = resolveManageRow('crewMembers', { crewId, crewName });
+          if (target) navigation.navigate(target.screen, target.params);
+        }}
+      >
+        <NavButtonLabel>크루원</NavButtonLabel>
+        <CountLabel count={manage.memberCnt} />
+      </NavButton>
 
       {manage.states.canDelete ? (
         <View className="items-center pt-10" style={{ opacity: DISABLED_OPACITY }}>

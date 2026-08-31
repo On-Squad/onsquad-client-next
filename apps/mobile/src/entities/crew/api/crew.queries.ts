@@ -6,6 +6,7 @@ import { type CrewDetailGetFetchParams, crewDetailGetFetch } from './crewDetailG
 import { type CrewHomeInfoGetFetchParams, crewHomeInfoGetFetch } from './crewHomeInfoGetFetch';
 import { type CrewListGetFetchParams, crewListGetFetch } from './crewListGetFetch';
 import { type CrewManageGetFetchParams, crewManageGetFetch } from './crewManageGetFetch';
+import { type CrewMembersGetFetchParams, crewMembersGetFetch } from './crewMembersGetFetch';
 import { type CrewParticipantsGetFetchParams, crewParticipantsGetFetch } from './crewParticipantsGetFetch';
 
 /**
@@ -76,4 +77,25 @@ export const crewQueries = {
 
   announceList: ({ crewId }: CrewAnnounceListGetFetchParams) =>
     makeQueryOptions([...crewQueries.root(), 'announce', crewId], () => crewAnnounceListGetFetch({ crewId })),
+
+  /**
+   * 크루원 목록 (무한스크롤).
+   *
+   * **`initialPageParam` 은 1이다.** 크루원 API 는 1-based 라 page=0 과 page=1 이
+   * 같은 첫 페이지를 반환한다(실측). 0 으로 시작하면 fetchNextPage 시 page=1 이 되어
+   * 첫 페이지를 두 번 받아 같은 사람이 목록에 두 번 들어간다.
+   */
+  members: ({ crewId, size = 5 }: Pick<CrewMembersGetFetchParams, 'crewId' | 'size'>) =>
+    infiniteQueryOptions({
+      queryKey: [...crewQueries.lists(), 'members', crewId, size],
+      queryFn: async ({ pageParam }) => {
+        const res = await crewMembersGetFetch({ crewId, size, page: pageParam });
+        return {
+          data: res.data.data,
+          nextPage: res.data.data.resultsSize === size ? pageParam + 1 : undefined,
+        };
+      },
+      getNextPageParam: (lastPage) => lastPage.nextPage,
+      initialPageParam: 1,
+    }),
 };

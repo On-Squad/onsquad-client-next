@@ -8,6 +8,7 @@ import { AnnounceListScreen } from '../screens/announceList';
 import { CrewDetailScreen } from '../screens/crewDetail';
 import { CrewHomeScreen } from '../screens/crewHome';
 import { CrewManageScreen } from '../screens/crewManage';
+import { CrewMembersScreen } from '../screens/crewMembers';
 import { CrewParticipantsScreen } from '../screens/crewParticipants';
 import { CrewNewScreen } from '../screens/crewNew';
 import { LoginScreen } from '../screens/login';
@@ -68,6 +69,11 @@ export function RootNavigator() {
           name="CrewParticipants"
           component={CrewParticipantsScreen}
           options={appHeaderOptions({ title: '참가 신청' })}
+        />
+        <Stack.Screen
+          name="CrewMembers"
+          component={CrewMembersScreen}
+          options={appHeaderOptions({ title: '크루원' })}
         />
         <Stack.Screen name="CrewNew" component={CrewNewScreen} options={appHeaderOptions({ title: '크루 개설' })} />
         <Stack.Screen

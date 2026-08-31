@@ -23,6 +23,8 @@ export type RootStackParamList = {
   CrewManage: { crewId: number; crewName: string };
   /** 참가 신청자 목록. 관리 허브를 거쳐서만 들어온다. */
   CrewParticipants: { crewId: number; crewName: string };
+  /** 크루원 목록. 관리 허브를 거쳐서만 들어온다. */
+  CrewMembers: { crewId: number; crewName: string };
   CrewNew: undefined;
   /** 크루 공지 목록. RN 이 직접 그린다. */
   AnnounceList: { crewId: number; crewName: string };

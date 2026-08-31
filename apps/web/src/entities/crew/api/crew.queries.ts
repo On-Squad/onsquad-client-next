@@ -13,14 +13,12 @@ import {
   crewListGetFetch,
 } from '@/entities/crew/api';
 import { CrewManageGetFetchParams, crewManageGetFetch } from '@/entities/crew/api/manage/crewManageGetFetch';
+import { CrewMembersGetFetchParams, crewMembersGetFetch } from '@/entities/crew/api/manage/members';
 import {
   CrewParticipantsGetFetchParams,
   crewParticipantsGetFetch,
 } from '@/entities/crew/api/manage/participants/crewParticipantsGetFetch';
-import {
-  CrewMembersGetFetchParams,
-  crewMembersGetFetch,
-} from '@/entities/crew/api/manage/members';
+
 import { makeQueryOptions } from '@/shared/lib/queries/makeQueryOptions';
 
 export const crewQueries = {
@@ -89,6 +87,10 @@ export const crewQueries = {
         };
       },
       getNextPageParam: (lastPage) => lastPage.nextPage,
-      initialPageParam: 0,
+      /**
+       * 크루원 API 는 1-based 다 — page=0 과 page=1 이 같은 첫 페이지를 반환한다(실측).
+       * 0 으로 시작하면 fetchNextPage 시 page=1 이 되어 같은 사람이 목록에 두 번 들어간다.
+       */
+      initialPageParam: 1,
     }),
 };

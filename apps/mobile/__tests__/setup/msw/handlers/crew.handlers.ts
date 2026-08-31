@@ -16,4 +16,10 @@ export const crewHandlers = [
   http.delete(`${BASE}/crews/:crewId/members/me`, () =>
     HttpResponse.json({ status: 200, success: true }),
   ),
+  http.delete(`${BASE}/crews/:crewId/members/:targetMemberId`, () =>
+    HttpResponse.json({ status: 200, success: true }),
+  ),
+  http.patch(`${BASE}/crews/:crewId/members/:targetMemberId/owner`, () =>
+    HttpResponse.json({ status: 200, success: true }),
+  ),
 ];
