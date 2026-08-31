@@ -4,14 +4,13 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { overlay } from 'overlay-kit';
 
 import { crewQueries } from '@/entities/crew';
-
 import type { CrewMemberItem } from '@/entities/crew/api/manage/members';
+
 import { OVERLAY_ANIMATION_DURATION } from '@/shared/config';
 import { closeWithAnimation } from '@/shared/lib/overlay';
 import { Alert } from '@/shared/ui/Alert';
 import { BUTTON } from '@/shared/ui/Alert/style';
 import { BottomSheet } from '@/shared/ui/BottomSheet';
-import { Button } from '@/shared/ui/Button';
 import { Text } from '@/shared/ui/Text';
 import { Button as OverlayButton } from '@/shared/ui/ui/button';
 
@@ -25,9 +24,7 @@ interface CrewMemberListProps {
 }
 
 const CrewMemberList = ({ crewId }: CrewMemberListProps) => {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
-    crewQueries.members({ crewId }),
-  );
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(crewQueries.members({ crewId }));
 
   const kickMutation = useKickCrewMemberMutation(crewId);
   const delegateMutation = useDelegateCrewOwnerMutation(crewId);
@@ -165,15 +162,18 @@ const CrewMemberList = ({ crewId }: CrewMemberListProps) => {
         ))}
       </ul>
 
+      {/* 크루 홈의 공지 "더보기" 와 같은 담백한 텍스트 버튼이다. */}
       {hasNextPage && (
-        <Button
-          variant="ghost"
-          isLoading={isFetchingNextPage}
+        <button
+          type="button"
+          disabled={isFetchingNextPage}
           onClick={() => fetchNextPage()}
-          className="mx-auto h-auto rounded-full bg-primary50 px-4 py-2 text-sm font-medium text-primary700 hover:bg-primary50 hover:text-primary700"
+          className="mx-auto py-2 text-grayscale500 hover:text-grayscale600 disabled:opacity-50"
         >
-          더보기 {loadedPages}/{totalPages}
-        </Button>
+          <Text.xs>
+            더보기 {loadedPages}/{totalPages}
+          </Text.xs>
+        </button>
       )}
     </div>
   );

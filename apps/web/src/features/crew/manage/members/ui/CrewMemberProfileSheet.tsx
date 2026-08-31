@@ -1,10 +1,10 @@
 'use client';
 
 import type { CrewMemberItem } from '@/entities/crew/api/manage/members';
+
 import { Avatar } from '@/shared/ui/Avatar';
 import { BottomSheet } from '@/shared/ui/BottomSheet';
 import { Text } from '@/shared/ui/Text';
-import { Button } from '@/shared/ui/ui/button';
 
 interface CrewMemberProfileSheetProps {
   item: CrewMemberItem;
@@ -31,10 +31,6 @@ const CrewMemberProfileSheet = ({ item, isOpen, onClose }: CrewMemberProfileShee
           <Text.sm className="text-grayscale500">MBTI</Text.sm>
           <Text.sm className="font-medium text-grayscale900">{mbtiLabel}</Text.sm>
         </div>
-
-        <Button className="w-full" onClick={onClose}>
-          닫기
-        </Button>
       </div>
     </BottomSheet>
   );
